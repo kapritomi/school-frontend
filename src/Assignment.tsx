@@ -152,6 +152,7 @@ function Assignment() {
             const y = fit.offsetY + v * fit.drawH;
 
             return (
+              
               <div
                 key={id}
                 onClick={(e) => {
@@ -173,6 +174,7 @@ function Assignment() {
                   boxShadow: "0 0 0 4px rgba(255,0,0,0.25)",
                 }}
               />
+              
             );
           })}
 
