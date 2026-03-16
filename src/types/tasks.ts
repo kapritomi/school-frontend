@@ -30,19 +30,17 @@ export type ShortAnswerJson = {
 
 // ---- Grouping ----
 export type Group ={
-  
+
 }
 
 export type TaskJson = {
   id: string; // belső azonosító
   task_title: string;
   task_description: string;
-  feedback: string;
   task_type_id: number;
   assignment?: AssignmentJson;
   short_answer?: ShortAnswerJson;
 };
-
 
 
 export type TasksJson = {

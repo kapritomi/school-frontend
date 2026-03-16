@@ -71,18 +71,7 @@ function ShortAnswerCreate() {
         />
       </section>
 
-      <section className="mt-8">
-        <label className="block text-primary text-[30px] font-semibold">
-          Visszajelzés:
-        </label>
-        <input
-          value={task.feedback}
-          onChange={(e) =>
-            updateTask({ ...task, feedback: e.target.value })
-          }
-          className="block w-full rounded-[6px] p-2 border-[1px] border-[#818181]"
-        />
-      </section>
+      
 
       <div className="mt-8">
         <button

@@ -31,14 +31,12 @@ export const initialTasksState: TasksState = {
         id: "1",
         task_title: "Párkereső",
         task_description: "",
-        feedback: "",
         task_type_id: TASK_TYPE_ID.pair,
       },
       {
         id: "2",
         task_title: "Madarak",
         task_description: "",
-        feedback: "",
         task_type_id: TASK_TYPE_ID.short,
       },
     ],
@@ -71,7 +69,6 @@ export function tasksReducer(state: TasksState, action: TasksAction): TasksState
         id,
         task_title: label,
         task_description: "",
-        feedback: "",
         task_type_id: TASK_TYPE_ID[type],
       };
 
@@ -127,12 +124,28 @@ export function tasksReducer(state: TasksState, action: TasksAction): TasksState
     }
 
     case "REORDER_SLOTS": {
-      const { from, to } = action;
-      if (from === to) return state;
-      if (from < 0 || to < 0 || from >= state.slots.length || to >= state.slots.length) return state;
-      // üreset ne mozgassunk
-      if (state.slots[from] === null) return state;
-      return { ...state, slots: swap(state.slots, from, to) };
+     const { from, to } = action;
+
+  if (from === to) return state;
+  if (from < 0 || to < 0 || from >= state.slots.length || to >= state.slots.length) return state;
+  if (state.slots[from] === null) return state;
+
+  const newSlots = swap(state.slots, from, to);
+
+  const taskMap = new Map(state.tasksJson.tasks.map((task) => [task.id, task]));
+
+  const reorderedTasks = newSlots
+    .filter((slot): slot is NonNullable<typeof slot> => slot !== null)
+    .map((slot) => taskMap.get(slot.id))
+    .filter((task): task is NonNullable<typeof task> => task !== undefined);
+
+  return {
+    ...state,
+    slots: newSlots,
+    tasksJson: {
+      tasks: reorderedTasks,
+    },
+  };
     }
 
     default:

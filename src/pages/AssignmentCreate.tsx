@@ -17,7 +17,6 @@ export default function AssignmentCreate() {
   const onChange = updateTask;
   const frameW = 700;
   const frameH = 500;
-  const src = "/image.jpg";
   const MAX_COORDS = 10;
 
   const imgRef = useRef<HTMLImageElement>(null);
@@ -50,7 +49,7 @@ export default function AssignmentCreate() {
     else img.addEventListener("load", onLoad);
 
     return () => img.removeEventListener("load", onLoad);
-  }, [src]);
+  }, [assignment.image]);
 
   const fit = useMemo(() => {
     if (!natural) return null;
@@ -79,6 +78,10 @@ export default function AssignmentCreate() {
   };
 
   const onPick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!assignment.image) {
+      alert("Először tölts fel egy képet.");
+      return;
+    }
     if (!fit || !natural) return;
     if (!isAdding) return;
 
@@ -117,7 +120,7 @@ export default function AssignmentCreate() {
       ...task,
       assignment: {
         ...assignment,
-        image: assignment.image || src,
+        image: assignment.image,
         coordinatesAndAnswers: [...assignment.coordinatesAndAnswers, nextEntry],
       },
     });
@@ -147,6 +150,21 @@ export default function AssignmentCreate() {
     setIsAdding(false);
     setAnswerDraft("");
   };
+  
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  const imageUrl = URL.createObjectURL(file);
+
+  onChange({
+    ...task,
+    assignment: {
+      ...assignment,
+      image: imageUrl,
+    },
+  });
+};
 
   return (
     <div>
@@ -182,23 +200,45 @@ export default function AssignmentCreate() {
       </form>
 
       <h1 className="text-primary text-[30px] font-semibold">Háttérkép:</h1>
-
-      <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
-        <div>
-          <div
-            onClick={onPick}
-            style={{
-              width: frameW,
-              height: frameH,
-              position: "relative",
-              overflow: "hidden",
-              cursor: isAdding ? "crosshair" : "default",
-              userSelect: "none",
-            }}
-          >
+      {/* ---- Háttérkép feltöltése gomb */}
+      <div className="w-full flex gap-4">
+        {!assignment.image ?
+          <div className="mb-4 w-3/5">
+              <input
+                className="
+                  block w-full text-sm text-gray-500
+                  file:mr-4
+                  file:py-2
+                  file:px-4
+                  file:rounded-md
+                  file:border-0
+                  file:text-sm
+                  file:font-semibold
+                  file:bg-primary
+                  file:text-white
+                  hover:file:bg-green-700"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+              />
+          </div> 
+          :
+          <div className="w-3/5">
+            {assignment.image &&
+            <div
+              onClick={onPick}
+              style={{
+                width: frameW,
+                height: frameH,
+                position: "relative",
+                overflow: "hidden",
+                cursor: isAdding ? "crosshair" : "default",
+                userSelect: "none",
+              }}
+            >
             <img
               ref={imgRef}
-              src={assignment.image || src}
+              src={assignment.image || ""}
               alt=""
               style={{
                 width: "100%",
@@ -243,9 +283,12 @@ export default function AssignmentCreate() {
                 );
               })}
           </div>
+          }
         </div>
+      }
+        
 
-        <div className="w-full">
+        <div className="w-1/2">
           {/* ---- Jelöléseid ---- */}
           <div className="flex flex-wrap ">
             <div className="w-full text-primary text-[30px] font-semibold">Jelöléseid:</div>
@@ -259,7 +302,7 @@ export default function AssignmentCreate() {
                 {!isAdding && (<button
                     type="button"
                     onClick={startAdd}
-                    disabled={isAdding || coords.length >= MAX_COORDS}
+                    disabled={!assignment.image || isAdding || coords.length >= MAX_COORDS}
                     className="mt-8 rounded-[6px] bg-primary text-white font-semibold text-[18px]"
                     style={{
                       padding: "6px 10px",
