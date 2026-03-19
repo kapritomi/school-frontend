@@ -8,7 +8,6 @@ import { useMemo, useState } from 'react'
         task_title: "Állatok csoportosítása",
         task_description: "Húzd a megfelelő csoportba",
         task_type: "grouping",
-        feedback: "ezazzzz",
         groups: [
             {
                 id: 1,
