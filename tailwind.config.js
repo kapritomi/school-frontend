@@ -9,11 +9,14 @@ export default {
         delete: '#FF575A',
         secondaryFont: '#5B5B5B',
         gray: '#818181',
-        primaryDisabled:"#2E6544CC"
+        primaryDisabled: '#2E6544CC',
       },
       fontSize: {
         TaskTitle: '30px',
         TaskDesc: '20px',
+      },
+      fontFamily: {
+        'default-font': 'Poppins',
       },
     },
   },

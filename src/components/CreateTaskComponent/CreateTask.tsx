@@ -1,5 +1,5 @@
 import AssignmentCreate from '../Tasks/AssignmentCreate';
-import ShortAnswerCreate from '../Tasks/ShortAnswerCreate'
+import ShortAnswerCreate from '../Tasks/ShortAnswerCreate';
 import { useTasks } from '../../store/useTasks';
 import { TASK_TYPE_ID } from '../../types/tasks';
 import Sidebar from '../Sidebar';

@@ -13,7 +13,6 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(tasksReducer, initialTasksState);
   const value = useMemo(() => ({ state, dispatch }), [state]);
 
-  
   return (
     <TasksContext.Provider value={value}>{children}</TasksContext.Provider>
   );
