@@ -1,4 +1,4 @@
-import { useTasks } from "../store/useTasks";
+import { useTasks } from '../../store/useTasks';
 
 function ShortAnswerCreate() {
   const { activeTask, updateTask } = useTasks();
@@ -12,18 +12,18 @@ function ShortAnswerCreate() {
     updateTask({
       ...task,
       short_answer: {
-        questions: [...shortData.questions, { question: "", answer: "" }],
+        questions: [...shortData.questions, { question: '', answer: '' }],
       },
     });
   };
 
   const updateQuestion = (
     index: number,
-    field: "question" | "answer",
-    value: string
+    field: 'question' | 'answer',
+    value: string,
   ) => {
     const nextQuestions = shortData.questions.map((item, i) =>
-      i === index ? { ...item, [field]: value } : item
+      i === index ? { ...item, [field]: value } : item,
     );
 
     updateTask({
@@ -51,9 +51,7 @@ function ShortAnswerCreate() {
         </label>
         <input
           value={task.task_title}
-          onChange={(e) =>
-            updateTask({ ...task, task_title: e.target.value })
-          }
+          onChange={(e) => updateTask({ ...task, task_title: e.target.value })}
           className="block w-full rounded-[6px] p-2 border-[1px] border-[#818181]"
         />
       </section>
@@ -70,8 +68,6 @@ function ShortAnswerCreate() {
           className="block w-full rounded-[6px] p-2 border-[1px] border-[#818181]"
         />
       </section>
-
-      
 
       <div className="mt-8">
         <button
@@ -91,7 +87,7 @@ function ShortAnswerCreate() {
               <input
                 value={item.question}
                 onChange={(e) =>
-                  updateQuestion(index, "question", e.target.value)
+                  updateQuestion(index, 'question', e.target.value)
                 }
                 className="w-full rounded-[6px] p-2 border-[1px] border-[#818181]"
               />
@@ -102,7 +98,7 @@ function ShortAnswerCreate() {
               <input
                 value={item.answer}
                 onChange={(e) =>
-                  updateQuestion(index, "answer", e.target.value)
+                  updateQuestion(index, 'answer', e.target.value)
                 }
                 className="w-full rounded-[6px] p-2 border-[1px] border-[#818181]"
               />

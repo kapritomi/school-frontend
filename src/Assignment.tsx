@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 type Task = {
   task_title: string;
@@ -13,23 +13,23 @@ type XY = { x: number; y: number };
 
 function Assignment() {
   const task: Task = {
-    task_title: "Quam.",
-    task_description: "Quisquam ut officia non.",
-    task_type: "assignment",
-    img: "/image.jpg",
+    task_title: 'Quam.',
+    task_description: 'Quisquam ut officia non.',
+    task_type: 'assignment',
+    img: '/image.jpg',
     coordinates: [
-      { id: 1, coordinate: "1004,206" },
-      { id: 2, coordinate: "763,227" },
-      { id: 3, coordinate: "1069,875" },
-      { id: 4, coordinate: "183,787" },
-      { id: 5, coordinate: "1453,228" },
+      { id: 1, coordinate: '1004,206' },
+      { id: 2, coordinate: '763,227' },
+      { id: 3, coordinate: '1069,875' },
+      { id: 4, coordinate: '183,787' },
+      { id: 5, coordinate: '1453,228' },
     ],
-    answers: ["consequuntur", "quisquam", "aut", "molestias", "id"],
+    answers: ['consequuntur', 'quisquam', 'aut', 'molestias', 'id'],
   };
 
   const frameW = 1800;
   const frameH = 900;
-  const src = task.img ?? "/image.jpg";
+  const src = task.img ?? '/image.jpg';
 
   const imgRef = useRef<HTMLImageElement>(null);
   const [natural, setNatural] = useState<{ w: number; h: number } | null>(null);
@@ -52,9 +52,9 @@ function Assignment() {
       });
 
     if (img.complete) onLoad();
-    else img.addEventListener("load", onLoad);
+    else img.addEventListener('load', onLoad);
 
-    return () => img.removeEventListener("load", onLoad);
+    return () => img.removeEventListener('load', onLoad);
   }, [src]);
 
   const fit = useMemo(() => {
@@ -76,7 +76,7 @@ function Assignment() {
     const canvas = cropCanvasRef.current;
     if (!img || !canvas) return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     // preview méret (képernyőn)
@@ -96,25 +96,15 @@ function Assignment() {
     ctx.clearRect(0, 0, outW, outH);
     ctx.imageSmoothingEnabled = true;
 
-    ctx.drawImage(
-      img,
-      sx,
-      sy,
-      cropW,
-      cropH,
-      0,
-      0,
-      outW,
-      outH
-    );
+    ctx.drawImage(img, sx, sy, cropW, cropH, 0, 0, outW, outH);
 
     // jelöld a közepét (ahol a kattintott pont van)
     ctx.beginPath();
     ctx.arc(outW / 2, outH / 2, 6, 0, Math.PI * 2);
-    ctx.fillStyle = "red";
+    ctx.fillStyle = 'red';
     ctx.fill();
     ctx.lineWidth = 3;
-    ctx.strokeStyle = "rgba(255,0,0,0.25)";
+    ctx.strokeStyle = 'rgba(255,0,0,0.25)';
     ctx.stroke();
   }, [open, selected, natural]);
 
@@ -124,8 +114,8 @@ function Assignment() {
         style={{
           width: frameW,
           height: frameH,
-          position: "relative",
-          overflow: "hidden",
+          position: 'relative',
+          overflow: 'hidden',
         }}
       >
         <img
@@ -133,10 +123,10 @@ function Assignment() {
           src={src}
           alt=""
           style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "contain",
-            display: "block",
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            display: 'block',
           }}
         />
 
@@ -152,7 +142,6 @@ function Assignment() {
             const y = fit.offsetY + v * fit.drawH;
 
             return (
-              
               <div
                 key={id}
                 onClick={(e) => {
@@ -160,21 +149,19 @@ function Assignment() {
                   setSelected({ id, xy });
                   setOpen(true);
                 }}
-                
                 style={{
-                  position: "absolute",
+                  position: 'absolute',
                   left: x,
                   top: y,
                   width: 16,
                   height: 16,
                   borderRadius: 999,
-                  background: "red",
-                  transform: "translate(-50%, -50%)",
-                  cursor: "pointer",
-                  boxShadow: "0 0 0 4px rgba(255,0,0,0.25)",
+                  background: 'red',
+                  transform: 'translate(-50%, -50%)',
+                  cursor: 'pointer',
+                  boxShadow: '0 0 0 4px rgba(255,0,0,0.25)',
                 }}
               />
-              
             );
           })}
 
@@ -182,11 +169,11 @@ function Assignment() {
           <div
             onClick={() => setOpen(false)}
             style={{
-              position: "absolute",
+              position: 'absolute',
               inset: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               padding: 16,
             }}
           >
@@ -194,21 +181,27 @@ function Assignment() {
               onClick={(e) => e.stopPropagation()}
               style={{
                 width: 520,
-                maxWidth: "90vw",
-                background: "white",
+                maxWidth: '90vw',
+                background: 'white',
                 borderRadius: 12,
                 padding: 16,
-                boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
+                boxShadow: '0 10px 30px rgba(0,0,0,0.25)',
               }}
             >
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  gap: 12,
+                }}
+              >
                 <button
                   onClick={() => setOpen(false)}
                   style={{
-                    border: "1px solid #ddd",
+                    border: '1px solid #ddd',
                     borderRadius: 8,
-                    padding: "6px 10px",
-                    cursor: "pointer",
+                    padding: '6px 10px',
+                    cursor: 'pointer',
                   }}
                 >
                   Bezár
@@ -217,15 +210,14 @@ function Assignment() {
 
               {/* ✅ kivágott környezet preview */}
               <div style={{ marginTop: 12 }}>
-                
                 <canvas
                   ref={cropCanvasRef}
                   style={{
-                    width: "100%",
-                    height: "auto",
+                    width: '100%',
+                    height: 'auto',
                     borderRadius: 10,
-                    border: "1px solid #eee",
-                    display: "block",
+                    border: '1px solid #eee',
+                    display: 'block',
                   }}
                 />
               </div>
@@ -236,18 +228,18 @@ function Assignment() {
                   Válaszlehetőségek
                 </div>
 
-                <div style={{ display: "grid", gap: 8 }}>
+                <div style={{ display: 'grid', gap: 8 }}>
                   {task.answers.map((a, i) => (
                     <button
                       key={i}
                       onClick={() => alert(`Kiválasztva: ${a}`)}
                       style={{
-                        textAlign: "left",
-                        border: "1px solid #ddd",
+                        textAlign: 'left',
+                        border: '1px solid #ddd',
                         borderRadius: 10,
-                        padding: "10px 12px",
-                        cursor: "pointer",
-                        background: "white",
+                        padding: '10px 12px',
+                        cursor: 'pointer',
+                        background: 'white',
                       }}
                     >
                       {a}
@@ -264,7 +256,7 @@ function Assignment() {
 }
 
 function parseCoordinate(s: string): XY | null {
-  const parts = s.split(",").map((p) => p.trim());
+  const parts = s.split(',').map((p) => p.trim());
   if (parts.length !== 2) return null;
 
   const x = Number(parts[0]);
@@ -274,7 +266,12 @@ function parseCoordinate(s: string): XY | null {
   return { x, y };
 }
 
-function containFit(frameW: number, frameH: number, imgW: number, imgH: number) {
+function containFit(
+  frameW: number,
+  frameH: number,
+  imgW: number,
+  imgH: number,
+) {
   const scale = Math.min(frameW / imgW, frameH / imgH);
 
   const drawW = imgW * scale;

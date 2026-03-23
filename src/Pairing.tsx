@@ -1,116 +1,124 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react';
 
-  type Card = { id: number; answer: string; img: string | null };
-  type Slot = { id: number; question: string; img: string | null};
-  type Placement = Record<number, number | null>;
-    const shuffle = <T,>(array: T[]): T[] => {
-    return [...array].sort(() => Math.random() - 0.5);
-    };
-  const taskData = {
-    task_title: "Magnam.",
-    task_description: "Quia aut eaque dolor numquam.",
-    task_type: "pairing",
-    feedback: "et",
-    pairQuestions: [
-      {
-        id: 1,
-        question: "Et nam accusantium consequuntur voluptatibus doloremque dolorum.",
-        img: null
-      },
-      {
-          "id": 2,
-          "question": "Numquam recusandae mollitia blanditiis fugit voluptas est.",
-          "img": null
-      },
-      {
-          "id": 3,
-          "question": "Corrupti ea in quia. Molestiae porro nemo fuga.",
-          "img": null
-      },
-      {
-          "id": 4,
-          "question": "Nihil quisquam architecto iusto architecto nam ut maxime. Neque numquam iure totam adipisci cum pariatur quas.",
-          "img": null
-      },
-      {
-          "id": 5,
-          "question": "Eligendi ea consequatur quia magnam et eveniet. Minima quia velit deleniti eius modi eligendi eum.",
-          "img": null
-      },
-      {
-          "id": 6,
-          "question": "Officiis eveniet dolor cumque ratione pariatur molestias. Laboriosam nulla beatae sed est inventore maiores.",
-          "img": null
-      },
-      {
-          "id": 7,
-          "question": "Ab sint eum illo.",
-          "img": null
-      },
-      {
-          "id": 8,
-          "question": "Ut aliquid suscipit veritatis sed consequatur asperiores illo dolores.",
-          "img": null
-      }
-    ],
-    pairAnswers: [
-      {
-        id: 1,
-        answer: "Excepturi commodi quaerat quibusdam.",
-        img: null
-      },
-      {
-          "id": 2,
-          "answer": "Et deserunt fugiat excepturi et.",
-          "img": null
-      },
-      {
-          "id": 3,
-          "answer": "Nihil quia reprehenderit eos at veritatis aliquam deleniti. Est numquam qui amet.",
-          "img": null
-      },
-      {
-          "id": 4,
-          "answer": "Necessitatibus est eius et animi totam facere fugit.",
-          "img": null
-      },
-      {
-          "id": 5,
-          "answer": "Odit et cupiditate quibusdam illum minima unde. Et vel quaerat similique sequi officiis ad hic.",
-          "img": null
-      },
-      {
-          "id": 6,
-          "answer": "Quos facilis numquam fugit asperiores illo eum.",
-          "img": null
-      },
-      {
-          "id": 7,
-          "answer": "Ratione et nesciunt eum et inventore eos odio. Eos aliquam et autem quidem inventore eos quisquam.",
-          "img": null
-      },
-      {
-          "id": 8,
-          "answer": "Sint perferendis sed aut. In nostrum ipsum libero odio.",
-          "img": null
-      }
-    ]
-  }
-  const slots: Slot[] = taskData.pairQuestions.map((q) => ({
-    id: q.id,
-    question: q.question,
-    img: q.img,
-  }));
-  const cards: Card[] = shuffle(taskData.pairAnswers).map((a) => ({
-    id: a.id,
-    answer: a.answer,
-    img: a.img,
-  }));
- 
-  const initialPlacement: Placement = Object.fromEntries(
-  cards.map((c) => [c.id, null])
+type Card = { id: number; answer: string; img: string | null };
+type Slot = { id: number; question: string; img: string | null };
+type Placement = Record<number, number | null>;
+const shuffle = <T,>(array: T[]): T[] => {
+  return [...array].sort(() => Math.random() - 0.5);
+};
+const taskData = {
+  task_title: 'Magnam.',
+  task_description: 'Quia aut eaque dolor numquam.',
+  task_type: 'pairing',
+  feedback: 'et',
+  pairQuestions: [
+    {
+      id: 1,
+      question:
+        'Et nam accusantium consequuntur voluptatibus doloremque dolorum.',
+      img: null,
+    },
+    {
+      id: 2,
+      question: 'Numquam recusandae mollitia blanditiis fugit voluptas est.',
+      img: null,
+    },
+    {
+      id: 3,
+      question: 'Corrupti ea in quia. Molestiae porro nemo fuga.',
+      img: null,
+    },
+    {
+      id: 4,
+      question:
+        'Nihil quisquam architecto iusto architecto nam ut maxime. Neque numquam iure totam adipisci cum pariatur quas.',
+      img: null,
+    },
+    {
+      id: 5,
+      question:
+        'Eligendi ea consequatur quia magnam et eveniet. Minima quia velit deleniti eius modi eligendi eum.',
+      img: null,
+    },
+    {
+      id: 6,
+      question:
+        'Officiis eveniet dolor cumque ratione pariatur molestias. Laboriosam nulla beatae sed est inventore maiores.',
+      img: null,
+    },
+    {
+      id: 7,
+      question: 'Ab sint eum illo.',
+      img: null,
+    },
+    {
+      id: 8,
+      question:
+        'Ut aliquid suscipit veritatis sed consequatur asperiores illo dolores.',
+      img: null,
+    },
+  ],
+  pairAnswers: [
+    {
+      id: 1,
+      answer: 'Excepturi commodi quaerat quibusdam.',
+      img: null,
+    },
+    {
+      id: 2,
+      answer: 'Et deserunt fugiat excepturi et.',
+      img: null,
+    },
+    {
+      id: 3,
+      answer:
+        'Nihil quia reprehenderit eos at veritatis aliquam deleniti. Est numquam qui amet.',
+      img: null,
+    },
+    {
+      id: 4,
+      answer: 'Necessitatibus est eius et animi totam facere fugit.',
+      img: null,
+    },
+    {
+      id: 5,
+      answer:
+        'Odit et cupiditate quibusdam illum minima unde. Et vel quaerat similique sequi officiis ad hic.',
+      img: null,
+    },
+    {
+      id: 6,
+      answer: 'Quos facilis numquam fugit asperiores illo eum.',
+      img: null,
+    },
+    {
+      id: 7,
+      answer:
+        'Ratione et nesciunt eum et inventore eos odio. Eos aliquam et autem quidem inventore eos quisquam.',
+      img: null,
+    },
+    {
+      id: 8,
+      answer: 'Sint perferendis sed aut. In nostrum ipsum libero odio.',
+      img: null,
+    },
+  ],
+};
+const slots: Slot[] = taskData.pairQuestions.map((q) => ({
+  id: q.id,
+  question: q.question,
+  img: q.img,
+}));
+const cards: Card[] = shuffle(taskData.pairAnswers).map((a) => ({
+  id: a.id,
+  answer: a.answer,
+  img: a.img,
+}));
+
+const initialPlacement: Placement = Object.fromEntries(
+  cards.map((c) => [c.id, null]),
 );
-  
+
 function Pair() {
   //Kártyák helyzete, null = poolban van
   const [placement, setPlacement] = useState<Placement>(initialPlacement);
@@ -122,7 +130,8 @@ function Pair() {
   const cardById = useMemo(() => new Map(cards.map((c) => [c.id, c])), []);
 
   const slotCardId = (slotId: number) =>
-    Object.keys(placement).find((id) => placement[Number(id)] === slotId) ?? null;
+    Object.keys(placement).find((id) => placement[Number(id)] === slotId) ??
+    null;
 
   const slotHasCard = (slotId: number) =>
     Object.values(placement).some((s) => s === slotId);
@@ -147,7 +156,7 @@ function Pair() {
 
   const poolCards = cards.filter((c) => placement[c.id] === null);
 
-  //Ellenőrzés gomb 
+  //Ellenőrzés gomb
   const [checked, setChecked] = useState(false);
   const cardMap = useMemo(() => new Map(cards.map((c) => [c.id, c])), [cards]);
   const slotMap = useMemo(() => new Map(slots.map((s) => [s.id, s])), [slots]);
@@ -158,71 +167,77 @@ function Pair() {
   };
   //Ellenőrzés hogy minden jó
   const checkAllCorrect = () => {
-  const allCorrect = cards.every(card =>
-    isCardCorrect(card.id)
-  );
+    const allCorrect = cards.every((card) => isCardCorrect(card.id));
 
-  setSuccess(allCorrect);
-  setChecked(true); // ha használod a keretezéshez
-};
+    setSuccess(allCorrect);
+    setChecked(true); // ha használod a keretezéshez
+  };
 
   return (
-    <div >
+    <div>
       {/* feladat címe */}
-      <div className='task-padding font-semibold text-TaskTitle'>{taskData.task_title}</div>
+      <div className="task-padding font-semibold text-TaskTitle">
+        {taskData.task_title}
+      </div>
       {/* feladat leírása */}
-      <div className='task-padding font-semibold text-TaskDesc'>{taskData.task_description}</div>
-      
-      <div className='flex flex-wrap'>
+      <div className="task-padding font-semibold text-TaskDesc">
+        {taskData.task_description}
+      </div>
+
+      <div className="flex flex-wrap">
         {/* bal rész: slotok */}
-        <div className='grid grid-cols-2 relative w-3/5 gap-y-4 gap-x-8 task-padding pr-12'>
-        
-        {/* fehér választóvonal a 2 rész közé*/}
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 h-[85%] w-[5px] bg-white" />
-          
+        <div className="grid grid-cols-2 relative w-3/5 gap-y-4 gap-x-8 task-padding pr-12">
+          {/* fehér választóvonal a 2 rész közé*/}
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 h-[85%] w-[5px] bg-white" />
+
           {slots.map((slot) => {
             const idInSlot = slotCardId(slot.id);
             const card = idInSlot ? cardById.get(Number(idInSlot)) : null;
 
             return (
-              <div className='bg-white flex w-full h-[200px] rounded-[8px] p-[5px] shadow-[0_4px_4px_rgba(0,0,0,0.25)]'
+              <div
+                className="bg-white flex w-full h-[200px] rounded-[8px] p-[5px] shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
                 key={slot.id}
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={() => dropToSlot(slot.id)}
               >
-                <div className='w-1/2 font-semibold text-[18px] p-2'>{slot.question}</div>
+                <div className="w-1/2 font-semibold text-[18px] p-2">
+                  {slot.question}
+                </div>
 
                 {card ? (
-                  <div className='w-1/2 rounded-[5px] font-semibold text-[18px] p-2'
+                  <div
+                    className="w-1/2 rounded-[5px] font-semibold text-[18px] p-2"
                     draggable
                     onDragStart={() => setDraggingId(card.id)}
                     onDragEnd={() => setDraggingId(null)}
                     style={{
-                      background: "white",
+                      background: 'white',
                       border: !card
-                      ? "2px dashed transparent"
-                      : !checked
-                      ? "2px solid transparent"
-                      : isCardCorrect(card.id)
-                      ? "2px solid green"
-                      : "2px solid red",
-                      boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
-                      cursor: "grab",
-                      userSelect: "none",
+                        ? '2px dashed transparent'
+                        : !checked
+                          ? '2px solid transparent'
+                          : isCardCorrect(card.id)
+                            ? '2px solid green'
+                            : '2px solid red',
+                      boxShadow: '0 12px 30px rgba(0,0,0,0.08)',
+                      cursor: 'grab',
+                      userSelect: 'none',
                     }}
                   >
                     {card.answer}
                   </div>
                 ) : (
-                  <div className='bg-[#EDEDED] w-[250px] rounded-[5px] shadow-[inset_0_2.21px_8px_rgba(0,0,0,0.25)]'></div>
+                  <div className="bg-[#EDEDED] w-[250px] rounded-[5px] shadow-[inset_0_2.21px_8px_rgba(0,0,0,0.25)]"></div>
                 )}
               </div>
             );
           })}
         </div>
-          
+
         {/* jobb rész: nagy összesített mező (pool) */}
-        <div className='pt-6 w-2/5'
+        <div
+          className="pt-6 w-2/5"
           onDragOver={(e) => e.preventDefault()}
           onDrop={dropToPool}
         >
@@ -230,17 +245,17 @@ function Pair() {
             <div style={{ opacity: 0.5 }}>Nincs több kártya</div>
           ) : (
             //berakott kártya
-            <div className='flex flex-wrap gap-8 px-10 justify-center'>
+            <div className="flex flex-wrap gap-8 px-10 justify-center">
               {poolCards.map((c) => (
                 <div
-                  className='bg-white flex w-[250px] h-[190px] rounded-[8px] p-[10px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] font-semibold text-[18px]'
+                  className="bg-white flex w-[250px] h-[190px] rounded-[8px] p-[10px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] font-semibold text-[18px]"
                   key={c.id}
                   draggable
                   onDragStart={() => setDraggingId(c.id)}
                   onDragEnd={() => setDraggingId(null)}
                   style={{
-                    cursor: "grab",
-                    userSelect: "none",
+                    cursor: 'grab',
+                    userSelect: 'none',
                   }}
                 >
                   {c.answer}
@@ -248,25 +263,27 @@ function Pair() {
               ))}
             </div>
           )}
-        {success && (
-          <div className="mt-4 text-green-600 font-bold text-xl">
-            ✅ Siker! Minden válasz helyes!
-          </div>
-        )}
+          {success && (
+            <div className="mt-4 text-green-600 font-bold text-xl">
+              ✅ Siker! Minden válasz helyes!
+            </div>
+          )}
 
           <div>
-          <button 
-            className='fixed bottom-4 right-[10px] bg-[#2E6544] text-white font-bold rounded-[8px] px-4 py-2 shadow-[0_4px_4px_rgba(0,0,0,0.25)]'
-            onClick={() => {setChecked(true); checkAllCorrect()}}>
+            <button
+              className="fixed bottom-4 right-[10px] bg-[#2E6544] text-white font-bold rounded-[8px] px-4 py-2 shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+              onClick={() => {
+                setChecked(true);
+                checkAllCorrect();
+              }}
+            >
               Ellenőrzés
-          </button>
-        </div>
-          
+            </button>
+          </div>
         </div>
       </div>
-      
     </div>
-  )
+  );
 }
 
-export default Pair
+export default Pair;

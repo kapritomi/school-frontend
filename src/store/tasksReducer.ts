@@ -1,5 +1,5 @@
-import type { Slot, TaskJson, TasksJson, TaskType } from "../types/tasks";
-import { MAX_ITEMS, TASK_TYPE_ID } from "../types/tasks";
+import type { Slot, TaskJson, TasksJson, TaskType } from '../types/tasks';
+import { MAX_ITEMS, TASK_TYPE_ID } from '../types/tasks';
 
 export type TasksState = {
   slots: Slot[];
@@ -11,32 +11,32 @@ export type TasksState = {
 type CreatePayload = { slotIndex: number; label: string; type: TaskType };
 
 export type TasksAction =
-  | { type: "SELECT_TASK"; id: string }
-  | { type: "CREATE_TASK"; payload: CreatePayload }
-  | { type: "REMOVE_TASK"; id: string }
-  | { type: "UPDATE_TASK"; task: TaskJson }
-  | { type: "REORDER_SLOTS"; from: number; to: number };
+  | { type: 'SELECT_TASK'; id: string }
+  | { type: 'CREATE_TASK'; payload: CreatePayload }
+  | { type: 'REMOVE_TASK'; id: string }
+  | { type: 'UPDATE_TASK'; task: TaskJson }
+  | { type: 'REORDER_SLOTS'; from: number; to: number };
 
 export const initialTasksState: TasksState = {
   nextId: 3,
   slots: (() => {
     const initial: Slot[] = Array(MAX_ITEMS).fill(null);
-    initial[0] = { id: "1", label: "Párkereső", type: "pair" };
-    initial[1] = { id: "2", label: "Madarak", type: "short" };
+    initial[0] = { id: '1', label: 'Párkereső', type: 'pair' };
+    initial[1] = { id: '2', label: 'Madarak', type: 'short' };
     return initial;
   })(),
   tasksJson: {
     tasks: [
       {
-        id: "1",
-        task_title: "Párkereső",
-        task_description: "",
+        id: '1',
+        task_title: 'Párkereső',
+        task_description: '',
         task_type_id: TASK_TYPE_ID.pair,
       },
       {
-        id: "2",
-        task_title: "Madarak",
-        task_description: "",
+        id: '2',
+        task_title: 'Madarak',
+        task_description: '',
         task_type_id: TASK_TYPE_ID.short,
       },
     ],
@@ -50,12 +50,15 @@ function swap<T>(arr: T[], i: number, j: number) {
   return copy;
 }
 
-export function tasksReducer(state: TasksState, action: TasksAction): TasksState {
+export function tasksReducer(
+  state: TasksState,
+  action: TasksAction,
+): TasksState {
   switch (action.type) {
-    case "SELECT_TASK":
+    case 'SELECT_TASK':
       return { ...state, activeId: action.id };
 
-    case "CREATE_TASK": {
+    case 'CREATE_TASK': {
       const { slotIndex, label, type } = action.payload;
       const id = String(state.nextId);
 
@@ -68,25 +71,24 @@ export function tasksReducer(state: TasksState, action: TasksAction): TasksState
       const base: TaskJson = {
         id,
         task_title: label,
-        task_description: "",
+        task_description: '',
         task_type_id: TASK_TYPE_ID[type],
       };
 
       const task =
-        type === "assignment"
+        type === 'assignment'
           ? {
               ...base,
-              assignment: { image: "", coordinatesAndAnswers: [] },
+              assignment: { image: '', coordinatesAndAnswers: [] },
             }
-          : 
-        type === "short"
-        ? {
-            ...base,
-            short_answer: {
-            questions: [],
-            },
-          }
-        :base;
+          : type === 'short'
+            ? {
+                ...base,
+                short_answer: {
+                  questions: [],
+                },
+              }
+            : base;
 
       return {
         ...state,
@@ -97,7 +99,7 @@ export function tasksReducer(state: TasksState, action: TasksAction): TasksState
       };
     }
 
-    case "REMOVE_TASK": {
+    case 'REMOVE_TASK': {
       const removedId = action.id;
 
       const slots = state.slots.map((s) => (s?.id === removedId ? null : s));
@@ -111,41 +113,53 @@ export function tasksReducer(state: TasksState, action: TasksAction): TasksState
       };
     }
 
-    case "UPDATE_TASK": {
+    case 'UPDATE_TASK': {
       const next = action.task;
 
       // task json frissítés
-      const tasks = state.tasksJson.tasks.map((t) => (t.id === next.id ? next : t));
+      const tasks = state.tasksJson.tasks.map((t) =>
+        t.id === next.id ? next : t,
+      );
 
       // sidebar label szinkron (title változás)
-      const slots = state.slots.map((s) => (s?.id === next.id ? { ...s, label: next.task_title } : s));
+      const slots = state.slots.map((s) =>
+        s?.id === next.id ? { ...s, label: next.task_title } : s,
+      );
 
       return { ...state, tasksJson: { tasks }, slots };
     }
 
-    case "REORDER_SLOTS": {
-     const { from, to } = action;
+    case 'REORDER_SLOTS': {
+      const { from, to } = action;
 
-  if (from === to) return state;
-  if (from < 0 || to < 0 || from >= state.slots.length || to >= state.slots.length) return state;
-  if (state.slots[from] === null) return state;
+      if (from === to) return state;
+      if (
+        from < 0 ||
+        to < 0 ||
+        from >= state.slots.length ||
+        to >= state.slots.length
+      )
+        return state;
+      if (state.slots[from] === null) return state;
 
-  const newSlots = swap(state.slots, from, to);
+      const newSlots = swap(state.slots, from, to);
 
-  const taskMap = new Map(state.tasksJson.tasks.map((task) => [task.id, task]));
+      const taskMap = new Map(
+        state.tasksJson.tasks.map((task) => [task.id, task]),
+      );
 
-  const reorderedTasks = newSlots
-    .filter((slot): slot is NonNullable<typeof slot> => slot !== null)
-    .map((slot) => taskMap.get(slot.id))
-    .filter((task): task is NonNullable<typeof task> => task !== undefined);
+      const reorderedTasks = newSlots
+        .filter((slot): slot is NonNullable<typeof slot> => slot !== null)
+        .map((slot) => taskMap.get(slot.id))
+        .filter((task): task is NonNullable<typeof task> => task !== undefined);
 
-  return {
-    ...state,
-    slots: newSlots,
-    tasksJson: {
-      tasks: reorderedTasks,
-    },
-  };
+      return {
+        ...state,
+        slots: newSlots,
+        tasksJson: {
+          tasks: reorderedTasks,
+        },
+      };
     }
 
     default:

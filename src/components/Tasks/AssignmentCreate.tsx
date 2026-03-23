@@ -1,17 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { CoordinateAndAnswers } from "../types/tasks";
-import { useTasks } from "../store/useTasks";
-import { DeleteIcon } from "../icons/Delete";
-
+import { useEffect, useMemo, useRef, useState } from 'react';
+import type { CoordinateAndAnswers } from '../../types/tasks';
+import { useTasks } from '../../store/useTasks';
+import { DeleteIcon } from '../../icons/Delete';
 
 type XY = { x: number; y: number };
 type CoordItem = { id: number; coordinate: string; answer: string };
 
-
-
 export default function AssignmentCreate() {
   const { activeTask, updateTask } = useTasks();
-   if (!activeTask) return null;
+  if (!activeTask) return null;
 
   const task = activeTask;
   const onChange = updateTask;
@@ -23,15 +20,18 @@ export default function AssignmentCreate() {
   const [natural, setNatural] = useState<{ w: number; h: number } | null>(null);
 
   const [isAdding, setIsAdding] = useState(false);
-  const [answerDraft, setAnswerDraft] = useState("");
+  const [answerDraft, setAnswerDraft] = useState('');
 
-  const assignment = task.assignment ?? { image: "", coordinatesAndAnswers: [] };
+  const assignment = task.assignment ?? {
+    image: '',
+    coordinatesAndAnswers: [],
+  };
 
   const coords: CoordItem[] = useMemo(() => {
     return assignment.coordinatesAndAnswers.map((c, idx) => ({
       id: idx + 1,
       coordinate: c.coordinate,
-      answer: c.answers?.[0]?.answer ?? "",
+      answer: c.answers?.[0]?.answer ?? '',
     }));
   }, [assignment.coordinatesAndAnswers]);
 
@@ -46,9 +46,9 @@ export default function AssignmentCreate() {
       });
 
     if (img.complete) onLoad();
-    else img.addEventListener("load", onLoad);
+    else img.addEventListener('load', onLoad);
 
-    return () => img.removeEventListener("load", onLoad);
+    return () => img.removeEventListener('load', onLoad);
   }, [assignment.image]);
 
   const fit = useMemo(() => {
@@ -65,21 +65,21 @@ export default function AssignmentCreate() {
 
   const startAdd = () => {
     if (coords.length >= MAX_COORDS) {
-      alert("Maximum 10 koordináta adható meg.");
+      alert('Maximum 10 koordináta adható meg.');
       return;
     }
     setIsAdding(true);
-    setAnswerDraft("");
+    setAnswerDraft('');
   };
 
   const cancelAdd = () => {
     setIsAdding(false);
-    setAnswerDraft("");
+    setAnswerDraft('');
   };
 
   const onPick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!assignment.image) {
-      alert("Először tölts fel egy képet.");
+      alert('Először tölts fel egy képet.');
       return;
     }
     if (!fit || !natural) return;
@@ -87,12 +87,12 @@ export default function AssignmentCreate() {
 
     const ans = answerDraft.trim();
     if (!ans) {
-      alert("Add meg a megfejtést, mielőtt a képre kattintasz.");
+      alert('Add meg a megfejtést, mielőtt a képre kattintasz.');
       return;
     }
 
     if (coords.length >= MAX_COORDS) {
-      alert("Maximum 10 koordináta adható meg.");
+      alert('Maximum 10 koordináta adható meg.');
       return;
     }
 
@@ -103,7 +103,13 @@ export default function AssignmentCreate() {
     const insideX = clickX - fit.offsetX;
     const insideY = clickY - fit.offsetY;
 
-    if (insideX < 0 || insideY < 0 || insideX > fit.drawW || insideY > fit.drawH) return;
+    if (
+      insideX < 0 ||
+      insideY < 0 ||
+      insideX > fit.drawW ||
+      insideY > fit.drawH
+    )
+      return;
 
     const u = insideX / fit.drawW;
     const v = insideY / fit.drawH;
@@ -126,12 +132,14 @@ export default function AssignmentCreate() {
     });
 
     setIsAdding(false);
-    setAnswerDraft("");
+    setAnswerDraft('');
   };
 
   const removeById = (id: number) => {
     const index = id - 1;
-    const nextCoords = assignment.coordinatesAndAnswers.filter((_, i) => i !== index);
+    const nextCoords = assignment.coordinatesAndAnswers.filter(
+      (_, i) => i !== index,
+    );
 
     onChange({
       ...task,
@@ -148,29 +156,32 @@ export default function AssignmentCreate() {
       assignment: { ...assignment, coordinatesAndAnswers: [] },
     });
     setIsAdding(false);
-    setAnswerDraft("");
+    setAnswerDraft('');
   };
-  
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-  const imageUrl = URL.createObjectURL(file);
+    const imageUrl = URL.createObjectURL(file);
 
-  onChange({
-    ...task,
-    assignment: {
-      ...assignment,
-      image: imageUrl,
-    },
-  });
-};
+    onChange({
+      ...task,
+      assignment: {
+        ...assignment,
+        image: imageUrl,
+      },
+    });
+  };
 
   return (
     <div>
       <form className="mb-4">
         <section className="space-y-4 mt-4">
-          <label htmlFor="title" className="block text-primary text-[30px] font-semibold">
+          <label
+            htmlFor="title"
+            className="block text-primary text-[30px] font-semibold"
+          >
             A feladat címe:
           </label>
           <input
@@ -183,17 +194,23 @@ export default function AssignmentCreate() {
         </section>
 
         <section className="mt-8">
-          <label htmlFor="description" className="block text-primary text-[30px] font-semibold">
+          <label
+            htmlFor="description"
+            className="block text-primary text-[30px] font-semibold"
+          >
             Feladatleírás:
           </label>
           <p className="text-[#818181] mt-4 mb-2 text-[15px]">
-            Adja meg a feladat leírását. Ez a feladat índításakor fog megjelenni. A leírás megadása nem
-            kötelező, üresen hagyhatja a mezőt.
+            Adja meg a feladat leírását. Ez a feladat índításakor fog
+            megjelenni. A leírás megadása nem kötelező, üresen hagyhatja a
+            mezőt.
           </p>
           <textarea
             id="description"
             value={task.task_description}
-            onChange={(e) => onChange({ ...task, task_description: e.target.value })}
+            onChange={(e) =>
+              onChange({ ...task, task_description: e.target.value })
+            }
             className="block w-full rounded-[6px] p-2 border-[1px] border-[#818181] shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
           />
         </section>
@@ -202,10 +219,10 @@ export default function AssignmentCreate() {
       <h1 className="text-primary text-[30px] font-semibold">Háttérkép:</h1>
       {/* ---- Háttérkép feltöltése gomb */}
       <div className="w-full flex gap-4">
-        {!assignment.image ?
+        {!assignment.image ? (
           <div className="mb-4 w-3/5">
-              <input
-                className="
+            <input
+              className="
                   block w-full text-sm text-gray-500
                   file:mr-4
                   file:py-2
@@ -217,102 +234,109 @@ export default function AssignmentCreate() {
                   file:bg-primary
                   file:text-white
                   hover:file:bg-green-700"
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-              />
-          </div> 
-          :
-          <div className="w-3/5">
-            {assignment.image &&
-            <div
-              onClick={onPick}
-              style={{
-                width: frameW,
-                height: frameH,
-                position: "relative",
-                overflow: "hidden",
-                cursor: isAdding ? "crosshair" : "default",
-                userSelect: "none",
-              }}
-            >
-            <img
-              ref={imgRef}
-              src={assignment.image || ""}
-              alt=""
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-                display: "block",
-                pointerEvents: "none",
-              }}
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
             />
-
-            {fit &&
-              natural &&
-              points.map(({ id, xy }) => {
-                const u = clamp01(xy.x / natural.w);
-                const v = clamp01(xy.y / natural.h);
-
-                const x = fit.offsetX + u * fit.drawW;
-                const y = fit.offsetY + v * fit.drawH;
-
-                return (
-                  <div key={id}>
-                    <div
-                      className="absolute w-[14px] h-[14px] rounded-full bg-red-600 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-                      key={id}
-                      style={{
-                        left: x,
-                        top: y,
-                        boxShadow: "0 0 0 4px rgba(255,0,0,0.25)",
-                      }}
-                    />
-                    <div 
-                      className="text-delete absolute font-bold text-[20px]"
-                      key={id+1} 
-                      style={{
-                        left: x-6,
-                        top: y-34, 
-                      }}
-                    >
-                      {id}
-                    </div>
-                  </div>
-                );
-              })}
           </div>
-          }
-        </div>
-      }
-        
+        ) : (
+          <div className="w-3/5">
+            {assignment.image && (
+              <div
+                onClick={onPick}
+                style={{
+                  width: frameW,
+                  height: frameH,
+                  position: 'relative',
+                  overflow: 'hidden',
+                  cursor: isAdding ? 'crosshair' : 'default',
+                  userSelect: 'none',
+                }}
+              >
+                <img
+                  ref={imgRef}
+                  src={assignment.image || ''}
+                  alt=""
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    display: 'block',
+                    pointerEvents: 'none',
+                  }}
+                />
+
+                {fit &&
+                  natural &&
+                  points.map(({ id, xy }) => {
+                    const u = clamp01(xy.x / natural.w);
+                    const v = clamp01(xy.y / natural.h);
+
+                    const x = fit.offsetX + u * fit.drawW;
+                    const y = fit.offsetY + v * fit.drawH;
+
+                    return (
+                      <div key={id}>
+                        <div
+                          className="absolute w-[14px] h-[14px] rounded-full bg-red-600 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                          key={id}
+                          style={{
+                            left: x,
+                            top: y,
+                            boxShadow: '0 0 0 4px rgba(255,0,0,0.25)',
+                          }}
+                        />
+                        <div
+                          className="text-delete absolute font-bold text-[20px]"
+                          key={id + 1}
+                          style={{
+                            left: x - 6,
+                            top: y - 34,
+                          }}
+                        >
+                          {id}
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="w-1/2">
           {/* ---- Jelöléseid ---- */}
           <div className="flex flex-wrap ">
-            <div className="w-full text-primary text-[30px] font-semibold">Jelöléseid:</div>
-              <div style={{ fontSize: 12, opacity: 0.75 }}>
-                {isAdding
-                  ? "Add meg a megfejtést, majd kattints a képre a pont felviteléhez."
-                  : "Kattintás csak akkor vesz fel pontot, ha előbb rányomsz az „Új koordináta hozzáadása” gombra."}
-              </div>
+            <div className="w-full text-primary text-[30px] font-semibold">
+              Jelöléseid:
+            </div>
+            <div style={{ fontSize: 12, opacity: 0.75 }}>
+              {isAdding
+                ? 'Add meg a megfejtést, majd kattints a képre a pont felviteléhez.'
+                : 'Kattintás csak akkor vesz fel pontot, ha előbb rányomsz az „Új koordináta hozzáadása” gombra.'}
+            </div>
             <div className="flex flex-wrap gap-2 w-full mb-5">
               <div className="flex w-full gap-2">
-                {!isAdding && (<button
+                {!isAdding && (
+                  <button
                     type="button"
                     onClick={startAdd}
-                    disabled={!assignment.image || isAdding || coords.length >= MAX_COORDS}
+                    disabled={
+                      !assignment.image ||
+                      isAdding ||
+                      coords.length >= MAX_COORDS
+                    }
                     className="mt-8 rounded-[6px] bg-primary text-white font-semibold text-[18px]"
                     style={{
-                      padding: "6px 10px",
-                      cursor: isAdding ? "not-allowed" : "pointer",
+                      padding: '6px 10px',
+                      cursor: isAdding ? 'not-allowed' : 'pointer',
                       opacity: isAdding ? 0.6 : 1,
                     }}
                   >
                     + Új pont felvétele
-                  </button>)}
-                
+                  </button>
+                )}
+
                 {isAdding && (
                   <div className="mt-8 flex gap-2">
                     <input
@@ -334,27 +358,35 @@ export default function AssignmentCreate() {
             </div>
           </div>
           {/* ---- Új pont felvétele gomb alatti rész ---- */}
-          <div className="w-full grid gap-4 mt-4" >
-            {coords.length === 0 && <div className="opacity-60 text-[14px]">Még nincs felvett pont.</div>}
+          <div className="w-full grid gap-4 mt-4">
+            {coords.length === 0 && (
+              <div className="opacity-60 text-[14px]">
+                Még nincs felvett pont.
+              </div>
+            )}
             <div className="flex justify-between">
-            {coords.length > 0 && <div className="w-full p-2" >{coords.length} / {MAX_COORDS}</div>}
-            {coords.length > 0 ? (
+              {coords.length > 0 && (
+                <div className="w-full p-2">
+                  {coords.length} / {MAX_COORDS}
+                </div>
+              )}
+              {coords.length > 0 ? (
                 <button
                   type="button"
                   onClick={clearAll}
                   className="flex gap-2 text-end w-[240px] text-delete font-semibold cursor-pointer p-2"
                 >
-                  <DeleteIcon className="w-6 h-6 text-delete"/>
+                  <DeleteIcon className="w-6 h-6 text-delete" />
                   Összes törlése
                 </button>
               ) : null}
-              </div>
+            </div>
             {coords.map((c) => (
               <div
                 key={c.id}
                 className="flex justify-between gap-4 items-center border-[1px] border-lightBorder rounded-[8px] p-4"
               >
-                <div >
+                <div>
                   <div>
                     {c.id}. megfejtés: {c.answer}
                   </div>
@@ -364,7 +396,7 @@ export default function AssignmentCreate() {
                   onClick={() => removeById(c.id)}
                   className="flex gap-2 cursor-pointer text-delete font-semibold"
                 >
-                  <DeleteIcon className="w-6 h-6 text-delete "/>
+                  <DeleteIcon className="w-6 h-6 text-delete " />
                   Törlés
                 </button>
               </div>
@@ -377,7 +409,7 @@ export default function AssignmentCreate() {
 }
 
 function parseCoordinate(s: string): XY | null {
-  const parts = s.split(",").map((p) => p.trim());
+  const parts = s.split(',').map((p) => p.trim());
   if (parts.length !== 2) return null;
 
   const x = Number(parts[0]);
@@ -387,7 +419,12 @@ function parseCoordinate(s: string): XY | null {
   return { x, y };
 }
 
-function containFit(frameW: number, frameH: number, imgW: number, imgH: number) {
+function containFit(
+  frameW: number,
+  frameH: number,
+  imgW: number,
+  imgH: number,
+) {
   const scale = Math.min(frameW / imgW, frameH / imgH);
   const drawW = imgW * scale;
   const drawH = imgH * scale;
