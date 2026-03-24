@@ -10,6 +10,7 @@ export default {
         secondaryFont: '#5B5B5B',
         gray: '#818181',
         primaryDisabled: '#2E6544CC',
+        alert: '#FF575A',
       },
       fontSize: {
         TaskTitle: '30px',

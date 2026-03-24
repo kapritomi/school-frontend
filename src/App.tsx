@@ -1,8 +1,9 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { CreateTaskPage } from './pages/CreateTaskPage';
-import { Login } from './pages/Login';
+import { Login } from './pages/Login/Login';
 import { TeacherHomePage } from './pages/TeacherHomePage';
+import { ClassEdit } from './pages/ClassView/ClassEdit';
 
 export default function App() {
   const router = createBrowserRouter([
@@ -13,6 +14,10 @@ export default function App() {
     {
       path: '/teacherHomePage',
       element: <TeacherHomePage />,
+    },
+    {
+      path: '/editClass/:classroomId',
+      element: <ClassEdit />,
     },
     {
       path: '/',
