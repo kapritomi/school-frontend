@@ -11,6 +11,7 @@ export default {
         gray: '#818181',
         primaryDisabled: '#2E6544CC',
         alert: '#FF575A',
+        darkGrayText:"#272727"
       },
       fontSize: {
         TaskTitle: '30px',
