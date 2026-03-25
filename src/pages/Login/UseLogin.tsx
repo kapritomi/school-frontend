@@ -7,8 +7,8 @@ export type Logincredentials = {
 };
 
 export const useLogin = () => {
-  const [email, setEmail] = useState<null | string>("test@test.com");
-  const [password, setPassword] = useState<null | string>("sajt");
+  const [email, setEmail] = useState<null | string>('test@test.com');
+  const [password, setPassword] = useState<null | string>('sajt');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLodaing, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ export const useLogin = () => {
       email: email,
       password: password,
     };
-    console.log(credentials);
+
     try {
       const response = await loginUser(credentials);
 

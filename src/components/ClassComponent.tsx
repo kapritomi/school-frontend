@@ -1,9 +1,9 @@
 type ClassProps = {
   id: number;
   name: string;
-  onClick:()=>void;
+  onClick: () => void;
 };
-export const ClassComponent = ({ id, name,onClick }: ClassProps) => {
+export const ClassComponent = ({ id, name, onClick }: ClassProps) => {
   return (
     <div
       onClick={onClick}
