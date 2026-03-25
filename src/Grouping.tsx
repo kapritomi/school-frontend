@@ -1,84 +1,8 @@
-import { useMemo, useState } from 'react'
-
+import { useMemo, useState, useEffect } from 'react'
+import type { TaskJson } from './types/tasks';
     type Card = { id: number; name: string; };
-    type Group = { id: number; name: string; };
     type Placement = Record<number, number | null>;
 
-    const taskData = {
-        task_title: "Állatok csoportosítása",
-        task_description: "Húzd a megfelelő csoportba",
-        task_type: "grouping",
-        groups: [
-            {
-                id: 1,
-                name: "Emlősök"
-            },
-            {
-                id: 2,
-                name: "Halak"
-            },
-            {
-                id: 3,
-                name: "Madarak"
-            },
-            {
-                id: 4,
-                name: "Hüllők"
-            }
-        ],
-        group_items: [
-            {
-                id: 1,
-                name: "Kutya"
-            },
-            {
-                id: 2,
-                name: "óriási kék elefántcsontszobor vitrínben állva ott. ahol a kecske szarik amikor a fecske énekel ott a"
-            },
-            {
-                id: 3,
-                name: "Kutya"
-            },
-            {
-                id: 4,
-                name: "Ponty"
-            },
-            {
-                id: 5,
-                name: "Harcsa"
-            },
-            {
-                id: 6,
-                name: "Sas"
-            },
-            {
-                id: 7,
-                name: "Galamb"
-            },
-            {
-                id: 8,
-                name: "Teknős"
-            },
-            {
-                id: 9,
-                name: "Aligátor"
-            }
-        ]
-    }
-
-    const groups: Group[] = taskData.groups.map((q) => ({
-        id: q.id,
-        name: q.name,
-    }));
-    const cards: Card[] = taskData.group_items.map((a) => ({
-        id: a.id,
-        name: a.name,
-        
-    }));
-
-    const initialPlacement: Placement = Object.fromEntries(
-        cards.map((c) => [c.id, null])
-    );
     const groupColors: Record<number, string> = {
         1: "#FFE4E6", // emlősök
         2: "#DBEAFE", // halak
@@ -86,36 +10,59 @@ import { useMemo, useState } from 'react'
         4: "#FEF3C7", // hüllők
     };
 
-function Grouping(){
-    const [placement, setPlacement] = useState<Placement>(initialPlacement);
+function Grouping({ task }: { task: TaskJson }){
+    if (!task.grouping) return null;
 
+    const groups = task.grouping.groups.map((g, index) => ({
+        id: index + 1,
+        name: g.name,
+    }));
+
+    const cards = task.grouping.groups.flatMap((g, gIndex) =>
+        g.items.map((item, itemIndex) => ({
+        id: gIndex * 100 + itemIndex,
+        name: item.name,
+        }))
+    );
+
+    const initialPlacement: Placement = useMemo(
+        () => Object.fromEntries(cards.map((c) => [c.id, null])),
+        [cards]
+    );
+    const [placement, setPlacement] = useState<Placement>(initialPlacement);
+   
     const [draggingId, setDraggingId] = useState<number | null>(null);
     
-      const cardById = useMemo(() => new Map(cards.map((c) => [c.id, c])), []);
+    const cardById = useMemo(
+        () => new Map(cards.map((c) => [c.id, c])),
+        [cards]
+    );
     
-      const slotCardIds = (slotId: number) =>
+    const slotCardIds = (slotId: number) =>
         Object.keys(placement).filter((id) => placement[Number(id)] === slotId);
     
-      const dropToSlot = (slotId: number) => {
-        if (!draggingId) return;
-         // egy slotba 1 kártya
-    
-        setPlacement((prev) => ({ ...prev, [draggingId]: slotId }));
-        setDraggingId(null);
-    
-        
-      };
-    
-      const dropToPool = () => {
-        if (!draggingId) return;
-        setPlacement((prev) => ({ ...prev, [draggingId]: null }));
-        setDraggingId(null);
-    
-        
-      };
-    
-      const poolCards = cards.filter((c) => placement[c.id] === null);
+    const dropToSlot = (slotId: number) => {
+    if (!draggingId) return;
+        // egy slotba 1 kártya
 
+    setPlacement((prev) => ({ ...prev, [draggingId]: slotId }));
+    setDraggingId(null);
+
+    
+    };
+    
+    const dropToPool = () => {
+    if (!draggingId) return;
+    setPlacement((prev) => ({ ...prev, [draggingId]: null }));
+    setDraggingId(null);
+
+    
+    };
+    
+    const poolCards = cards.filter((c) => placement[c.id] === null);
+    useEffect(() => {
+        setPlacement(initialPlacement);
+    }, [initialPlacement]);
     return(
         <div>
             {/* Csoportok */}

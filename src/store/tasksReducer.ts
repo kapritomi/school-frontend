@@ -86,6 +86,22 @@ export function tasksReducer(state: TasksState, action: TasksAction): TasksState
             questions: [],
             },
           }
+          : 
+        type === "pair"
+        ? {
+            ...base,
+            pairing: {
+              pairing_groups: [],
+            },
+          }
+          : 
+        type === "grouping"
+        ? {
+            ...base,
+            grouping: {
+              groups: [],
+            },
+          }
         :base;
 
       return {

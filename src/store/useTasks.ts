@@ -18,7 +18,7 @@ export function useTasks() {
 
     selectTask: (item: SidebarItem) => dispatch({ type: "SELECT_TASK", id: item.id }),
     createTask: (slotIndex: number, label: string, type: TaskType) =>
-      dispatch({ type: "CREATE_TASK", payload: { slotIndex, label, type } }),
+    dispatch({ type: "CREATE_TASK", payload: { slotIndex, label, type } }),
     removeTask: (id: string) => dispatch({ type: "REMOVE_TASK", id }),
     updateTask: (task: TaskJson) => dispatch({ type: "UPDATE_TASK", task }),
     reorderSlots: (from: number, to: number) => dispatch({ type: "REORDER_SLOTS", from, to }),

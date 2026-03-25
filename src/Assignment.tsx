@@ -1,43 +1,26 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { TaskJson } from "./types/tasks";
 
-type Task = {
-  task_title: string;
-  task_description: string;
-  task_type: string;
-  img: string | null;
-  coordinates: { id: number; coordinate: string }[];
-  answers: string[];
-};
 
 type XY = { x: number; y: number };
-
-function Assignment() {
-  const task: Task = {
-    task_title: "Quam.",
-    task_description: "Quisquam ut officia non.",
-    task_type: "assignment",
-    img: "/image.jpg",
-    coordinates: [
-      { id: 1, coordinate: "1004,206" },
-      { id: 2, coordinate: "763,227" },
-      { id: 3, coordinate: "1069,875" },
-      { id: 4, coordinate: "183,787" },
-      { id: 5, coordinate: "1453,228" },
-    ],
-    answers: ["consequuntur", "quisquam", "aut", "molestias", "id"],
-  };
+type Point = {
+  index: number;
+  xy: XY;
+  answers: string[];
+};
+function Assignment({ task }: { task: TaskJson }) {
+  if (!task.assignment) return null;
 
   const frameW = 1800;
   const frameH = 900;
-  const src = task.img ?? "/image.jpg";
+  const src = task.assignment.image ?? "/image.jpg";
 
   const imgRef = useRef<HTMLImageElement>(null);
   const [natural, setNatural] = useState<{ w: number; h: number } | null>(null);
 
   // modal state
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<{ id: number; xy: XY } | null>(null);
-
+const [selected, setSelected] = useState<Point | null>(null);
   // crop preview canvas
   const cropCanvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -62,12 +45,16 @@ function Assignment() {
     return containFit(frameW, frameH, natural.w, natural.h);
   }, [frameW, frameH, natural]);
 
-  const points = useMemo(() => {
-    return task.coordinates
-      .map((c) => ({ id: c.id, xy: parseCoordinate(c.coordinate) }))
-      .filter((p): p is { id: number; xy: XY } => p.xy !== null);
-  }, [task.coordinates]);
+ const points = useMemo(() => {
+  if (!task.assignment) return [];
 
+  return task.assignment.coordinatesAndAnswers
+    .map((c, index) => {
+      const xy = parseCoordinate(c.coordinate);
+      return xy ? { index, xy, answers: c.answers.map(a => a.answer) } : null;
+    })
+    .filter((p): p is { index: number; xy: XY; answers: string[] } => p !== null);
+}, [task.assignment]);
   // amikor kiválasztasz egy pontot, rajzoljuk ki a környezetét a canvasra
   useEffect(() => {
     if (!open || !selected || !natural) return;
@@ -142,7 +129,7 @@ function Assignment() {
 
         {fit &&
           natural &&
-          points.map(({ id, xy }) => {
+          points.map(({ index, xy, answers }) => {
             // natural px -> UV
             const u = clamp01(xy.x / natural.w);
             const v = clamp01(xy.y / natural.h);
@@ -154,10 +141,10 @@ function Assignment() {
             return (
               
               <div
-                key={id}
+                key={index}
                 onClick={(e) => {
                   e.stopPropagation();
-                  setSelected({ id, xy });
+                  setSelected({ index, xy, answers });
                   setOpen(true);
                 }}
                 
@@ -237,7 +224,7 @@ function Assignment() {
                 </div>
 
                 <div style={{ display: "grid", gap: 8 }}>
-                  {task.answers.map((a, i) => (
+                  {selected?.answers.map((a, i) => (
                     <button
                       key={i}
                       onClick={() => alert(`Kiválasztva: ${a}`)}

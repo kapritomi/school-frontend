@@ -1,117 +1,36 @@
 import { useMemo, useState } from 'react'
+import type { TaskJson } from './types/tasks';
 
   type Card = { id: number; answer: string; img: string | null };
   type Slot = { id: number; question: string; img: string | null};
   type Placement = Record<number, number | null>;
-    const shuffle = <T,>(array: T[]): T[] => {
-    return [...array].sort(() => Math.random() - 0.5);
-    };
-  const taskData = {
-    task_title: "Magnam.",
-    task_description: "Quia aut eaque dolor numquam.",
-    task_type: "pairing",
-    feedback: "et",
-    pairQuestions: [
-      {
-        id: 1,
-        question: "Et nam accusantium consequuntur voluptatibus doloremque dolorum.",
-        img: null
-      },
-      {
-          "id": 2,
-          "question": "Numquam recusandae mollitia blanditiis fugit voluptas est.",
-          "img": null
-      },
-      {
-          "id": 3,
-          "question": "Corrupti ea in quia. Molestiae porro nemo fuga.",
-          "img": null
-      },
-      {
-          "id": 4,
-          "question": "Nihil quisquam architecto iusto architecto nam ut maxime. Neque numquam iure totam adipisci cum pariatur quas.",
-          "img": null
-      },
-      {
-          "id": 5,
-          "question": "Eligendi ea consequatur quia magnam et eveniet. Minima quia velit deleniti eius modi eligendi eum.",
-          "img": null
-      },
-      {
-          "id": 6,
-          "question": "Officiis eveniet dolor cumque ratione pariatur molestias. Laboriosam nulla beatae sed est inventore maiores.",
-          "img": null
-      },
-      {
-          "id": 7,
-          "question": "Ab sint eum illo.",
-          "img": null
-      },
-      {
-          "id": 8,
-          "question": "Ut aliquid suscipit veritatis sed consequatur asperiores illo dolores.",
-          "img": null
-      }
-    ],
-    pairAnswers: [
-      {
-        id: 1,
-        answer: "Excepturi commodi quaerat quibusdam.",
-        img: null
-      },
-      {
-          "id": 2,
-          "answer": "Et deserunt fugiat excepturi et.",
-          "img": null
-      },
-      {
-          "id": 3,
-          "answer": "Nihil quia reprehenderit eos at veritatis aliquam deleniti. Est numquam qui amet.",
-          "img": null
-      },
-      {
-          "id": 4,
-          "answer": "Necessitatibus est eius et animi totam facere fugit.",
-          "img": null
-      },
-      {
-          "id": 5,
-          "answer": "Odit et cupiditate quibusdam illum minima unde. Et vel quaerat similique sequi officiis ad hic.",
-          "img": null
-      },
-      {
-          "id": 6,
-          "answer": "Quos facilis numquam fugit asperiores illo eum.",
-          "img": null
-      },
-      {
-          "id": 7,
-          "answer": "Ratione et nesciunt eum et inventore eos odio. Eos aliquam et autem quidem inventore eos quisquam.",
-          "img": null
-      },
-      {
-          "id": 8,
-          "answer": "Sint perferendis sed aut. In nostrum ipsum libero odio.",
-          "img": null
-      }
-    ]
-  }
-  const slots: Slot[] = taskData.pairQuestions.map((q) => ({
-    id: q.id,
-    question: q.question,
-    img: q.img,
-  }));
-  const cards: Card[] = shuffle(taskData.pairAnswers).map((a) => ({
-    id: a.id,
-    answer: a.answer,
-    img: a.img,
-  }));
- 
-  const initialPlacement: Placement = Object.fromEntries(
-  cards.map((c) => [c.id, null])
-);
+    
+
+
   
-function Pair() {
+function Pairing({ task }: { task: TaskJson }) {
+  if (!task.pairing) return null;
+  const slots: Slot[] = task.pairing.pairing_groups.map((q) => ({
+      id: q.pair_question.length, // vagy q.id, ha van
+      question: q.pair_question,
+      img: null,
+    }));
+
+  const cards: Card[] = task.pairing.pairing_groups.map((a) => ({
+    id: a.pair_answer.length, // vagy a.id
+    answer: a.pair_answer,
+    img: null,
+  }));
+  const shuffle = <T,>(array: T[]): T[] =>
+    [...array].sort(() => Math.random() - 0.5);
+  const shuffledCards = useMemo(() => shuffle(cards), [task]);
+ 
+  const initialPlacement: Placement = useMemo(
+    () => Object.fromEntries(shuffledCards.map((c) => [c.id, null])),
+    [shuffledCards]
+  );
+
+
   //Kártyák helyzete, null = poolban van
   const [placement, setPlacement] = useState<Placement>(initialPlacement);
   //minden hibátlan üzenet
@@ -169,9 +88,9 @@ function Pair() {
   return (
     <div >
       {/* feladat címe */}
-      <div className='task-padding font-semibold text-TaskTitle'>{taskData.task_title}</div>
+      <div className='task-padding font-semibold text-TaskTitle'>{task.task_title}</div>
       {/* feladat leírása */}
-      <div className='task-padding font-semibold text-TaskDesc'>{taskData.task_description}</div>
+      <div className='task-padding font-semibold text-TaskDesc'>{task.task_description}</div>
       
       <div className='flex flex-wrap'>
         {/* bal rész: slotok */}
@@ -269,4 +188,4 @@ function Pair() {
   )
 }
 
-export default Pair
+export default Pairing
