@@ -35,12 +35,15 @@ export const ClassEdit = () => {
     setIsFetching(true);
     if (classroomId) {
       getStudents(Number(classroomId))
-        .then((res) =>
+      .then((res) =>{
           setClassroomData({
             name: res.classroom_name,
             students: res.students,
             clasroom_id: res.classroom_id,
-          }),
+          })
+          console.log(res)
+        }
+          
         )
         .catch((e) => console.log(e))
         .finally(() => setIsFetching(false));
@@ -141,5 +144,6 @@ export const ClassEdit = () => {
         </div>
       )}
     </div>
+   
   );
 };

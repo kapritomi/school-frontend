@@ -81,7 +81,6 @@ export function tasksReducer(
               ...base,
               assignment: { image: '', coordinatesAndAnswers: [] },
             }
-<<<<<<< HEAD
           : 
         type === "short"
         ? {
@@ -107,16 +106,6 @@ export function tasksReducer(
             },
           }
         :base;
-=======
-          : type === 'short'
-            ? {
-                ...base,
-                short_answer: {
-                  questions: [],
-                },
-              }
-            : base;
->>>>>>> 31806afde49b6d7849fe24cb1c0150a530d04dc3
 
       return {
         ...state,
