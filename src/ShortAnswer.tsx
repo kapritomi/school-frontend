@@ -45,4 +45,4 @@ function ShortAnswer ({ task }: ShortAnswerProps){
     </div>
     )
 }
-export default ShortAnswer
+export default ShortAnswer;

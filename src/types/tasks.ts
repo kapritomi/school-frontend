@@ -1,4 +1,4 @@
-export type TaskType = "pair" | "grouping" | "assignment" | "short";
+export type TaskType = 'pair' | 'grouping' | 'assignment' | 'short';
 
 export type SidebarItem = { id: string; label: string; type: TaskType };
 export type Slot = SidebarItem | null;
@@ -6,13 +6,13 @@ export type Slot = SidebarItem | null;
 // ---- JSON struktúra (a képed alapján) ----
 
 // ---- Assignment ----
-export type Answer = { 
-  answer: string; 
-  isCorrect: boolean 
+export type Answer = {
+  answer: string;
+  isCorrect: boolean;
 };
-export type CoordinateAndAnswers = { 
-  coordinate: string; 
-  answers: Answer[] 
+export type CoordinateAndAnswers = {
+  coordinate: string;
+  answers: Answer[];
 };
 export type AssignmentJson = {
   image: string;
@@ -26,8 +26,9 @@ export type ShortQuestion = {
 };
 export type ShortAnswerJson = {
   questions: ShortQuestion[];
-}
+};
 
+<<<<<<< HEAD
 // ---- Pairing ----
 export type PairGroup = {
   pair_question: string;
@@ -48,6 +49,10 @@ export type Group = {
 export type GroupingJson = {
   groups: Group[];
 };
+=======
+// ---- Grouping ----
+export type Group = {};
+>>>>>>> 31806afde49b6d7849fe24cb1c0150a530d04dc3
 
 export type TaskJson = {
   id: string; // belső azonosító
@@ -60,7 +65,6 @@ export type TaskJson = {
   grouping?: GroupingJson;
 };
 
-
 export type TasksJson = {
   tasks: TaskJson[];
 };
@@ -68,8 +72,16 @@ export type TasksJson = {
 export const MAX_ITEMS = 10;
 
 export const TASK_TYPE_ID: Record<TaskType, number> = {
+<<<<<<< HEAD
   grouping: 1,
   pair: 2,
   assignment: 3,
   short: 4,
 };
+=======
+  pair: 1,
+  grouping: 2,
+  short: 3,
+  assignment: 4,
+};
+>>>>>>> 31806afde49b6d7849fe24cb1c0150a530d04dc3
