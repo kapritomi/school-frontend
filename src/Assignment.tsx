@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { TaskJson } from "./types/tasks";
-
+import { useEffect, useMemo, useRef, useState } from 'react';
+import type { TaskJson } from './types/tasks';
 
 type XY = { x: number; y: number };
 type Point = {
@@ -13,14 +12,14 @@ function Assignment({ task }: { task: TaskJson }) {
 
   const frameW = 1800;
   const frameH = 900;
-  const src = task.assignment.image ?? "/image.jpg";
+  const src = task.assignment.image ?? '/image.jpg';
 
   const imgRef = useRef<HTMLImageElement>(null);
   const [natural, setNatural] = useState<{ w: number; h: number } | null>(null);
 
   // modal state
   const [open, setOpen] = useState(false);
-const [selected, setSelected] = useState<Point | null>(null);
+  const [selected, setSelected] = useState<Point | null>(null);
   // crop preview canvas
   const cropCanvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -45,16 +44,20 @@ const [selected, setSelected] = useState<Point | null>(null);
     return containFit(frameW, frameH, natural.w, natural.h);
   }, [frameW, frameH, natural]);
 
- const points = useMemo(() => {
-  if (!task.assignment) return [];
+  const points = useMemo(() => {
+    if (!task.assignment) return [];
 
-  return task.assignment.coordinatesAndAnswers
-    .map((c, index) => {
-      const xy = parseCoordinate(c.coordinate);
-      return xy ? { index, xy, answers: c.answers.map(a => a.answer) } : null;
-    })
-    .filter((p): p is { index: number; xy: XY; answers: string[] } => p !== null);
-}, [task.assignment]);
+    return task.assignment.coordinatesAndAnswers
+      .map((c, index) => {
+        const xy = parseCoordinate(c.coordinate);
+        return xy
+          ? { index, xy, answers: c.answers.map((a) => a.answer) }
+          : null;
+      })
+      .filter(
+        (p): p is { index: number; xy: XY; answers: string[] } => p !== null,
+      );
+  }, [task.assignment]);
   // amikor kiválasztasz egy pontot, rajzoljuk ki a környezetét a canvasra
   useEffect(() => {
     if (!open || !selected || !natural) return;
@@ -215,7 +218,7 @@ const [selected, setSelected] = useState<Point | null>(null);
                   Válaszlehetőségek
                 </div>
 
-                <div style={{ display: "grid", gap: 8 }}>
+                <div style={{ display: 'grid', gap: 8 }}>
                   {selected?.answers.map((a, i) => (
                     <button
                       key={i}

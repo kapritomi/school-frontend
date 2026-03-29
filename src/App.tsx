@@ -1,10 +1,10 @@
-
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { CreateTaskPage } from './pages/CreateTaskPage';
 import { Login } from './pages/Login/Login';
 import { TeacherHomePage } from './pages/TeacherHomePage';
 import { ClassEdit } from './pages/ClassView/ClassEdit';
+import { BulkStudentUpload } from './pages/BulkStudentUpload/BulkStudentUpload';
 
 export default function App() {
   const router = createBrowserRouter([
@@ -19,6 +19,10 @@ export default function App() {
     {
       path: '/editClass/:classroomId',
       element: <ClassEdit />,
+    },
+    {
+      path: '/bulkStudentUpload/:classroomId',
+      element: <BulkStudentUpload />,
     },
     {
       path: '/',

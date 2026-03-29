@@ -81,31 +81,28 @@ export function tasksReducer(
               ...base,
               assignment: { image: '', coordinatesAndAnswers: [] },
             }
-          : 
-        type === "short"
-        ? {
-            ...base,
-            short_answer: {
-            questions: [],
-            },
-          }
-          : 
-        type === "pair"
-        ? {
-            ...base,
-            pairing: {
-              pairing_groups: [],
-            },
-          }
-          : 
-        type === "grouping"
-        ? {
-            ...base,
-            grouping: {
-              groups: [],
-            },
-          }
-        :base;
+          : type === 'short'
+            ? {
+                ...base,
+                short_answer: {
+                  questions: [],
+                },
+              }
+            : type === 'pair'
+              ? {
+                  ...base,
+                  pairing: {
+                    pairing_groups: [],
+                  },
+                }
+              : type === 'grouping'
+                ? {
+                    ...base,
+                    grouping: {
+                      groups: [],
+                    },
+                  }
+                : base;
 
       return {
         ...state,

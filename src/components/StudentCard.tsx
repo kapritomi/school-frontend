@@ -35,7 +35,6 @@ export const StudentCard = ({
           maxLength={30}
           onChange={(e) => setNewStudentName(e.target.value)}
           defaultValue={name}
-
         />
       ) : (
         <p className="text-[24px] w-2/3 max-w-2/3 truncate font-medium text-darkGrayText">
