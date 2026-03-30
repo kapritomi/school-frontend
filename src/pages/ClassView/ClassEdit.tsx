@@ -6,7 +6,7 @@ import { EditIcon } from '../../assets/Icons/EditIcon';
 import { BinIcon } from '../../assets/Icons/BinIcon';
 import { useClassEdit, type Student } from './useClassEdit';
 import { ClipLoader } from 'react-spinners';
-import { ErrorModal } from '../../components/ErrorModal';
+import { Modal } from '../../components/Modal';
 
 export const ClassEdit = () => {
   const { classroomId } = useParams();
@@ -18,8 +18,8 @@ export const ClassEdit = () => {
     setEditView,
     classroomData,
     studentName,
-    errorMessage,
-    modalErrorMessage,
+    message,
+    setMessage,
     editView,
     editingId,
     handleStudentEdit,
@@ -28,7 +28,6 @@ export const ClassEdit = () => {
     isFetching,
     setIsFetching,
     handleDeleteClassroom,
-    setModalErrorMessage,
   } = useClassEdit();
 
   useEffect(() => {
@@ -50,11 +49,12 @@ export const ClassEdit = () => {
 
   return (
     <div className="px-[41px] w-screen h-screen relative">
-      {modalErrorMessage && (
-        <ErrorModal
-          setModalErrorMessage={setModalErrorMessage}
-          text={modalErrorMessage}
-        ></ErrorModal>
+      {message && (
+        <Modal
+          setModalErrorMessage={setMessage}
+          text={message.message}
+          type={message.type}
+        ></Modal>
       )}
       {isFetching && (
         <div className="w-full h-full z-20 flex right-0 items-center justify-center absolute  bg-zinc-400 bg-opacity-40 ">
@@ -79,13 +79,10 @@ export const ClassEdit = () => {
                     <input
                       maxLength={30}
                       onChange={(e) => handleInputChange(e.target.value)}
-                      className={`w-[333px] ${errorMessage ? 'border-alert' : 'border-lightBorder'} p-4 outline-none focus:border-primary focus:border-[2px] h-[48px] border-[1px] rounded-[8px]`}
+                      className={`w-[333px]  border-lightBorder p-4 outline-none focus:border-primary focus:border-[2px] h-[48px] border-[1px] rounded-[8px]`}
                       type="text"
                       value={studentName ? studentName : ''}
                     />
-                    <p className="text-[16px] font-semibold text-alert">
-                      {errorMessage}
-                    </p>
                   </div>
                   <button
                     disabled={!studentName || studentName.length === 0}

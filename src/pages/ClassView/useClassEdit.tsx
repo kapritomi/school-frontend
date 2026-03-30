@@ -7,6 +7,7 @@ import {
 } from '../../api/deleteStudents';
 import { useNavigate } from 'react-router-dom';
 import { deleteClassroom } from '../../api/deleteClasroom';
+import type { MessageType } from '../../types/messageType';
 
 export type studentObject = {
   classroom_id: number;
@@ -26,13 +27,10 @@ export const useClassEdit = () => {
   const [classroomData, setClassroomData] = useState<ClassroomData | null>(
     null,
   );
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [message, setMessage] = useState<MessageType | null>(null);
   const [editView, setEditView] = useState<boolean>(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isFetching, setIsFetching] = useState<boolean>(false);
-  const [modalErrorMessage, setModalErrorMessage] = useState<null | string>(
-    null,
-  );
 
   const navigate = useNavigate();
   const handleStudentEdit = (id: number | null) => {
@@ -54,6 +52,10 @@ export const useClassEdit = () => {
       };
       const response = await updateStudent(updateData, student_id);
       console.log(response);
+      setMessage({
+        type: 'success',
+        message: response.message,
+      });
 
       setClassroomData((prev) => {
         if (!prev) return null;
@@ -67,7 +69,10 @@ export const useClassEdit = () => {
       });
       setEditingId(null);
     } catch (e: any) {
-      setModalErrorMessage(e.response.data.message);
+      setMessage({
+        type: 'error',
+        message: e.response.data.message,
+      });
     } finally {
       setIsFetching(false);
     }
@@ -83,9 +88,12 @@ export const useClassEdit = () => {
         classroom_id: classroomData.clasroom_id,
         student_ids: [student_id],
       };
-      console.log(deleteData);
+
       const response = await deleteStudents(deleteData);
-      console.log(response);
+      setMessage({
+        type: 'success',
+        message: response.message,
+      });
 
       setClassroomData((prev) => {
         if (!prev) return null;
@@ -99,7 +107,10 @@ export const useClassEdit = () => {
       });
       setEditingId(null);
     } catch (e: any) {
-      setModalErrorMessage(e.response.data.message);
+      setMessage({
+        type: 'error',
+        message: e.response.data.message,
+      });
     } finally {
       setIsFetching(false);
     }
@@ -112,7 +123,10 @@ export const useClassEdit = () => {
         const response = await deleteClassroom(classroomData?.clasroom_id);
         navigate('/teacherHomePage');
       } catch (e: any) {
-        setModalErrorMessage(e.response.data.message);
+        setMessage({
+          type: 'error',
+          message: e.response.data.message,
+        });
       } finally {
         setIsFetching(false);
       }
@@ -131,7 +145,7 @@ export const useClassEdit = () => {
       };
       setIsFetching(true);
       try {
-        setErrorMessage(null);
+        setMessage(null);
         const response = await storeStudent(postData);
 
         if (classroomData) {
@@ -149,7 +163,10 @@ export const useClassEdit = () => {
           });
         }
       } catch (e: any) {
-        setErrorMessage(e.response.data.message);
+        setMessage({
+          type: 'error',
+          message: e.response.data.message,
+        });
       } finally {
         setIsFetching(false);
         setStudentName('');
@@ -159,11 +176,10 @@ export const useClassEdit = () => {
   return {
     studentName,
     classroomData,
-    errorMessage,
+    message,
     editView,
     editingId,
     isFetching,
-    modalErrorMessage,
     handleStudentEdit,
     setEditView,
     setClassroomData,
@@ -173,6 +189,6 @@ export const useClassEdit = () => {
     setIsFetching,
     handleDeleteUsers,
     handleDeleteClassroom,
-    setModalErrorMessage,
+    setMessage,
   };
 };

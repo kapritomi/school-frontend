@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { bulkUpload } from '../../api/bulkUpload';
 import type { MessageType } from '../../types/messageType';
 
@@ -22,20 +22,26 @@ export const useBulkUpload = () => {
         });
         console.log(response);
       } catch (e: any) {
-        setMessage({
-          type: 'success',
-          message: e.response.data.message,
-        });
+        // setMessage({
+        //   type: 'success',
+        //   message: e.response.data.message,
+        // });
+        console.log(e);
       } finally {
         setIsFetching(false);
       }
     }
   };
+
+  useEffect(() => {
+    console.log(message);
+  }, [message]);
   return {
     file,
     setFile,
     handleBulkUpload,
     isFetching,
     message,
+    setMessage,
   };
 };
