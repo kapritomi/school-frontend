@@ -13,11 +13,13 @@ export const Navbar = () => {
       </button>
       <div className="flex gap-8 font-semibold text-[20px] text-primary">
         <button
-          className={`hover:text-secondary transition-all duration-150 ${location.pathname.includes('worksheets') ? 'border-b-[1px] border-[1px] border-primary' : 'border-none'}`}
+          onClick={() => navigate('/worksheets')}
+          className={`hover:text-secondary transition-all duration-150 ${location.pathname.includes('worksheets') ? 'border-b-[1px]  border-primary' : 'border-none'}`}
         >
           Feladatsoraim
         </button>
         <button
+          onClick={() => navigate('/teacherHomePage')}
           className={`hover:text-secondary transition-all duration-150 ${location.pathname.includes('Class') || location.pathname.includes('teacherHomePage') ? ' border-b-[1px] border-primary' : 'border-none'}`}
         >
           Osztályok

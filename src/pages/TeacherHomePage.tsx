@@ -5,35 +5,46 @@ import { getClassrooms } from '../api/getClassrooms';
 import { ClipLoader } from 'react-spinners';
 import { useNavigate } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
+import { useQuery } from '@tanstack/react-query';
 
 export const TeacherHomePage = () => {
-  const [classes, setClasses] = useState<ClassType[]>([]);
-  const [isFetching, setIsFetching] = useState<boolean>(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  // const [classes, setClasses] = useState<ClassType[]>([]);
+  // const [isFetching, setIsFetching] = useState<boolean>(true);
+  // const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    setIsFetching(true);
-    getClassrooms()
-      .then((res) => setClasses(res.classRooms))
-      .catch((e) => setErrorMessage(e))
-      .finally(() => setIsFetching(false));
-  }, []);
+  const {
+    data: classrooms,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['classrooms', 'all'],
+    queryFn: () => getClassrooms(),
 
+    staleTime: 1000 * 60 * 5, // 5 percig nem kéri le újra, ha nem muszáj
+  });
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-red-500 font-bold">
+          Hiba történt az adatok betöltésekor!
+        </p>
+      </div>
+    );
+  }
   return (
     <div className="relative w-screen h-screen max-h-screen overflow-y-hidden">
       <Navbar></Navbar>
-      <div className="px-[41px] mt-[70px] overflow-y-scroll w-full h-full">
+      <div className="px-[41px] mt-[70px] overflow-y-auto w-full h-full">
         <p className="text-primary text-[40px] font-semibold mb-[41px]">
           Osztályok
         </p>
-        {isFetching ? (
-          <ClipLoader size={90} color="#2E6544"></ClipLoader>
-        ) : errorMessage ? (
-          <p>{errorMessage}</p>
-        ) : (
+        {isLoading && <ClipLoader size={90} color="#2E6544"></ClipLoader>}
+
+        {classrooms && (
           <div className="flex flex-wrap gap-[56px]">
-            {classes.map((item: ClassType) => (
+            {classrooms.map((item: ClassType) => (
               <ClassComponent
                 onClick={() => navigate(`/editClass/${item.id}`)}
                 id={item.id}

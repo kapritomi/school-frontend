@@ -5,6 +5,7 @@ import { Login } from './pages/Login/Login';
 import { TeacherHomePage } from './pages/TeacherHomePage';
 import { ClassEdit } from './pages/ClassView/ClassEdit';
 import { BulkStudentUpload } from './pages/BulkStudentUpload/BulkStudentUpload';
+import { Worksheets } from './pages/Worksheets/Worksheets';
 
 export default function App() {
   const router = createBrowserRouter([
@@ -15,6 +16,10 @@ export default function App() {
     {
       path: '/teacherHomePage',
       element: <TeacherHomePage />,
+    },
+    {
+      path: '/worksheets',
+      element: <Worksheets />,
     },
     {
       path: '/editClass/:classroomId',

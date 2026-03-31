@@ -26,7 +26,7 @@ export const ClassEdit = () => {
   } = useQuery({
     queryKey: ['classroom', classroomId],
     queryFn: () => getOneClassroom(Number(classroomId)),
-    enabled: !!classroomId, 
+    enabled: !!classroomId,
     select: (res) => ({
       name: res.classroom_name,
       students: res.students,

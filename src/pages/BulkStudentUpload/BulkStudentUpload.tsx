@@ -4,7 +4,7 @@ import { useBulkUpload } from './UseBulkUpload';
 import table from '../../assets/table.png';
 import { Modal } from '../../components/Modal';
 import { Navbar } from '../../components/Navbar';
-import React from 'react'
+import React from 'react';
 export const BulkStudentUpload = () => {
   const { classroomId } = useParams();
   const { setFile, handleBulkUpload, isFetching, message, setMessage } =
@@ -34,7 +34,7 @@ export const BulkStudentUpload = () => {
   return (
     <div className="w-screen h-screen max-h-screen relative overflow-y-hidden">
       <Navbar></Navbar>
-      <div className="w-full mt-[70px] h-full overflow-y-scroll px-[41px]">
+      <div className="w-full mt-[70px] h-full overflow-y-auto px-[41px]">
         {isFetching && (
           <div className="w-full h-full z-20 top-0 flex right-0 items-center justify-center absolute bg-zinc-400 bg-opacity-40">
             <ClipLoader size={90} color="#2E6544" />
@@ -60,21 +60,19 @@ export const BulkStudentUpload = () => {
             vagy CSV) mindig kompatibilis legyen a feldolgozó rendszerrel.
           </p>
           <div className="flex flex-col gap-[10px]">
-            <p className="font-bold text-[22px]">1. A táblázat szerkezete:</p>
-          
-              A lista egyetlen oszlopból álljon, ahol az első sor a meghatározó
-              fejléc.
-              <ol className="list-disc list-inside ml-4">
-                <li>
-                  A1 cella (Fejléc): Kizárólag a name vagy a nev (ékezet nélkül
-                  vagy ékezettel: név) szót tartalmazhatja.
-                </li>
-                <li>
-                  A2 - A31 cellák: Ide kerülnek a diákok teljes nevei vagy
-                  becenevei, egymás alá felsorolva.
-                </li>
-              </ol>
-       
+            <p className="font-bold text-[22px]">1. A táblázat szerkezete:</p>A
+            lista egyetlen oszlopból álljon, ahol az első sor a meghatározó
+            fejléc.
+            <ol className="list-disc list-inside ml-4">
+              <li>
+                A1 cella (Fejléc): Kizárólag a name vagy a nev (ékezet nélkül
+                vagy ékezettel: név) szót tartalmazhatja.
+              </li>
+              <li>
+                A2 - A31 cellák: Ide kerülnek a diákok teljes nevei vagy
+                becenevei, egymás alá felsorolva.
+              </li>
+            </ol>
           </div>
           <div className="flex flex-col gap-[10px]">
             <p className="font-bold text-[22px]">2. Korlátok és szabályok</p>

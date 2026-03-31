@@ -42,31 +42,35 @@ export const useClassEdit = () => {
     }
   };
 
-
-  const handleUpdateStudent = async (student_id: number, name: string, classroom_id: number) => {
+  const handleUpdateStudent = async (
+    student_id: number,
+    name: string,
+    classroom_id: number,
+  ) => {
     if (!student_id || !name || !classroom_id) return;
 
     setIsFetching(true);
     try {
       const updateData = { name: name.trim() };
-      
-     
+
       const response = await updateStudent(updateData, student_id);
 
-      queryClient.setQueryData(['classroom', String(classroom_id)], (oldData: any) => {
-        if (!oldData) return oldData;
+      queryClient.setQueryData(
+        ['classroom', String(classroom_id)],
+        (oldData: any) => {
+          if (!oldData) return oldData;
 
-        return {
-          ...oldData,
-          students: oldData.students.map((s: any) => 
-            s.id === student_id ? { ...s, name: name.trim() } : s
-          ),
-        };
-      });
+          return {
+            ...oldData,
+            students: oldData.students.map((s: any) =>
+              s.id === student_id ? { ...s, name: name.trim() } : s,
+            ),
+          };
+        },
+      );
 
       setMessage({ type: 'success', message: response.message });
       setEditingId(null);
-
     } catch (e: any) {
       setMessage({ type: 'error', message: 'Hiba a mentés során!' });
     } finally {
@@ -88,16 +92,17 @@ export const useClassEdit = () => {
         student_ids: [student_id],
       };
       const response = await deleteStudents(deleteData);
-     queryClient.setQueryData(['classroom', String(classroom_id)], (oldData: any) => {
-        if (!oldData) return oldData;
+      queryClient.setQueryData(
+        ['classroom', String(classroom_id)],
+        (oldData: any) => {
+          if (!oldData) return oldData;
 
-        return {
-          ...oldData,
-          students: oldData.students.filter((s: any) => 
-            s.id !== student_id 
-          ),
-        };
-      });
+          return {
+            ...oldData,
+            students: oldData.students.filter((s: any) => s.id !== student_id),
+          };
+        },
+      );
       setMessage({
         type: 'success',
         message: response.message,
