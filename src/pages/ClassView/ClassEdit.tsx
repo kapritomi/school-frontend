@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getStudents } from '../../api/getStudents';
+import { getOneClassroom } from '../../api/getOneClassroom';
 import { StudentCard } from '../../components/StudentCard';
 import { EditIcon } from '../../assets/Icons/EditIcon';
 import { BinIcon } from '../../assets/Icons/BinIcon';
@@ -33,7 +33,7 @@ export const ClassEdit = () => {
   useEffect(() => {
     setIsFetching(true);
     if (classroomId) {
-      getStudents(Number(classroomId))
+      getOneClassroom(Number(classroomId))
         .then((res) => {
           setClassroomData({
             name: res.classroom_name,
