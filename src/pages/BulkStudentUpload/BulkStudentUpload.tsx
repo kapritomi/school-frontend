@@ -4,6 +4,7 @@ import { useBulkUpload } from './UseBulkUpload';
 import table from '../../assets/table.png';
 import { Modal } from '../../components/Modal';
 import { Navbar } from '../../components/Navbar';
+import React from 'react'
 export const BulkStudentUpload = () => {
   const { classroomId } = useParams();
   const { setFile, handleBulkUpload, isFetching, message, setMessage } =
@@ -31,12 +32,12 @@ export const BulkStudentUpload = () => {
     },
   ];
   return (
-    <div className="w-screen h-screen max-h-screen relative overflow-hidden">
+    <div className="w-screen h-screen max-h-screen relative overflow-y-hidden">
       <Navbar></Navbar>
-      <div className="w-full mt-[70px] h-full overflow-y-scroll px-[41px] pb-5">
+      <div className="w-full mt-[70px] h-full overflow-y-scroll px-[41px]">
         {isFetching && (
-          <div className="w-full h-full z-20 flex right-0 items-center justify-center absolute  bg-zinc-400 bg-opacity-40 ">
-            <ClipLoader size={90} color="#2E6544"></ClipLoader>
+          <div className="w-full h-full z-20 top-0 flex right-0 items-center justify-center absolute bg-zinc-400 bg-opacity-40">
+            <ClipLoader size={90} color="#2E6544" />
           </div>
         )}
         {message && (
@@ -60,7 +61,7 @@ export const BulkStudentUpload = () => {
           </p>
           <div className="flex flex-col gap-[10px]">
             <p className="font-bold text-[22px]">1. A táblázat szerkezete:</p>
-            <p>
+          
               A lista egyetlen oszlopból álljon, ahol az első sor a meghatározó
               fejléc.
               <ol className="list-disc list-inside ml-4">
@@ -73,7 +74,7 @@ export const BulkStudentUpload = () => {
                   becenevei, egymás alá felsorolva.
                 </li>
               </ol>
-            </p>
+       
           </div>
           <div className="flex flex-col gap-[10px]">
             <p className="font-bold text-[22px]">2. Korlátok és szabályok</p>
@@ -85,7 +86,7 @@ export const BulkStudentUpload = () => {
               </div>
               <div className="grid grid-cols-2 md:grid-cols-[300px_1fr]">
                 {rules.map((item) => (
-                  <>
+                  <React.Fragment key={item.id}>
                     {/* Címke oszlop */}
                     <div className=" p-4 font-bold  border-b border-gray">
                       {item.label}
@@ -94,7 +95,7 @@ export const BulkStudentUpload = () => {
                     <div className="p-4   border-b border-gray ">
                       {item.desc}
                     </div>
-                  </>
+                  </React.Fragment>
                 ))}
               </div>
             </div>
@@ -103,7 +104,7 @@ export const BulkStudentUpload = () => {
             <img className="w-full h-full object-cover" src={table} alt="" />
           </div>
 
-          <div className=" flex flex-col gap-[10px] ">
+          <div className=" flex flex-col gap-[10px] min-h-[200px] ">
             <p className="text-[30px] text-primary font-semibold">
               Fájl feltöltés
             </p>

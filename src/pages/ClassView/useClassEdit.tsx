@@ -8,6 +8,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { deleteClassroom } from '../../api/deleteClasroom';
 import type { MessageType } from '../../types/messageType';
+import { useQueryClient } from '@tanstack/react-query';
 
 export type studentObject = {
   classroom_id: number;
@@ -31,7 +32,7 @@ export const useClassEdit = () => {
   const [editView, setEditView] = useState<boolean>(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isFetching, setIsFetching] = useState<boolean>(false);
-
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const handleStudentEdit = (id: number | null) => {
     if (editingId === id) {
@@ -41,70 +42,67 @@ export const useClassEdit = () => {
     }
   };
 
-  const handleUpdateStudent = async (student_id: number, name: string) => {
-    if (!student_id || !name) {
-      return;
-    }
+
+  const handleUpdateStudent = async (student_id: number, name: string, classroom_id: number) => {
+    if (!student_id || !name || !classroom_id) return;
+
     setIsFetching(true);
     try {
-      const updateData = {
-        name: name,
-      };
+      const updateData = { name: name.trim() };
+      
+     
       const response = await updateStudent(updateData, student_id);
-      console.log(response);
-      setMessage({
-        type: 'success',
-        message: response.message,
-      });
 
-      setClassroomData((prev) => {
-        if (!prev) return null;
+      queryClient.setQueryData(['classroom', String(classroom_id)], (oldData: any) => {
+        if (!oldData) return oldData;
 
         return {
-          ...prev,
-          students: prev.students.map((student) =>
-            student.id === student_id ? { ...student, name: name } : student,
+          ...oldData,
+          students: oldData.students.map((s: any) => 
+            s.id === student_id ? { ...s, name: name.trim() } : s
           ),
         };
       });
+
+      setMessage({ type: 'success', message: response.message });
       setEditingId(null);
+
     } catch (e: any) {
-      setMessage({
-        type: 'error',
-        message: e.response.data.message,
-      });
+      setMessage({ type: 'error', message: 'Hiba a mentés során!' });
     } finally {
       setIsFetching(false);
     }
   };
 
-  const handleDeleteUsers = async (student_id: number) => {
-    if (!classroomData?.clasroom_id || !student_id) {
+  const handleDeleteUsers = async (
+    student_id: number,
+    classroom_id: number,
+  ) => {
+    if (!classroom_id || !student_id) {
       return;
     }
     setIsFetching(true);
     try {
       const deleteData: deleteStudentsType = {
-        classroom_id: classroomData.clasroom_id,
+        classroom_id: classroom_id,
         student_ids: [student_id],
       };
-
       const response = await deleteStudents(deleteData);
+     queryClient.setQueryData(['classroom', String(classroom_id)], (oldData: any) => {
+        if (!oldData) return oldData;
+
+        return {
+          ...oldData,
+          students: oldData.students.filter((s: any) => 
+            s.id !== student_id 
+          ),
+        };
+      });
       setMessage({
         type: 'success',
         message: response.message,
       });
 
-      setClassroomData((prev) => {
-        if (!prev) return null;
-
-        return {
-          ...prev,
-          students: prev.students.filter(
-            (student) => student.id !== student_id,
-          ),
-        };
-      });
       setEditingId(null);
     } catch (e: any) {
       setMessage({
@@ -116,11 +114,17 @@ export const useClassEdit = () => {
     }
   };
 
-  const handleDeleteClassroom = async () => {
-    if (classroomData?.clasroom_id) {
+  const handleDeleteClassroom = async (clasroom_id: number) => {
+    if (clasroom_id) {
       setIsFetching(true);
       try {
-        const response = await deleteClassroom(classroomData?.clasroom_id);
+        await deleteClassroom(clasroom_id);
+
+        queryClient.removeQueries({
+          queryKey: ['classroom', clasroom_id],
+        });
+
+        queryClient.invalidateQueries({ queryKey: ['classrooms'] });
         navigate('/teacherHomePage');
       } catch (e: any) {
         setMessage({
@@ -147,21 +151,14 @@ export const useClassEdit = () => {
       try {
         setMessage(null);
         const response = await storeStudent(postData);
+        queryClient.invalidateQueries({
+          queryKey: ['classroom', String(classroom_id)],
+        });
 
-        if (classroomData) {
-          const newStudent: Student = {
-            id:
-              classroomData.students.length > 0
-                ? Math.max(...classroomData.students.map((s) => s.id)) + 1
-                : 1,
-            name: studentName.trim(),
-          };
-
-          setClassroomData({
-            ...classroomData,
-            students: [...classroomData.students, newStudent],
-          });
-        }
+        setMessage({
+          type: 'success',
+          message: response.message,
+        });
       } catch (e: any) {
         setMessage({
           type: 'error',

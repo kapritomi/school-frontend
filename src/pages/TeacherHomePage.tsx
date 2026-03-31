@@ -23,7 +23,7 @@ export const TeacherHomePage = () => {
   return (
     <div className="relative w-screen h-screen max-h-screen overflow-y-hidden">
       <Navbar></Navbar>
-      <div className='px-[41px] mt-[70px] overflow-y-scroll w-full h-full'>
+      <div className="px-[41px] mt-[70px] overflow-y-scroll w-full h-full">
         <p className="text-primary text-[40px] font-semibold mb-[41px]">
           Osztályok
         </p>
@@ -46,7 +46,6 @@ export const TeacherHomePage = () => {
             </div>
           </div>
         )}
-
       </div>
     </div>
   );
