@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useBulkUpload } from './UseBulkUpload';
 import table from '../../assets/table.png';
 import { Modal } from '../../components/Modal';
+import { Navbar } from '../../components/Navbar';
 export const BulkStudentUpload = () => {
   const { classroomId } = useParams();
   const { setFile, handleBulkUpload, isFetching, message, setMessage } =
@@ -31,7 +32,8 @@ export const BulkStudentUpload = () => {
   ];
   return (
     <div className="w-screen h-screen max-h-screen relative overflow-hidden">
-      <div className="w-full h-full overflow-y-scroll px-[41px] pb-5">
+      <Navbar></Navbar>
+      <div className="w-full mt-[70px] h-full overflow-y-scroll px-[41px] pb-5">
         {isFetching && (
           <div className="w-full h-full z-20 flex right-0 items-center justify-center absolute  bg-zinc-400 bg-opacity-40 ">
             <ClipLoader size={90} color="#2E6544"></ClipLoader>
