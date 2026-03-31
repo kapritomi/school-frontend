@@ -7,6 +7,7 @@ import { BinIcon } from '../../assets/Icons/BinIcon';
 import { useClassEdit, type Student } from './useClassEdit';
 import { ClipLoader } from 'react-spinners';
 import { Modal } from '../../components/Modal';
+import { Navbar } from '../../components/Navbar';
 
 export const ClassEdit = () => {
   const { classroomId } = useParams();
@@ -48,8 +49,10 @@ export const ClassEdit = () => {
   }, []);
 
   return (
-    <div className="px-[41px] w-screen h-screen relative">
-      {message && (
+    <div className=" w-screen h-screen max-h-screen relative overflow-y-hidden ">
+      <Navbar></Navbar>
+      <div className='mt-[70px] px-[41px] w-full h-full overflow-y-scroll '>
+           {message && (
         <Modal
           setModalErrorMessage={setMessage}
           text={message.message}
@@ -57,7 +60,7 @@ export const ClassEdit = () => {
         ></Modal>
       )}
       {isFetching && (
-        <div className="w-full h-full z-20 flex right-0 items-center justify-center absolute  bg-zinc-400 bg-opacity-40 ">
+        <div className="w-full h-full z-20 top-0 flex right-0 items-center justify-center absolute  bg-zinc-400 bg-opacity-40 ">
           <ClipLoader size={90} color="#2E6544"></ClipLoader>
         </div>
       )}
@@ -97,7 +100,7 @@ export const ClassEdit = () => {
               <div className="flex items-end">
                 <button
                   onClick={() => navigate(`/bulkStudentUpload/${classroomId}`)}
-                  className="w-[283px] h-[48px] text-white bg-primary rounded-[8px]"
+                  className="w-[283px] h-[48px] text-primary font-semibold text-[20px] rounded-[8px]"
                 >
                   Tömeges adatfelvitel
                 </button>
@@ -142,6 +145,7 @@ export const ClassEdit = () => {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };

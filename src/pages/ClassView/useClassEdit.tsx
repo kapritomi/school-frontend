@@ -134,14 +134,14 @@ export const useClassEdit = () => {
   };
 
   const handleInputChange = (e: string) => {
-    let studentName = e.trim();
+    let studentName = e;
     setStudentName(studentName);
   };
   const handleSaveStudent = async (classroom_id: number) => {
     if (studentName && classroom_id) {
       const postData: studentObject = {
         classroom_id: classroom_id,
-        name: studentName,
+        name: studentName.trim(),
       };
       setIsFetching(true);
       try {
