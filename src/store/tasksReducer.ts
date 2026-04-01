@@ -21,24 +21,12 @@ export const initialTasksState: TasksState = {
   nextId: 3,
   slots: (() => {
     const initial: Slot[] = Array(MAX_ITEMS).fill(null);
-    initial[0] = { id: '1', label: 'Párkereső', type: 'pair' };
-    initial[1] = { id: '2', label: 'Madarak', type: 'short' };
+   
     return initial;
   })(),
   tasksJson: {
     tasks: [
-      {
-        id: '1',
-        task_title: 'Párkereső',
-        task_description: '',
-        task_type_id: TASK_TYPE_ID.pair,
-      },
-      {
-        id: '2',
-        task_title: 'Madarak',
-        task_description: '',
-        task_type_id: TASK_TYPE_ID.short,
-      },
+      
     ],
   },
   activeId: null,
