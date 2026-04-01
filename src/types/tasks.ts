@@ -1,4 +1,4 @@
-export type TaskType = "pair" | "grouping" | "assignment" | "short";
+export type TaskType = 'pair' | 'grouping' | 'assignment' | 'short';
 
 export type SidebarItem = { id: string; label: string; type: TaskType };
 export type Slot = SidebarItem | null;
@@ -6,13 +6,13 @@ export type Slot = SidebarItem | null;
 // ---- JSON struktúra (a képed alapján) ----
 
 // ---- Assignment ----
-export type Answer = { 
-  answer: string; 
-  isCorrect: boolean 
+export type Answer = {
+  answer: string;
+  isCorrect: boolean;
 };
-export type CoordinateAndAnswers = { 
-  coordinate: string; 
-  answers: Answer[] 
+export type CoordinateAndAnswers = {
+  coordinate: string;
+  answers: Answer[];
 };
 export type AssignmentJson = {
   image: string;
@@ -26,7 +26,7 @@ export type ShortQuestion = {
 };
 export type ShortAnswerJson = {
   questions: ShortQuestion[];
-}
+};
 
 // ---- Pairing ----
 export type PairGroup = {
@@ -59,7 +59,6 @@ export type TaskJson = {
   pairing?: PairingJson;
   grouping?: GroupingJson;
 };
-
 
 export type TasksJson = {
   tasks: TaskJson[];

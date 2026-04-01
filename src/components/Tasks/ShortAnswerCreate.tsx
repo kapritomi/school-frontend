@@ -1,4 +1,4 @@
-import { useTasks } from "../store/useTasks";
+import { useTasks } from '../../store/useTasks';
 
 function ShortAnswerCreate() {
   const { activeTask, updateTask } = useTasks();
@@ -12,18 +12,18 @@ function ShortAnswerCreate() {
     updateTask({
       ...task,
       short_answer: {
-        questions: [...shortData.questions, { question: "", answer: "" }],
+        questions: [...shortData.questions, { question: '', answer: '' }],
       },
     });
   };
 
   const updateQuestion = (
     index: number,
-    field: "question" | "answer",
-    value: string
+    field: 'question' | 'answer',
+    value: string,
   ) => {
     const nextQuestions = shortData.questions.map((item, i) =>
-      i === index ? { ...item, [field]: value } : item
+      i === index ? { ...item, [field]: value } : item,
     );
 
     updateTask({
@@ -96,7 +96,7 @@ function ShortAnswerCreate() {
               <input
                 value={item.question}
                 onChange={(e) =>
-                  updateQuestion(index, "question", e.target.value)
+                  updateQuestion(index, 'question', e.target.value)
                 }
                 className="w-3/4 rounded-[6px] p-2 border border-gray focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" 
               />
@@ -107,7 +107,7 @@ function ShortAnswerCreate() {
               <input
                 value={item.answer}
                 onChange={(e) =>
-                  updateQuestion(index, "answer", e.target.value)
+                  updateQuestion(index, 'answer', e.target.value)
                 }
                 className="w-3/4 rounded-[6px] p-2 border border-gray focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               />

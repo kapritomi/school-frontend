@@ -7,3 +7,7 @@
     @apply pl-16 pt-4 pr-16;
   }
 }
+
+* {
+  font-family: 'Poppins';
+}

@@ -35,9 +35,9 @@ const [selected, setSelected] = useState<Point | null>(null);
       });
 
     if (img.complete) onLoad();
-    else img.addEventListener("load", onLoad);
+    else img.addEventListener('load', onLoad);
 
-    return () => img.removeEventListener("load", onLoad);
+    return () => img.removeEventListener('load', onLoad);
   }, [src]);
 
   const fit = useMemo(() => {
@@ -63,7 +63,7 @@ const [selected, setSelected] = useState<Point | null>(null);
     const canvas = cropCanvasRef.current;
     if (!img || !canvas) return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     // preview méret (képernyőn)
@@ -83,25 +83,15 @@ const [selected, setSelected] = useState<Point | null>(null);
     ctx.clearRect(0, 0, outW, outH);
     ctx.imageSmoothingEnabled = true;
 
-    ctx.drawImage(
-      img,
-      sx,
-      sy,
-      cropW,
-      cropH,
-      0,
-      0,
-      outW,
-      outH
-    );
+    ctx.drawImage(img, sx, sy, cropW, cropH, 0, 0, outW, outH);
 
     // jelöld a közepét (ahol a kattintott pont van)
     ctx.beginPath();
     ctx.arc(outW / 2, outH / 2, 6, 0, Math.PI * 2);
-    ctx.fillStyle = "red";
+    ctx.fillStyle = 'red';
     ctx.fill();
     ctx.lineWidth = 3;
-    ctx.strokeStyle = "rgba(255,0,0,0.25)";
+    ctx.strokeStyle = 'rgba(255,0,0,0.25)';
     ctx.stroke();
   }, [open, selected, natural]);
 
@@ -111,8 +101,8 @@ const [selected, setSelected] = useState<Point | null>(null);
         style={{
           width: frameW,
           height: frameH,
-          position: "relative",
-          overflow: "hidden",
+          position: 'relative',
+          overflow: 'hidden',
         }}
       >
         <img
@@ -120,10 +110,10 @@ const [selected, setSelected] = useState<Point | null>(null);
           src={src}
           alt=""
           style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "contain",
-            display: "block",
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            display: 'block',
           }}
         />
 
@@ -139,7 +129,6 @@ const [selected, setSelected] = useState<Point | null>(null);
             const y = fit.offsetY + v * fit.drawH;
 
             return (
-              
               <div
                 key={index}
                 onClick={(e) => {
@@ -147,21 +136,19 @@ const [selected, setSelected] = useState<Point | null>(null);
                   setSelected({ index, xy, answers });
                   setOpen(true);
                 }}
-                
                 style={{
-                  position: "absolute",
+                  position: 'absolute',
                   left: x,
                   top: y,
                   width: 16,
                   height: 16,
                   borderRadius: 999,
-                  background: "red",
-                  transform: "translate(-50%, -50%)",
-                  cursor: "pointer",
-                  boxShadow: "0 0 0 4px rgba(255,0,0,0.25)",
+                  background: 'red',
+                  transform: 'translate(-50%, -50%)',
+                  cursor: 'pointer',
+                  boxShadow: '0 0 0 4px rgba(255,0,0,0.25)',
                 }}
               />
-              
             );
           })}
 
@@ -169,11 +156,11 @@ const [selected, setSelected] = useState<Point | null>(null);
           <div
             onClick={() => setOpen(false)}
             style={{
-              position: "absolute",
+              position: 'absolute',
               inset: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               padding: 16,
             }}
           >
@@ -181,21 +168,27 @@ const [selected, setSelected] = useState<Point | null>(null);
               onClick={(e) => e.stopPropagation()}
               style={{
                 width: 520,
-                maxWidth: "90vw",
-                background: "white",
+                maxWidth: '90vw',
+                background: 'white',
                 borderRadius: 12,
                 padding: 16,
-                boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
+                boxShadow: '0 10px 30px rgba(0,0,0,0.25)',
               }}
             >
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  gap: 12,
+                }}
+              >
                 <button
                   onClick={() => setOpen(false)}
                   style={{
-                    border: "1px solid #ddd",
+                    border: '1px solid #ddd',
                     borderRadius: 8,
-                    padding: "6px 10px",
-                    cursor: "pointer",
+                    padding: '6px 10px',
+                    cursor: 'pointer',
                   }}
                 >
                   Bezár
@@ -204,15 +197,14 @@ const [selected, setSelected] = useState<Point | null>(null);
 
               {/* ✅ kivágott környezet preview */}
               <div style={{ marginTop: 12 }}>
-                
                 <canvas
                   ref={cropCanvasRef}
                   style={{
-                    width: "100%",
-                    height: "auto",
+                    width: '100%',
+                    height: 'auto',
                     borderRadius: 10,
-                    border: "1px solid #eee",
-                    display: "block",
+                    border: '1px solid #eee',
+                    display: 'block',
                   }}
                 />
               </div>
@@ -229,12 +221,12 @@ const [selected, setSelected] = useState<Point | null>(null);
                       key={i}
                       onClick={() => alert(`Kiválasztva: ${a}`)}
                       style={{
-                        textAlign: "left",
-                        border: "1px solid #ddd",
+                        textAlign: 'left',
+                        border: '1px solid #ddd',
                         borderRadius: 10,
-                        padding: "10px 12px",
-                        cursor: "pointer",
-                        background: "white",
+                        padding: '10px 12px',
+                        cursor: 'pointer',
+                        background: 'white',
                       }}
                     >
                       {a}
@@ -251,7 +243,7 @@ const [selected, setSelected] = useState<Point | null>(null);
 }
 
 function parseCoordinate(s: string): XY | null {
-  const parts = s.split(",").map((p) => p.trim());
+  const parts = s.split(',').map((p) => p.trim());
   if (parts.length !== 2) return null;
 
   const x = Number(parts[0]);
@@ -261,7 +253,12 @@ function parseCoordinate(s: string): XY | null {
   return { x, y };
 }
 
-function containFit(frameW: number, frameH: number, imgW: number, imgH: number) {
+function containFit(
+  frameW: number,
+  frameH: number,
+  imgW: number,
+  imgH: number,
+) {
   const scale = Math.min(frameW / imgW, frameH / imgH);
 
   const drawW = imgW * scale;
