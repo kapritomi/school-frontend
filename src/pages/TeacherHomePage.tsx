@@ -1,3 +1,4 @@
+//nincs kész az osztály létrehozás, uin kene frisstés azonnal, illetve endpointon lehetne regex check nevre, plussz endpointon vissza kuldhetne az uj obijektumot, és egybol az edit fulre navigalhatna
 import {useState } from 'react';
 import type { ClassType } from '../types/class';
 import { ClassComponent } from '../components/ClassComponent';
