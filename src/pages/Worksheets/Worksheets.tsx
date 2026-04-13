@@ -29,7 +29,7 @@ export const Worksheets = () => {
     return (
       <div className="flex items-center justify-center h-screen">
         <p className="text-red-500 font-bold">
-          Hiba történt az adatok betöltésekor!
+          Hiba történt az adatok betöltésekor! {error.message}
         </p>
       </div>
     );

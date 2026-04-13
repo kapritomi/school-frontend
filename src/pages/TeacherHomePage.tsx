@@ -8,9 +8,7 @@ import { Navbar } from '../components/Navbar';
 import { useQuery } from '@tanstack/react-query';
 
 export const TeacherHomePage = () => {
-  // const [classes, setClasses] = useState<ClassType[]>([]);
-  // const [isFetching, setIsFetching] = useState<boolean>(true);
-  // const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const navigate = useNavigate();
 
   const {
