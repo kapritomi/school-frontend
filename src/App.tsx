@@ -40,7 +40,7 @@ export default function App() {
       path: '/createTask',
       element: <CreateTaskPage />,
     },
-        {
+    {
       path: '/worksheetSolutions/:worksheetId',
       element: <WorksheetSolutions />,
     },
