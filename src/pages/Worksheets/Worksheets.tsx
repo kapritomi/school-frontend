@@ -3,6 +3,7 @@ import { Navbar } from '../../components/Navbar';
 import { getWorksheets } from '../../api/getWorksheets';
 import { Worksheet } from '../../components/Worksheet';
 import { ClipLoader } from 'react-spinners';
+import { useState } from 'react';
 
 type WorksheetsResponseType = {
   title: string;
@@ -24,7 +25,18 @@ export const Worksheets = () => {
       })),
     staleTime: 1000 * 60 * 5, // 5 percig nem kéri le újra, ha nem muszáj
   });
+  const [selectedWorksheetId, setSelectedWorksheetId] = useState<number | null>(
+    null,
+  );
 
+  const handleSelectWorksheet=(id:number)=>{
+    if(id===selectedWorksheetId){
+      setSelectedWorksheetId(null)
+      return
+    }
+    setSelectedWorksheetId(id)
+    
+  }
   if (error) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -47,10 +59,15 @@ export const Worksheets = () => {
         <p className="text-[40px] font-semibold text-primary">
           Feladatlapjaid:
         </p>
-        <div className="w-full flex flex-wrap gap-[60px]">
+        <div className="w-full  flex flex-wrap gap-[60px]">
           {worksheets &&
             worksheets.map((item: WorksheetsResponseType) => (
-              <Worksheet title={item.title}></Worksheet>
+              <Worksheet
+                handleSelectWorksheet={handleSelectWorksheet}
+                selectedWorksheetId={selectedWorksheetId}
+                id={item.id}
+                title={item.title}
+              ></Worksheet>
             ))}
         </div>
       </div>
