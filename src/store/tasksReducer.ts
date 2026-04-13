@@ -21,13 +21,11 @@ export const initialTasksState: TasksState = {
   nextId: 3,
   slots: (() => {
     const initial: Slot[] = Array(MAX_ITEMS).fill(null);
-   
+
     return initial;
   })(),
   tasksJson: {
-    tasks: [
-      
-    ],
+    tasks: [],
   },
   activeId: null,
 };

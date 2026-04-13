@@ -9,6 +9,7 @@ import { Worksheets } from './pages/Worksheets/Worksheets';
 
 import TaskPreview from './TaskPreview';
 import { TasksProvider } from './store/TasksContext';
+import { WorksheetSolutions } from './pages/WorksheetSolutions/WorksheetSolutions';
 export default function App() {
   const router = createBrowserRouter([
     {
@@ -39,10 +40,18 @@ export default function App() {
       path: '/createTask',
       element: <CreateTaskPage />,
     },
+        {
+      path: '/worksheetSolutions/:worksheetId',
+      element: <WorksheetSolutions />,
+    },
     {
       path: '/taskPreview',
-      element: <TasksProvider><TaskPreview /></TasksProvider>
-    }
+      element: (
+        <TasksProvider>
+          <TaskPreview />
+        </TasksProvider>
+      ),
+    },
   ]);
 
   return <RouterProvider router={router} />;
