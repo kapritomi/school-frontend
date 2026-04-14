@@ -7,7 +7,10 @@ import { TeacherHomePage } from './pages/TeacherHomePage';
 import { ClassEdit } from './pages/ClassView/ClassEdit';
 import TaskPreview from './TaskPreview';
 import { TasksProvider } from './store/TasksContext';
+
+
 export default function App() {
+
   const router = createBrowserRouter([
     {
       path: '/login',
@@ -31,9 +34,9 @@ export default function App() {
     },
     {
       path: '/taskPreview',
-      element: <TasksProvider><TaskPreview /></TasksProvider>
+      element: <TaskPreview />
     }
   ]);
 
-  return <RouterProvider router={router} />;
+  return <TasksProvider><RouterProvider router={router}/></TasksProvider> ;
 }

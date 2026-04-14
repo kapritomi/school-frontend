@@ -3,14 +3,14 @@ import Pairing from "./Pairing";
 import Assignment from "./Assignment";
 import ShortAnswer from "./ShortAnswer";
 import type { TaskJson } from "./types/tasks";
-import { useTasks } from "./store/useTasks";
+import { useTasks } from "@/store/TasksContext";
 import { Link } from "react-router-dom"
 import { useEffect } from "react";
 
 export default function TaskPreview(){
     const { tasksJson } = useTasks();
     useEffect(()=>{
-        console.log(tasksJson)
+        console.log("előnézet:",tasksJson)
     },[tasksJson])
      const TASK_COMPONENTS: Record<
       number,

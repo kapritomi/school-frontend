@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { CoordinateAndAnswers } from '../../types/tasks';
-import { useTasks } from '../../store/useTasks';
+import { useTasks } from '../../store/TasksContext';
 import { DeleteIcon } from '../../icons/Delete';
 
 type XY = { x: number; y: number };

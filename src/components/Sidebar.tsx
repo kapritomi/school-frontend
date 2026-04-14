@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { TaskType } from '../types/tasks';
-import { useTasks } from '../store/useTasks';
+import { useTasks } from '../store/TasksContext';
 import { DeleteIcon } from '../icons/Delete';
 export default function Sidebar() {
   const { slots, selectTask, createTask, removeTask, reorderSlots } =
