@@ -120,6 +120,7 @@ export const useClassEdit = () => {
   };
 
   const handleDeleteClassroom = async (clasroom_id: number) => {
+    if (!window.confirm('Biztosan törölni szeretnéd ezt az osztályt?')) return;
     if (clasroom_id) {
       setIsFetching(true);
       try {

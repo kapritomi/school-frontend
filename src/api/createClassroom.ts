@@ -1,8 +1,7 @@
-
 import { apiClient } from './clients';
-type classroomObject ={
-    name : string
-}
+type classroomObject = {
+  name: string;
+};
 export const createClassroom = async (classroomData: classroomObject) => {
   try {
     const response = await apiClient.post('/classrooms', classroomData, {

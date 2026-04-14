@@ -5,6 +5,7 @@ import { Worksheet } from '../../components/Worksheet';
 import { ClipLoader } from 'react-spinners';
 import { useState } from 'react';
 import { deleteWorksheet } from '../../api/deleteWorksheet';
+import { useNavigate } from 'react-router-dom';
 type WorksheetsResponseType = {
   title: string;
   id: number;
@@ -12,6 +13,7 @@ type WorksheetsResponseType = {
 
 export const Worksheets = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const {
     data: worksheets,
     isLoading,
@@ -39,7 +41,8 @@ export const Worksheets = () => {
   };
 
   const handleDeleteWorksheet = async (id: number) => {
-    if (!window.confirm("Biztosan törölni szeretnéd ezt a feladatlapot?")) return;
+    if (!window.confirm('Biztosan törölni szeretnéd ezt a feladatlapot?'))
+      return;
     if (id) {
       try {
         await deleteWorksheet(id);
@@ -93,6 +96,14 @@ export const Worksheets = () => {
                 title={item.title}
               ></Worksheet>
             ))}
+          <div
+            onClick={() => navigate('/createTask')}
+            className={` w-[197px] h-[300px] flex p-[30px] rounded-[12px] cursor-pointer border-primary border-2 border-dashed text-white    tranition-all  `}
+          >
+            <p className="text-[20px] font-bold text-center text-primary">
+              + Új létrehozása
+            </p>
+          </div>
         </div>
       </div>
     </div>

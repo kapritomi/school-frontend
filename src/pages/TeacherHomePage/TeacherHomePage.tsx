@@ -1,60 +1,27 @@
-//nincs kész az osztály létrehozás, uin kene frisstés azonnal, illetve endpointon lehetne regex check nevre, plussz endpointon vissza kuldhetne az uj obijektumot, és egybol az edit fulre navigalhatna
-import {useState } from 'react';
-import type { ClassType } from '../types/class';
-import { ClassComponent } from '../components/ClassComponent';
-import { getClassrooms } from '../api/getClassrooms';
+import type { ClassType } from '../../types/class';
+import { ClassComponent } from '../../components/ClassComponent';
 import { ClipLoader } from 'react-spinners';
 import { useNavigate } from 'react-router-dom';
-import { Navbar } from '../components/Navbar';
-import { useQuery } from '@tanstack/react-query';
-import { createClassroom } from '../api/createClassroom';
-import { Modal } from '../components/Modal';
-import type { MessageType } from '../types/messageType';
+import { Navbar } from '../../components/Navbar';
+import { Modal } from '../../components/Modal';
+import { useTeacherHomePage } from './useTeacherHomePage';
 
 export const TeacherHomePage = () => {
   const navigate = useNavigate();
-  const [isModalOpen,setIsModalOpen]=useState<boolean>(true)
-  const [classRoomName,setClassRoomName]=useState<null|string>(null)
-  const [message,setMessage]=useState<MessageType | null>(null)
   const {
-    data: classrooms,
-    isLoading,
+    cancelCreate,
+    classRoomName,
+    classrooms,
+    confirmCreate,
     error,
-  } = useQuery({
-    queryKey: ['classrooms', 'all'],
-    queryFn: () => getClassrooms(),
-
-    staleTime: 1000 * 60 * 5, // 5 percig nem kéri le újra, ha nem muszáj
-  });
-
-    const confirmCreate = () => {
-    handleCreateClassroom()
-    setIsModalOpen(false);
-
-  };
-
-  const cancelCreate = () => {
-    setIsModalOpen(false);
-
-  };
-
-  const handleCreateClassroom =async ()=>{
-    if(!classRoomName) return
-
-    const classroomData={
-      name:classRoomName
-    }
-
-    try{
-      const res = await createClassroom(classroomData)
-       setMessage({ type: 'success', message: res.message });
-    }
-    catch(error){
-       setMessage({ type: 'error', message: 'Hiba a mentés során!' });
-    }
-
-  }
-
+    isLoading,
+    isModalOpen,
+    message,
+    setClassRoomName,
+    setIsModalOpen,
+    setMessage,
+    mutation,
+  } = useTeacherHomePage();
   if (error) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -67,7 +34,7 @@ export const TeacherHomePage = () => {
   return (
     <div className="relative w-screen h-screen max-h-screen overflow-y-hidden">
       <Navbar></Navbar>
-           {isModalOpen && (
+      {isModalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center"
           onMouseDown={cancelCreate}
@@ -81,11 +48,11 @@ export const TeacherHomePage = () => {
             <div className="text-lg font-medium mb-3">
               Új osztály létrehozása
             </div>
-
+            {/* innen majd az input classát át kell tenni a sidebarba is */}
             <input
-              className="w-full border-[1px] focus:border-primary focus:border-[2.5px]  border-lightBorder rounded-lg px-3 py-2 outline-none"
+              className="w-full  focus:border-primary focus:border-[2px] h-[48px] border-lightBorder border-[1px] rounded-lg px-3 py-2 outline-none"
               placeholder="Osztály neve"
-              value={classRoomName ? classRoomName : ""}
+              value={classRoomName ? classRoomName : ''}
               onChange={(e) => setClassRoomName(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') confirmCreate();
@@ -94,9 +61,7 @@ export const TeacherHomePage = () => {
               autoFocus
             />
 
-            <div className="flex gap-2 mt-2">
-       
-            </div>
+            <div className="flex gap-2 mt-2"></div>
 
             <div className="flex justify-end gap-2 mt-4">
               <button
@@ -119,17 +84,20 @@ export const TeacherHomePage = () => {
         </div>
       )}
       <div className="px-[41px] mt-[70px] overflow-y-auto w-full h-full">
-         {message && (
-                  <Modal
-                    setModalErrorMessage={setMessage}
-                    text={message.message}
-                    type={message.type}
-                  />
-                )}
+        {message && (
+          <Modal
+            setModalErrorMessage={setMessage}
+            text={message.message}
+            type={message.type}
+          />
+        )}
         <p className="text-primary text-[40px] font-semibold mb-[41px]">
           Osztályok
         </p>
-        {isLoading && <ClipLoader size={90} color="#2E6544"></ClipLoader>}
+        {isLoading ||
+          (mutation.isPending && (
+            <ClipLoader size={90} color="#2E6544"></ClipLoader>
+          ))}
 
         {classrooms && (
           <div className="flex flex-wrap gap-[56px]">
@@ -141,7 +109,10 @@ export const TeacherHomePage = () => {
                 key={item.id}
               ></ClassComponent>
             ))}
-            <div onClick={()=>setIsModalOpen(true)} className="w-[164px] cursor-pointer text-white items-center justify-center shadow-md h-[157px] flex bg-primary rounded-[12px]">
+            <div
+              onClick={() => setIsModalOpen(true)}
+              className="w-[164px] cursor-pointer text-white items-center justify-center shadow-md h-[157px] flex bg-primary rounded-[12px]"
+            >
               <p className="text-[40px] font-bold">+</p>
             </div>
           </div>
