@@ -1,7 +1,13 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
-import type { Slot, TaskJson, TasksJson, TaskType, SidebarItem } from "../types/tasks";
-import { MAX_ITEMS, TASK_TYPE_ID } from "../types/tasks";
-import { useEffect } from "react";
+import React, { createContext, useContext, useMemo, useState } from 'react';
+import type {
+  Slot,
+  TaskJson,
+  TasksJson,
+  TaskType,
+  SidebarItem,
+} from '../types/tasks';
+import { MAX_ITEMS, TASK_TYPE_ID } from '../types/tasks';
+
 type TasksContextType = {
   slots: Slot[];
   tasksJson: TasksJson;
@@ -22,9 +28,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   const [tasksJson, setTasksJson] = useState<TasksJson>({ tasks: [] });
   const [activeId, setActiveId] = useState<string | null>(null);
   const [nextId, setNextId] = useState(1);
-useEffect(() => {
-  console.log("PROVIDER MOUNT");
-}, []);
+
   const activeTask = useMemo(() => {
     if (!activeId) return null;
     return tasksJson.tasks.find((t) => t.id === activeId) ?? null;
@@ -53,20 +57,20 @@ useEffect(() => {
     const base: TaskJson = {
       id,
       task_title: label,
-      task_description: "",
+      task_description: '',
       task_type_id: TASK_TYPE_ID[type],
     };
 
     const task =
-      type === "assignment"
-        ? { ...base, assignment: { image: "", coordinatesAndAnswers: [] } }
-        : type === "short"
-        ? { ...base, short_answer: { questions: [] } }
-        : type === "pair"
-        ? { ...base, pairing: { pairing_groups: [] } }
-        : type === "grouping"
-        ? { ...base, grouping: { groups: [] } }
-        : base;
+      type === 'assignment'
+        ? { ...base, assignment: { image: '', coordinatesAndAnswers: [] } }
+        : type === 'short'
+          ? { ...base, short_answer: { questions: [] } }
+          : type === 'pair'
+            ? { ...base, pairing: { pairing_groups: [] } }
+            : type === 'grouping'
+              ? { ...base, grouping: { groups: [] } }
+              : base;
 
     setTasksJson((prev) => ({
       tasks: [...prev.tasks, task],
@@ -94,8 +98,8 @@ useEffect(() => {
     // sidebar label sync
     setSlots((prev) =>
       prev.map((s) =>
-        s?.id === task.id ? { ...s, label: task.task_title } : s
-      )
+        s?.id === task.id ? { ...s, label: task.task_title } : s,
+      ),
     );
   };
 
@@ -135,11 +139,13 @@ useEffect(() => {
     reorderSlots,
   };
 
-  return <TasksContext.Provider value={value}>{children}</TasksContext.Provider>;
+  return (
+    <TasksContext.Provider value={value}>{children}</TasksContext.Provider>
+  );
 }
 
 export function useTasks() {
   const ctx = useContext(TasksContext);
-  if (!ctx) throw new Error("useTasks must be used inside TasksProvider");
+  if (!ctx) throw new Error('useTasks must be used inside TasksProvider');
   return ctx;
 }

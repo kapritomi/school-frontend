@@ -1,20 +1,17 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react';
 import type { TaskJson } from './types/tasks';
 
-  type Card = { id: number; answer: string; img: string | null };
-  type Slot = { id: number; question: string; img: string | null};
-  type Placement = Record<number, number | null>;
-    
+type Card = { id: number; answer: string; img: string | null };
+type Slot = { id: number; question: string; img: string | null };
+type Placement = Record<number, number | null>;
 
-
-  
 function Pairing({ task }: { task: TaskJson }) {
   if (!task.pairing) return null;
   const slots: Slot[] = task.pairing.pairing_groups.map((q) => ({
-      id: q.pair_question.length, // vagy q.id, ha van
-      question: q.pair_question,
-      img: null,
-    }));
+    id: q.pair_question.length, // vagy q.id, ha van
+    question: q.pair_question,
+    img: null,
+  }));
 
   const cards: Card[] = task.pairing.pairing_groups.map((a) => ({
     id: a.pair_answer.length, // vagy a.id
@@ -24,12 +21,11 @@ function Pairing({ task }: { task: TaskJson }) {
   const shuffle = <T,>(array: T[]): T[] =>
     [...array].sort(() => Math.random() - 0.5);
   const shuffledCards = useMemo(() => shuffle(cards), [task]);
- 
+
   const initialPlacement: Placement = useMemo(
     () => Object.fromEntries(shuffledCards.map((c) => [c.id, null])),
-    [shuffledCards]
+    [shuffledCards],
   );
-
 
   //Kártyák helyzete, null = poolban van
   const [placement, setPlacement] = useState<Placement>(initialPlacement);
@@ -87,11 +83,15 @@ function Pairing({ task }: { task: TaskJson }) {
   return (
     <div>
       {/* feladat címe */}
-      <div className='task-padding font-semibold text-TaskTitle'>{task.task_title}</div>
+      <div className="task-padding font-semibold text-TaskTitle">
+        {task.task_title}
+      </div>
       {/* feladat leírása */}
-      <div className='task-padding font-semibold text-TaskDesc'>{task.task_description}</div>
-      
-      <div className='flex flex-wrap'>
+      <div className="task-padding font-semibold text-TaskDesc">
+        {task.task_description}
+      </div>
+
+      <div className="flex flex-wrap">
         {/* bal rész: slotok */}
         <div className="grid grid-cols-2 relative w-3/5 gap-y-4 gap-x-8 task-padding pr-12">
           {/* fehér választóvonal a 2 rész közé*/}
@@ -193,4 +193,4 @@ function Pairing({ task }: { task: TaskJson }) {
   );
 }
 
-export default Pairing
+export default Pairing;

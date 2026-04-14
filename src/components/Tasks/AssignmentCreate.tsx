@@ -321,13 +321,21 @@ export default function AssignmentCreate() {
                   <button
                     type="button"
                     onClick={startAdd}
-                    disabled={!assignment.image || isAdding || coords.length >= MAX_COORDS}
+                    disabled={
+                      !assignment.image ||
+                      isAdding ||
+                      coords.length >= MAX_COORDS
+                    }
                     className="mt-8 rounded-[6px] text-white font-semibold text-[18px]"
                     style={{
-                      padding: "6px 10px",
-                      cursor: (isAdding || coords.length >= MAX_COORDS) ? "not-allowed" : "pointer",
+                      padding: '6px 10px',
+                      cursor:
+                        isAdding || coords.length >= MAX_COORDS
+                          ? 'not-allowed'
+                          : 'pointer',
                       opacity: isAdding ? 0.6 : 1,
-                      backgroundColor: coords.length === 10 ? "#5B5B5B" : "#2E6544"
+                      backgroundColor:
+                        coords.length === 10 ? '#5B5B5B' : '#2E6544',
                     }}
                   >
                     + Új pont felvétele
@@ -355,11 +363,19 @@ export default function AssignmentCreate() {
             </div>
           </div>
           {/* ---- Új pont felvétele gomb alatti rész ---- */}
-          <div className="w-full grid gap-4 mt-2 " >
-            {coords.length === 0 && <div className="opacity-60 text-[14px]">Még nincs felvett pont.</div>}
+          <div className="w-full grid gap-4 mt-2 ">
+            {coords.length === 0 && (
+              <div className="opacity-60 text-[14px]">
+                Még nincs felvett pont.
+              </div>
+            )}
             <div className="flex justify-between ">
-            {coords.length > 0 && <div className="w-full p-2 h-12" >{coords.length} / {MAX_COORDS}</div>}
-            {coords.length > 0 ? (
+              {coords.length > 0 && (
+                <div className="w-full p-2 h-12">
+                  {coords.length} / {MAX_COORDS}
+                </div>
+              )}
+              {coords.length > 0 ? (
                 <button
                   type="button"
                   onClick={clearAll}
@@ -369,29 +385,29 @@ export default function AssignmentCreate() {
                   Összes törlése
                 </button>
               ) : null}
-              </div>
-              <div className="h-64 overflow-auto flex flex-wrap gap-4">
-                {coords.map((c) => (
-                  <div
-                    key={c.id}
-                    className="w-full h-12 flex justify-between gap-4 items-center border-[1px] border-lightBorder rounded-[8px] p-4"
-                  >
-                    <div >
-                      <div>
-                        {c.id}. megfejtés: {c.answer}
-                      </div>
+            </div>
+            <div className="h-64 overflow-auto flex flex-wrap gap-4">
+              {coords.map((c) => (
+                <div
+                  key={c.id}
+                  className="w-full h-12 flex justify-between gap-4 items-center border-[1px] border-lightBorder rounded-[8px] p-4"
+                >
+                  <div>
+                    <div>
+                      {c.id}. megfejtés: {c.answer}
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => removeById(c.id)}
-                      className="flex gap-2 cursor-pointer text-delete font-semibold"
-                    >
-                      <DeleteIcon className="w-6 h-6 text-delete "/>
-                      Törlés
-                    </button>
                   </div>
-                ))}
-              </div>
+                  <button
+                    type="button"
+                    onClick={() => removeById(c.id)}
+                    className="flex gap-2 cursor-pointer text-delete font-semibold"
+                  >
+                    <DeleteIcon className="w-6 h-6 text-delete " />
+                    Törlés
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
