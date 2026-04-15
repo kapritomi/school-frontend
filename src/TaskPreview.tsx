@@ -12,6 +12,7 @@ export default function TaskPreview(){
     useEffect(()=>{
         console.log("előnézet:",tasksJson)
     },[tasksJson])
+    
      const TASK_COMPONENTS: Record<
       number,
       React.ComponentType<{ task: TaskJson }>
