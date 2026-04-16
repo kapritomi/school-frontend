@@ -35,16 +35,14 @@ export const ClassEdit = () => {
     setIsFetching(true);
     if (classroomId) {
       getStudents(Number(classroomId))
-      .then((res) =>{
+        .then((res) => {
           setClassroomData({
             name: res.classroom_name,
             students: res.students,
             clasroom_id: res.classroom_id,
-          })
-          console.log(res)
-        }
-          
-        )
+          });
+          console.log(res);
+        })
         .catch((e) => console.log(e))
         .finally(() => setIsFetching(false));
     }
@@ -71,37 +69,37 @@ export const ClassEdit = () => {
 
           <p className="text-[26px] font-medium">Osztály szerkesztése</p>
           <div className="flex justify-between w-full">
-           <div className='flex'>
-             <div className="w-[573px] min-h-[140px] h-fit px-[21px] py-[10px] flex flex-col gap-[23px] border-lightBorder border-[1px] shadow-md rounded-[8px]">
-              <label className="text-[24px]  text-secondaryFont font-medium">
-                Új tanuló felvétele az osztályba:
-              </label>
-              <div className="flex gap-[16px]">
-                <div className="flex flex-col gap-4">
-                  <input
-                    maxLength={30}
-                    onChange={(e) => handleInputChange(e.target.value)}
-                    className={`w-[333px] ${errorMessage ? 'border-alert' : 'border-lightBorder'} p-4 outline-none focus:border-primary focus:border-[2px] h-[48px] border-[1px] rounded-[8px]`}
-                    type="text"
-                    value={studentName ? studentName : ''}
-                  />
-                  <p className="text-[16px] font-semibold text-alert">
-                    {errorMessage}
-                  </p>
+            <div className="flex">
+              <div className="w-[573px] min-h-[140px] h-fit px-[21px] py-[10px] flex flex-col gap-[23px] border-lightBorder border-[1px] shadow-md rounded-[8px]">
+                <label className="text-[24px]  text-secondaryFont font-medium">
+                  Új tanuló felvétele az osztályba:
+                </label>
+                <div className="flex gap-[16px]">
+                  <div className="flex flex-col gap-4">
+                    <input
+                      maxLength={30}
+                      onChange={(e) => handleInputChange(e.target.value)}
+                      className={`w-[333px] ${errorMessage ? 'border-alert' : 'border-lightBorder'} p-4 outline-none focus:border-primary focus:border-[2px] h-[48px] border-[1px] rounded-[8px]`}
+                      type="text"
+                      value={studentName ? studentName : ''}
+                    />
+                    <p className="text-[16px] font-semibold text-alert">
+                      {errorMessage}
+                    </p>
+                  </div>
+                  <button
+                    disabled={!studentName || studentName.length === 0}
+                    onClick={() => handleSaveStudent(Number(classroomId))}
+                    className="bg-primary disabled:bg-primaryDisabled w-[108px] h-[48px] rounded-[8px] text-white text-[20px] font-semibold"
+                  >
+                    Felvétel
+                  </button>
                 </div>
-                <button
-                  disabled={!studentName || studentName.length === 0}
-                  onClick={() => handleSaveStudent(Number(classroomId))}
-                  className="bg-primary disabled:bg-primaryDisabled w-[108px] h-[48px] rounded-[8px] text-white text-[20px] font-semibold"
-                >
-                  Felvétel
-                </button>
+              </div>
+              <div className="bg-red-900 flex items-end">
+                <button className="">Tömeges adatfelvitel</button>
               </div>
             </div>
-            <div className='bg-red-900 flex items-end'>
-              <button className=''>Tömeges adatfelvitel</button>
-            </div>
-           </div>
             <div className="h-[140px]  items-end flex flex-col justify-between">
               <button
                 onClick={() => {
@@ -112,8 +110,7 @@ export const ClassEdit = () => {
                 Névsor szerkesztése
                 <EditIcon color="white"></EditIcon>
               </button>
-              
-               
+
               <button
                 onClick={() => handleDeleteClassroom()}
                 className="w-[283px] h-[48px] bg-alert rounded-[8px] text-white flex gap-4 items-center justify-center text-[20px] font-semibold"
@@ -121,7 +118,6 @@ export const ClassEdit = () => {
                 Osztály törlése
                 <BinIcon color="white"></BinIcon>
               </button>
-              
             </div>
           </div>
 
@@ -144,6 +140,5 @@ export const ClassEdit = () => {
         </div>
       )}
     </div>
-   
   );
 };

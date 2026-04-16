@@ -37,7 +37,7 @@ export type PairingJson = {
   pairing_groups: PairGroup[];
 };
 
-// ---- Grouping ---- 
+// ---- Grouping ----
 export type GroupItem = {
   name: string;
 };
