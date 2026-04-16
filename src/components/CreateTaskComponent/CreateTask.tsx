@@ -13,12 +13,12 @@ export default function CreateTask() {
   return (
     <div className="bg-gradient-to-r w-screen  max-h-screen relative overflow-y-hidden from-[#E8F7EC] to-[#F0F9FF] h-screen flex">
       <Navbar></Navbar>
-      <div className="mt-[70px] flex w-full h-full overflow-y-scroll">
+      <div className="mt-[70px] flex w-full">
         <div className="w-1/6">
           <Sidebar />
         </div>
 
-        <div className="w-4/6 p-4">
+        <div className="w-full p-4 overflow-y-auto">
           <button
             onClick={() => console.log(JSON.stringify(tasksJson, null, 2))}
           >

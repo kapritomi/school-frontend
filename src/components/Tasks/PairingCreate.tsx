@@ -1,6 +1,8 @@
+import { ArrowDownIcon } from '@/assets/Icons/ArrowDownIcon';
 import { BinIcon } from '../../assets/Icons/BinIcon';
 
 import { useTasks } from '../../store/TasksContext';
+import { ArrowUpIcon } from '@/assets/Icons/ArrowUpIcon';
 
 export default function PairingCreate() {
   const { activeTask, updateTask } = useTasks();
@@ -17,7 +19,7 @@ export default function PairingCreate() {
         pairing: {
           pairing_groups: [
             ...pairing.pairing_groups,
-            { pair_question: '', pair_answer: '' },
+            { pair_question: '', pair_answer: '', isExpanded: true },
           ],
         },
       });
@@ -26,8 +28,8 @@ export default function PairingCreate() {
 
   const updatePair = (
     index: number,
-    field: 'pair_question' | 'pair_answer',
-    value: string,
+    field: 'pair_question' | 'pair_answer' | 'isExpanded',
+    value: string | boolean,
   ) => {
     const next = pairing.pairing_groups.map((p, i) =>
       i === index ? { ...p, [field]: value } : p,
@@ -48,6 +50,10 @@ export default function PairingCreate() {
         pairing_groups: pairing.pairing_groups.filter((_, i) => i !== index),
       },
     });
+  };
+
+  const handleExpandQuestion = (index: number) => {
+    updatePair(index, 'isExpanded', true);
   };
 
   return (
@@ -103,17 +109,39 @@ export default function PairingCreate() {
         {pairing.pairing_groups.map((item, index) => (
           <div
             key={index}
-            className="border rounded-[5px] border-[#8FBF6D] p-4 bg-white"
+            className="border rounded-[5px] text-gray border-[#8FBF6D] p-4 bg-white"
           >
             <div className="flex justify-between">
-              <p className="text-gray text-[22px]">{index + 1}. Pár</p>
-              <div className="cursor-pointer" onClick={() => removePair(index)}>
-                <BinIcon color="#FF575A"></BinIcon>
+              <p className=" text-[22px]">{index + 1}. Pár</p>
+              <div className="flex items-center gap-3">
+                <div
+                  className="cursor-pointer"
+                  onClick={() => removePair(index)}
+                >
+                  <BinIcon color="#FF575A"></BinIcon>
+                </div>
+
+                <div
+                  className="cursor-pointer "
+                  onClick={() => handleExpandQuestion(index)}
+                >
+                  {item.isExpanded ? (
+                    <ArrowDownIcon></ArrowDownIcon>
+                  ) : (
+                    <ArrowUpIcon></ArrowUpIcon>
+                  )}
+                </div>
               </div>
             </div>
             <div className="mb-3">
-              <label className="block mb-1 font-medium">Kérdés vagy kép</label>
+              <label
+                htmlFor="pairQuestionQuestion"
+                className="block mb-1 font-medium"
+              >
+                Kérdés vagy leírás
+              </label>
               <input
+                name="pairQuestionQuestion"
                 value={item.pair_question}
                 onChange={(e) =>
                   updatePair(index, 'pair_question', e.target.value)
@@ -123,8 +151,46 @@ export default function PairingCreate() {
             </div>
 
             <div className="mb-3">
-              <label className="block mb-1 font-medium">Válasz</label>
+              <label
+                htmlFor="pairQuestionImage"
+                className="block mb-1 font-medium"
+              >
+                Kép
+              </label>
               <input
+                className="
+                  w-1/2
+                  text-sm 
+                  file:cursor-pointer
+                  file:mr-4
+                  file:py-2
+                  file:px-4
+                  file:rounded-md
+                  file:border-[1px]   
+                  file:border-solid
+                  file:border-gray
+                  file:text-sm
+                  file:bg-white
+                  file:text-gray
+
+                  disabled:opacity-50
+                  disabled:cursor-not-allowed
+                  "
+                type="file"
+                accept="image/*"
+                disabled={item.pair_question ? true : false}
+              />
+            </div>
+
+            <div className="mb-3">
+              <label
+                htmlFor="pairQuestionAnswer"
+                className="block mb-1 font-medium"
+              >
+                Válasz
+              </label>
+              <input
+                name="pairQuestionAnswer"
                 value={item.pair_answer}
                 onChange={(e) =>
                   updatePair(index, 'pair_answer', e.target.value)

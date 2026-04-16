@@ -32,6 +32,7 @@ export type ShortAnswerJson = {
 export type PairGroup = {
   pair_question: string;
   pair_answer: string;
+  isExpanded: boolean; //frontend miatt muszaj betenni, majd be fetcheleskor hamozzuk a jsont
 };
 export type PairingJson = {
   pairing_groups: PairGroup[];
