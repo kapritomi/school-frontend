@@ -2,7 +2,7 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
+import { TasksProvider } from './store/TasksContext.tsx';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -12,8 +12,11 @@ const queryClient = new QueryClient({
     },
   },
 });
+
 createRoot(document.getElementById('root')!).render(
   <QueryClientProvider client={queryClient}>
-    <App></App>
+    <TasksProvider>
+      <App />
+    </TasksProvider>
   </QueryClientProvider>,
 );

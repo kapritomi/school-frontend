@@ -13,7 +13,7 @@ export default {
         primaryDisabled: '#2E6544CC',
         alert: '#FF575A',
         darkGrayText: '#272727',
-        secondaryText:'#444444'
+        secondaryText: '#444444',
       },
       fontSize: {
         TaskTitle: '30px',

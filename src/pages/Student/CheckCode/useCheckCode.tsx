@@ -70,6 +70,6 @@ export const useCheckCode = () => {
     handleInputChange,
     handleStartSolving,
     setStudentId,
-    studentId
+    studentId,
   };
 };

@@ -1,5 +1,6 @@
 import { BinIcon } from '../../assets/Icons/BinIcon';
-import { useTasks } from '../../store/useTasks';
+
+import { useTasks } from '../../store/TasksContext';
 
 export default function PairingCreate() {
   const { activeTask, updateTask } = useTasks();
@@ -10,7 +11,7 @@ export default function PairingCreate() {
   const pairing = task.pairing ?? { pairing_groups: [] };
 
   const addPair = () => {
-    if(pairing.pairing_groups.length<8){
+    if (pairing.pairing_groups.length < 8) {
       updateTask({
         ...task,
         pairing: {
@@ -20,7 +21,6 @@ export default function PairingCreate() {
           ],
         },
       });
-
     }
   };
 
@@ -51,7 +51,7 @@ export default function PairingCreate() {
   };
 
   return (
-    <div className='h-fit'>
+    <div className="h-fit">
       {/* ---- Feladat címe ---- */}
       <section className="space-y-4 mt-4">
         <label className="block text-primary text-[30px] font-semibold">
@@ -79,7 +79,7 @@ export default function PairingCreate() {
           }
           maxLength={255}
           className="w-full resize-none p-4 h-[70px] rounded-[8px] border-[1px] border-lightBorder outline-none text-gray transition-all
-             focus:border-primary focus:ring-1 focus:ring-primary" 
+             focus:border-primary focus:ring-1 focus:ring-primary"
         />
       </section>
 
@@ -92,7 +92,7 @@ export default function PairingCreate() {
         </p>
         <button
           type="button"
-          onClick={()=>addPair()}
+          onClick={() => addPair()}
           className="px-3 py-2 rounded-lg bg-primary text-white"
         >
           + Új kérdés
@@ -105,12 +105,11 @@ export default function PairingCreate() {
             key={index}
             className="border rounded-[5px] border-[#8FBF6D] p-4 bg-white"
           >
-            <div className='flex justify-between'>
-                <p className='text-gray text-[22px]'>{index+1}. Pár</ p>
-                <div className='cursor-pointer' onClick={() => removePair(index)}>
-                  <BinIcon color='#FF575A'></BinIcon>
-                </div>
-                
+            <div className="flex justify-between">
+              <p className="text-gray text-[22px]">{index + 1}. Pár</p>
+              <div className="cursor-pointer" onClick={() => removePair(index)}>
+                <BinIcon color="#FF575A"></BinIcon>
+              </div>
             </div>
             <div className="mb-3">
               <label className="block mb-1 font-medium">Kérdés vagy kép</label>
@@ -130,7 +129,7 @@ export default function PairingCreate() {
                 onChange={(e) =>
                   updatePair(index, 'pair_answer', e.target.value)
                 }
-                 className="w-3/4 rounded-[6px] p-2 border outline-none border-gray focus:outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary"
+                className="w-3/4 rounded-[6px] p-2 border outline-none border-gray focus:outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary"
               />
             </div>
           </div>
