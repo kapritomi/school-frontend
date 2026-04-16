@@ -3,14 +3,18 @@ import { BinIcon } from '../../assets/Icons/BinIcon';
 
 import { useTasks } from '../../store/TasksContext';
 import { ArrowUpIcon } from '@/assets/Icons/ArrowUpIcon';
+import type { PairGroup } from '@/types/tasks';
+import { useEffect, useRef } from 'react';
 
 export default function PairingCreate() {
   const { activeTask, updateTask } = useTasks();
+  const itemsRef = useRef<Map<string, HTMLDivElement> | null>(null);
 
   if (!activeTask) return null;
 
   const task = activeTask;
   const pairing = task.pairing ?? { pairing_groups: [] };
+  const prevLengthRef = useRef(pairing.pairing_groups.length);
 
   const addPair = () => {
     if (pairing.pairing_groups.length < 8) {
@@ -25,6 +29,24 @@ export default function PairingCreate() {
       });
     }
   };
+
+  useEffect(() => {
+    const currentLength = pairing.pairing_groups.length;
+    const prevLength = prevLengthRef.current;
+
+    if (currentLength > prevLength) {
+      const lastIndex = currentLength - 1;
+
+      const timer = setTimeout(() => {
+        scrollToId(String(lastIndex));
+      }, 100);
+
+      prevLengthRef.current = currentLength;
+      return () => clearTimeout(timer);
+    }
+
+    prevLengthRef.current = currentLength;
+  }, [pairing.pairing_groups.length]);
 
   const updatePair = (
     index: number,
@@ -52,65 +74,88 @@ export default function PairingCreate() {
     });
   };
 
-  const handleExpandQuestion = (index: number) => {
-    updatePair(index, 'isExpanded', true);
+  function getMap() {
+    if (!itemsRef.current) {
+      itemsRef.current = new Map();
+    }
+    return itemsRef.current;
+  }
+
+  const scrollToId = (id: string) => {
+    const map = getMap();
+    const node = map.get(id);
+    if (node) {
+      node.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  };
+
+  const handleExpandQuestion = (index: number, item: PairGroup) => {
+    updatePair(index, 'isExpanded', !item.isExpanded);
   };
 
   return (
-    <div className="h-fit">
+    <div className="flex flex-col gap-ElementsSpace">
       {/* ---- Feladat címe ---- */}
-      <section className="space-y-4 mt-4">
+      <section className="flex flex-col gap-LabelDescriptionInputSpace">
         <label className="block text-primary text-[30px] font-semibold">
           A feladat címe:
         </label>
         <input
           value={task.task_title}
           onChange={(e) => updateTask({ ...task, task_title: e.target.value })}
-          className="border-lightBorder w-full p-4 outline-none text-gray  h-[48px] border-[1px] rounded-[8px] focus:border-primary focus:ring-1 focus:ring-primary"
+          className="border-lightBorder shadow-md w-full p-4 outline-none text-gray  h-[48px] border-[1px] rounded-[8px] focus:border-primary focus:ring-1 focus:ring-primary"
         />
       </section>
       {/* ---- Feladatleírás ---- */}
-      <section className="mt-8">
-        <label className="block text-primary text-[30px] font-semibold">
-          Feladatleírás:
-        </label>
-        <p className="text-[#818181] mt-4 mb-2 text-[15px]">
-          Adja meg a feladat leírását. Ez a feladat índításakor fog megjelenni.
-          A leírás megadása nem kötelező, üresen hagyhatja a mezőt.
-        </p>
+      <section className="flex flex-col gap-LabelDescriptionInputSpace">
+        <div className="flex flex-col gap-LabelDescriptionSpace">
+          <label className="block text-primary text-[30px] font-semibold">
+            Feladatleírás:
+          </label>
+          <p className="text-[#818181]  text-[15px]">
+            Adja meg a feladat leírását. Ez a feladat índításakor fog
+            megjelenni. A leírás megadása nem kötelező, üresen hagyhatja a
+            mezőt.
+          </p>
+        </div>
         <textarea
           value={task.task_description}
           onChange={(e) =>
             updateTask({ ...task, task_description: e.target.value })
           }
           maxLength={255}
-          className="w-full resize-none p-4 h-[70px] rounded-[8px] border-[1px] border-lightBorder outline-none text-gray transition-all
+          className="w-full shadow-md resize-none p-4 h-[70px] rounded-[8px] border-[1px] border-lightBorder outline-none text-gray transition-all
              focus:border-primary focus:ring-1 focus:ring-primary"
         />
       </section>
 
       {/* ---- Új kérdés gomb ---- */}
-      <div className="mt-8">
+      <div className="flex flex-col gap-LabelDescriptionSpace">
         <h1 className="text-primary text-[30px] font-semibold">Párok:</h1>
-        <p className="text-gray mt-4 mb-2 text-[15px]">
+        <p className="text-gray  text-[15px]">
           Kártyánként legalább egy tartalmat és a hozzá tartozó megoldást kell
           megadnia.
         </p>
-        <button
-          type="button"
-          onClick={() => addPair()}
-          className="px-3 py-2 rounded-lg bg-primary text-white"
-        >
-          + Új kérdés
-        </button>
       </div>
       {/* ---- Kérdés létrehozás field */}
-      <div className="mt-6 grid  gap-4 w-1/2">
+      <div className="flex flex-col gap-4 w-1/2">
         {pairing.pairing_groups.map((item, index) => (
           <div
+            ref={(node) => {
+              const map = getMap();
+              if (node) {
+                map.set(String(index), node);
+              } else {
+                map.delete(String(index));
+              }
+            }}
             key={index}
-            className="border rounded-[5px] text-gray border-[#8FBF6D] p-4 bg-white"
+            className={`border w-full flex flex-col gap-[13px] rounded-[5px] text-gray duration-300  transition-all border-[#8FBF6D] p-4 bg-white ${item.isExpanded ? 'max-h-[600px]' : 'max-h-[140px] overflow-hidden'}`}
           >
+            {/* Kartya header */}
             <div className="flex justify-between">
               <p className=" text-[22px]">{index + 1}. Pár</p>
               <div className="flex items-center gap-3">
@@ -123,7 +168,7 @@ export default function PairingCreate() {
 
                 <div
                   className="cursor-pointer "
-                  onClick={() => handleExpandQuestion(index)}
+                  onClick={() => handleExpandQuestion(index, item)}
                 >
                   {item.isExpanded ? (
                     <ArrowDownIcon></ArrowDownIcon>
@@ -133,32 +178,37 @@ export default function PairingCreate() {
                 </div>
               </div>
             </div>
-            <div className="mb-3">
-              <label
-                htmlFor="pairQuestionQuestion"
-                className="block mb-1 font-medium"
-              >
-                Kérdés vagy leírás
-              </label>
-              <input
-                name="pairQuestionQuestion"
-                value={item.pair_question}
-                onChange={(e) =>
-                  updatePair(index, 'pair_question', e.target.value)
-                }
-                className="w-3/4 rounded-[6px] p-2 border outline-none border-gray focus:outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary"
-              />
-            </div>
+            {/* Kartya body */}
+            {item.isExpanded ? (
+              <div className="flex flex-col gap-[10px]">
+                <div className="flex flex-col gap-[15px]">
+                  <label
+                    htmlFor="pairQuestionQuestion"
+                    className="block  font-medium"
+                  >
+                    Kérdés vagy leírás
+                  </label>
+                  <textarea
+                    maxLength={130}
+                    name="pairQuestionQuestion"
+                    value={item.pair_question}
+                    onChange={(e) =>
+                      updatePair(index, 'pair_question', e.target.value)
+                    }
+                    className="w-full  shadow-md resize-none h-[90px] p-4 rounded-[8px] border-[1px] border-lightBorder outline-none text-gray transition-all
+             focus:border-primary focus:ring-1 focus:ring-primary"
+                  />
+                </div>
 
-            <div className="mb-3">
-              <label
-                htmlFor="pairQuestionImage"
-                className="block mb-1 font-medium"
-              >
-                Kép
-              </label>
-              <input
-                className="
+                <div className="flex flex-col gap-[15px]">
+                  <label
+                    htmlFor="pairQuestionImage"
+                    className="block font-medium"
+                  >
+                    Kép
+                  </label>
+                  <input
+                    className="
                   w-1/2
                   text-sm 
                   file:cursor-pointer
@@ -168,38 +218,61 @@ export default function PairingCreate() {
                   file:rounded-md
                   file:border-[1px]   
                   file:border-solid
-                  file:border-gray
+                  file:border-lightBorder
                   file:text-sm
                   file:bg-white
                   file:text-gray
-
+                 
                   disabled:opacity-50
                   disabled:cursor-not-allowed
                   "
-                type="file"
-                accept="image/*"
-                disabled={item.pair_question ? true : false}
-              />
-            </div>
+                    type="file"
+                    accept="image/*"
+                    disabled={item.pair_question ? true : false}
+                  />
+                </div>
 
-            <div className="mb-3">
-              <label
-                htmlFor="pairQuestionAnswer"
-                className="block mb-1 font-medium"
-              >
-                Válasz
-              </label>
-              <input
-                name="pairQuestionAnswer"
-                value={item.pair_answer}
-                onChange={(e) =>
-                  updatePair(index, 'pair_answer', e.target.value)
-                }
-                className="w-3/4 rounded-[6px] p-2 border outline-none border-gray focus:outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary"
-              />
-            </div>
+                <div className="flex flex-col gap-[15px]">
+                  <label
+                    htmlFor="pairQuestionAnswer"
+                    className="block  font-medium"
+                  >
+                    Válasz
+                  </label>
+                  <textarea
+                    maxLength={130}
+                    name="pairQuestionAnswer"
+                    value={item.pair_answer}
+                    onChange={(e) =>
+                      updatePair(index, 'pair_answer', e.target.value)
+                    }
+                    className="w-full  shadow-md resize-none p-4 h-[90px] rounded-[8px] border-[1px] border-lightBorder outline-none text-gray transition-all
+             focus:border-primary focus:ring-1 focus:ring-primary"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="flex text-[16px] flex-col">
+                <p className="w-3/4  truncate">{item.pair_question}</p>
+                {item.pair_answer && item.pair_question && (
+                  <p className="">-</p>
+                )}
+
+                <p className="w-3/4 truncate ">{item.pair_answer}</p>
+              </div>
+            )}
           </div>
         ))}
+      </div>
+      <div className="mt-8">
+        <button
+          type="button"
+          onClick={() => addPair()}
+          className="px-3 py-2 rounded-lg cursor-pointer bg-primary text-white disabled:bg-opacity-75"
+          disabled={!(pairing.pairing_groups.length < 8)}
+        >
+          + Új kérdés
+        </button>
       </div>
     </div>
   );

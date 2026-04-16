@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import type { TaskType } from '../types/tasks';
 import { useTasks } from '../store/TasksContext';
-import { DeleteIcon } from '../icons/Delete';
 export default function Sidebar() {
   const { slots, selectTask, createTask, removeTask, reorderSlots } =
     useTasks();
@@ -248,7 +247,7 @@ export default function Sidebar() {
           </div>
         </div>
       )}
-      <div className="text-[22px] font-medium pl-3 pt-5">Beállítások:</div>
+      <div className="text-[22px] font-medium pl-3 pt-5"></div>
     </aside>
   );
 }

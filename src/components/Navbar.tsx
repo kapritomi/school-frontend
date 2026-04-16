@@ -4,7 +4,7 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   return (
-    <div className="w-screen h-[70px] px-[19px] shadow-md absolute flex items-center justify-between top-0">
+    <div className="w-screen bg-white h-[70px] px-[19px] shadow-md absolute flex items-center justify-between top-0">
       <button
         className="w-[117px] h-[36px] bg-primary text-white font-semibold text-[20px] rounded-[6px]"
         onClick={() => navigate(-1)}

@@ -22,6 +22,11 @@ export default {
       fontFamily: {
         'default-font': 'Poppins',
       },
+      gap: {
+        LabelDescriptionInputSpace: '23px',
+        LabelDescriptionSpace: '10px',
+        ElementsSpace: '33px',
+      },
     },
   },
   plugins: [],
