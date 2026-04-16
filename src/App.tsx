@@ -46,7 +46,7 @@ export default function App() {
       element: <WorksheetSolutions />,
     },
     {
-      path: '/student/checkCode/:code',
+      path: '/student/checkCode/:code?',
       element: <CheckCode />,
     },
     {

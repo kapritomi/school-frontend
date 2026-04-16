@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { checkCodeAndPassword } from '../../../api/Student/checkCode';
+import { startSolving } from '../../../api/Student/startSolving';
 type Student = {
   name: string;
   id: number;
@@ -10,7 +11,9 @@ export const useCheckCode = () => {
   const [code, setCode] = useState<null | string>('U7yfql0X');
   const [password, setPassword] = useState<null | string>('körte123');
   const [students, setStudents] = useState<null | Student[]>(null);
-  const [worksheetId, setWorksheetId] = useState<null | number>(0);
+  const [worksheetId, setWorksheetId] = useState<null | number>(null);
+  const [studentId, setStudentId] = useState<null | number>(null);
+
   const handleInputChange = (
     input: string,
     set: React.Dispatch<React.SetStateAction<string | null>>,
@@ -19,11 +22,25 @@ export const useCheckCode = () => {
       set(input);
     }
   };
-
+  const handleStartSolving = async () => {
+    if (worksheetId || studentId) {
+      try {
+        const data = {
+          worksheet_id: String(worksheetId),
+          student_id: String(studentId),
+        };
+        startSolving(data);
+      } catch (error: any) {
+        const serverMessage =
+          error.response?.data?.message || 'Hiba történt a mentés során!';
+        setErrorMessage(serverMessage);
+      }
+    }
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!code || !password) return;
-    setIsLoading(true)
+    setIsLoading(true);
     const data = {
       access_code: code,
       password: password,
@@ -36,13 +53,14 @@ export const useCheckCode = () => {
       const serverMessage =
         error.response?.data?.message || 'Hiba történt a mentés során!';
       setErrorMessage(serverMessage);
-    }
-    finally{
-        setIsLoading(false)
+    } finally {
+      setIsLoading(false);
     }
   };
   return {
     isLodaing,
+    code,
+    password,
     setIsLoading,
     errorMessage,
     students,
@@ -50,5 +68,8 @@ export const useCheckCode = () => {
     setPassword,
     setCode,
     handleInputChange,
+    handleStartSolving,
+    setStudentId,
+    studentId
   };
 };

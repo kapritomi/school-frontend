@@ -1,3 +1,4 @@
+import { BinIcon } from '../../assets/Icons/BinIcon';
 import { useTasks } from '../../store/useTasks';
 
 export default function PairingCreate() {
@@ -9,15 +10,18 @@ export default function PairingCreate() {
   const pairing = task.pairing ?? { pairing_groups: [] };
 
   const addPair = () => {
-    updateTask({
-      ...task,
-      pairing: {
-        pairing_groups: [
-          ...pairing.pairing_groups,
-          { pair_question: '', pair_answer: '' },
-        ],
-      },
-    });
+    if(pairing.pairing_groups.length<8){
+      updateTask({
+        ...task,
+        pairing: {
+          pairing_groups: [
+            ...pairing.pairing_groups,
+            { pair_question: '', pair_answer: '' },
+          ],
+        },
+      });
+
+    }
   };
 
   const updatePair = (
@@ -47,7 +51,7 @@ export default function PairingCreate() {
   };
 
   return (
-    <div>
+    <div className='h-fit'>
       {/* ---- Feladat címe ---- */}
       <section className="space-y-4 mt-4">
         <label className="block text-primary text-[30px] font-semibold">
@@ -56,7 +60,7 @@ export default function PairingCreate() {
         <input
           value={task.task_title}
           onChange={(e) => updateTask({ ...task, task_title: e.target.value })}
-          className="block w-full rounded-[6px] p-2 border-[1px] border-[#818181] shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+          className="border-lightBorder w-full p-4 outline-none text-gray  h-[48px] border-[1px] rounded-[8px] focus:border-primary focus:ring-1 focus:ring-primary"
         />
       </section>
       {/* ---- Feladatleírás ---- */}
@@ -73,32 +77,41 @@ export default function PairingCreate() {
           onChange={(e) =>
             updateTask({ ...task, task_description: e.target.value })
           }
-          className="block w-full rounded-[6px] p-2 border-[1px] border-[#818181] shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+          maxLength={255}
+          className="w-full resize-none p-4 h-[70px] rounded-[8px] border-[1px] border-lightBorder outline-none text-gray transition-all
+             focus:border-primary focus:ring-1 focus:ring-primary" 
         />
       </section>
 
       {/* ---- Új kérdés gomb ---- */}
       <div className="mt-8">
-        <h1 className="text-primary text-[30px] font-semibold">Kártyák:</h1>
-        <p className="text-[#818181] mt-4 mb-2 text-[15px]">
+        <h1 className="text-primary text-[30px] font-semibold">Párok:</h1>
+        <p className="text-gray mt-4 mb-2 text-[15px]">
           Kártyánként legalább egy tartalmat és a hozzá tartozó megoldást kell
           megadnia.
         </p>
         <button
           type="button"
-          onClick={addPair}
+          onClick={()=>addPair()}
           className="px-3 py-2 rounded-lg bg-primary text-white"
         >
           + Új kérdés
         </button>
       </div>
       {/* ---- Kérdés létrehozás field */}
-      <div className="mt-6 grid gap-4 w-1/2">
+      <div className="mt-6 grid  gap-4 w-1/2">
         {pairing.pairing_groups.map((item, index) => (
           <div
             key={index}
             className="border rounded-[5px] border-[#8FBF6D] p-4 bg-white"
           >
+            <div className='flex justify-between'>
+                <p className='text-gray text-[22px]'>{index+1}. Pár</ p>
+                <div className='cursor-pointer' onClick={() => removePair(index)}>
+                  <BinIcon color='#FF575A'></BinIcon>
+                </div>
+                
+            </div>
             <div className="mb-3">
               <label className="block mb-1 font-medium">Kérdés vagy kép</label>
               <input
@@ -106,7 +119,7 @@ export default function PairingCreate() {
                 onChange={(e) =>
                   updatePair(index, 'pair_question', e.target.value)
                 }
-                className="w-3/4 rounded-[6px] p-2 border border-gray focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                className="w-3/4 rounded-[6px] p-2 border outline-none border-gray focus:outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary"
               />
             </div>
 
@@ -117,17 +130,9 @@ export default function PairingCreate() {
                 onChange={(e) =>
                   updatePair(index, 'pair_answer', e.target.value)
                 }
-                className="w-3/4 rounded-[6px] p-2 border border-gray focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                 className="w-3/4 rounded-[6px] p-2 border outline-none border-gray focus:outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary"
               />
             </div>
-
-            <button
-              type="button"
-              onClick={() => removePair(index)}
-              className="px-3 py-2 rounded-lg border border-red-400 text-red-500"
-            >
-              Törlés
-            </button>
           </div>
         ))}
       </div>

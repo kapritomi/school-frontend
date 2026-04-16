@@ -1,9 +1,17 @@
-import { useNavigate } from 'react-router-dom';
+
 import { ClipLoader } from 'react-spinners';
 import { useCheckCode } from './useCheckCode';
+import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export const CheckCode = () => {
-  const navigate = useNavigate();
+  const params = useParams()
+
+  useEffect(()=>{
+    if(params.code){
+      setCode(params.code)
+    }
+  },[])
   const {
     isLodaing,
     errorMessage,
@@ -12,6 +20,11 @@ export const CheckCode = () => {
     setCode,
     setPassword,
     students,
+    handleStartSolving,
+    setStudentId,
+    studentId,
+    code,
+    password
   } = useCheckCode();
 
   return (
@@ -31,13 +44,27 @@ export const CheckCode = () => {
             <div className="w-full h-full flex flex-wrap gap-4 ">
               {students.map((st) => (
                 <div
-                  className={`flex items-center h-[64px] hover:cursor-pointer hover:border-primary w-[334px] border-lightBorder border-[1px] px-[17px] py-[11px] justify-between rounded-[5px] shadow-md`}
+                onClick={()=>setStudentId(st.id)}
+                  className={`flex items-center ${studentId === st.id ?"bg-primary text-white" : "bg-white text-darkGrayText"} h-[64px] hover:cursor-pointer hover:border-primary w-[334px] border-lightBorder border-[1px] px-[17px] py-[11px] justify-between rounded-[5px] shadow-md`}
                   key={st.id}
                 >
-                  <p className="text-[24px] w-2/3 max-w-2/3 truncate font-medium text-darkGrayText">{st.name}</p>
+                  <p className="text-[24px] w-2/3 max-w-2/3 truncate font-medium ">
+                    {st.name}
+                  </p>
                 </div>
               ))}
             </div>
+            {studentId && 
+         
+              <div className="w-full pb-20 text-white justify-center flex">
+                <button
+                  onClick={(e) => handleSubmit(e)}
+                  className="w-[232px] h-[60px] rounded-[6px] font-semibold bg-primary"
+                >
+                  Kezdés
+                </button>
+              </div>
+            }
           </div>
         ) : (
           <div className="w-[500px] flex flex-col gap-[41px]  min-h-[400px] shadow-md rounded-[16px] py-[27px] border-lightBorder border-[1px] px-[32px] ">
@@ -47,12 +74,14 @@ export const CheckCode = () => {
             >
               <input
                 autoFocus
+                value={code ? code : ""}
                 onChange={(e) => handleInputChange(e.target.value, setCode)}
                 className={`w-[436px] focus:border-primary outline-none  h-[60px] border-[2px] transition-all duration-300 rounded-[6px] p-4 ${errorMessage ? 'border-alert outline-2' : 'border-lightBorder'}`}
                 type="text"
                 placeholder="Kód"
               />
               <input
+              value={password? password : ""}
                 autoFocus
                 onChange={(e) => handleInputChange(e.target.value, setPassword)}
                 className={`w-[436px] focus:border-primary outline-none  h-[60px] border-[2px] transition-all duration-300 rounded-[6px] p-4 ${errorMessage ? 'border-alert outline-2' : 'border-lightBorder'}`}
@@ -67,7 +96,7 @@ export const CheckCode = () => {
 
               <div className="w-full h-full text-white justify-center flex">
                 <button
-                  onClick={(e) => handleSubmit(e)}
+                  onClick={() => handleStartSolving()}
                   className="w-[232px] h-[60px] rounded-[6px] font-semibold bg-primary"
                 >
                   Kezdés

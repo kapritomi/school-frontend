@@ -5,9 +5,7 @@ type requestData = {
 };
 export const checkCodeAndPassword = async (codeAndPassword: requestData) => {
   try {
-    const response = await apiClient.post('/verify-access', codeAndPassword, {
-      _authRequired: true,
-    } as any);
+    const response = await apiClient.post('/verify-access', codeAndPassword);
 
     return response.data;
   } catch (error: any) {
