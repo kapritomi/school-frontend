@@ -80,10 +80,10 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="bg-white w-[240px] h-full shadow-[6px_4px_4px_rgba(0,0,0,0.25)]">
-      <div className="text-[22px] font-medium pl-3 pt-5">Feladatsorod:</div>
+    <aside className="bg-white w-[260px] px-3 h-full shadow-[6px_4px_4px_rgba(0,0,0,0.25)]">
+      <p className="text-[22px] font-medium  pt-4">Feladatsorod:</p>
       {/* ---- Feladatok ---- */}
-      <div className="flex flex-col gap-3 p-3">
+      <div className="flex flex-col gap-3">
         {slots.map((slot, idx) => {
           const isOver =
             overIndex === idx && dragIndex !== null && dragIndex !== idx;
@@ -247,7 +247,49 @@ export default function Sidebar() {
           </div>
         </div>
       )}
-      <div className="text-[22px] font-medium pl-3 pt-5"></div>
+      <div>
+        <p className="text-[22px] font-medium  pt-4">Beállítások:</p>
+        <div className="pl-1 flex flex-col gap-2">
+          <label className="text-secondaryFont text-[19px]" htmlFor="worksheetAccess">
+            Feladatlap láthatósága:
+          </label>
+          <label className="flex items-center gap-4 cursor-pointer group">
+            <div className="relative flex items-center justify-center">
+              <input
+                type="radio"
+                name="visibility"
+                className="peer appearance-none w-[17px] h-[17px] border-[1px] border-secondary rounded-full checked:bg-transparent transition-all"
+                // checked={visibility === 'public'}
+                // onChange={() => setVisibility('public')}
+              />
+              {/* A belső teli kör, ami csak akkor látszik ha 'checked' */}
+              <div className="absolute w-[15px] h-[15px] bg-[#2D5A43] rounded-full scale-0 peer-checked:scale-100 transition-transform" />
+            </div>
+            <span className="text-[18px] text-gray font-medium">Publikus</span>
+          </label>
+
+          {/* Privát opció */}
+          <label className="flex items-center gap-4 cursor-pointer group">
+            <div className="relative flex items-center justify-center">
+              <input
+                type="radio"
+                name="visibility"
+                className="peer appearance-none w-[17px] h-[17px] border-[1px] border-secondary rounded-full checked:bg-transparent transition-all"
+                // checked={visibility === 'private'}
+                // onChange={() => setVisibility('private')}
+              />
+              <div className="absolute w-[15px] h-[15px] bg-primary rounded-full scale-0 peer-checked:scale-100 transition-transform" />
+            </div>
+            <span className="text-[18px]  text-gray font-medium">Privát</span>
+          </label>
+        </div>
+      </div>
+      <div className='pt-4 pl-1 '>
+          <label className="text-secondaryFont text-[19px]" htmlFor="worksheetPassword">
+            Feladatlap jelszava:
+          </label>
+          <input name='worksheetPassword'  className="border-lightBorder shadow-md  p-4 outline-none text-gray  h-[28px] border-[1px] rounded-[8px] focus:border-primary focus:ring-1 focus:ring-primary" type="text" />
+      </div>
     </aside>
   );
 }
