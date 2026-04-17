@@ -23,6 +23,7 @@ export type AssignmentJson = {
 export type ShortQuestion = {
   question: string;
   answer: string;
+  isExpanded: boolean;
 };
 export type ShortAnswerJson = {
   questions: ShortQuestion[];

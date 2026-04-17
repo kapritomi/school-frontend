@@ -1,4 +1,4 @@
-import {useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTasks } from '../../store/TasksContext';
 import type { Group } from '@/types/tasks';
 import { EditIcon } from '@/assets/Icons/EditIcon';
@@ -11,7 +11,7 @@ export default function GroupingCreate() {
   const [itemName, setItemName] = useState<null | string>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [newItemName,setNewItemName]=useState<string | null>(null)
+  const [newItemName, setNewItemName] = useState<string | null>(null);
   if (!activeTask) return null;
 
   const task = activeTask;
@@ -57,7 +57,7 @@ export default function GroupingCreate() {
     if (itemName && selectedGroup) {
       const next = grouping.groups.map((g, i) =>
         i === groupIndex
-          ? { ...g, items: [...g.items, {name: itemName }] }
+          ? { ...g, items: [...g.items, { name: itemName }] }
           : g,
       );
 
@@ -75,7 +75,7 @@ export default function GroupingCreate() {
         if (i !== groupIndex) return g;
 
         const newItems = g.items.map((item, j) =>
-          j === itemIndex ? {...item, name: newItemName } : item,
+          j === itemIndex ? { ...item, name: newItemName } : item,
         );
 
         return { ...g, items: newItems };
@@ -87,32 +87,30 @@ export default function GroupingCreate() {
       });
     }
   };
-  const handleEdit=(index:number,itemName:string)=>{
-    if(index === editingId){
-      setEditingId(null)
-      setNewItemName(null)
-    }else{
-      setEditingId(index)
-      setNewItemName(itemName)
+  const handleEdit = (index: number, itemName: string) => {
+    if (index === editingId) {
+      setEditingId(null);
+      setNewItemName(null);
+    } else {
+      setEditingId(index);
+      setNewItemName(itemName);
     }
-  }
-const handleDelete = (groupIndex: number, itemIndex: number) => {
-  
-  const updatedGroups = grouping.groups.map((g, i) => {
-    if (i !== groupIndex) return g;
-    const filteredItems = g.items.filter((_, j) => j !== itemIndex);
-    return { ...g, items: filteredItems };
-  });
+  };
+  const handleDelete = (groupIndex: number, itemIndex: number) => {
+    const updatedGroups = grouping.groups.map((g, i) => {
+      if (i !== groupIndex) return g;
+      const filteredItems = g.items.filter((_, j) => j !== itemIndex);
+      return { ...g, items: filteredItems };
+    });
 
- 
-  updateTask({
-    ...task,
-    grouping: { 
-      ...task.grouping, 
-      groups: updatedGroups 
-    },
-  });
-};
+    updateTask({
+      ...task,
+      grouping: {
+        ...task.grouping,
+        groups: updatedGroups,
+      },
+    });
+  };
   return (
     <div className="flex flex-col gap-ElementsSpace">
       <section className="flex flex-col gap-LabelDescriptionInputSpace">
@@ -260,14 +258,12 @@ const handleDelete = (groupIndex: number, itemIndex: number) => {
                     >
                       {isEditing && editingId === ii ? (
                         <input
-                        className="border-none text-[18px] shadow-md w-full h-full  outline-none text-gray "
+                          className="border-none text-[18px] shadow-md w-full h-full  outline-none text-gray "
                           maxLength={80}
                           autoFocus
                           key={ii}
                           defaultValue={item.name}
-                          onChange={(e) =>
-                           setNewItemName(e.target.value)
-                          }
+                          onChange={(e) => setNewItemName(e.target.value)}
                           placeholder="Elem neve"
                         />
                       ) : (
@@ -277,14 +273,21 @@ const handleDelete = (groupIndex: number, itemIndex: number) => {
                       )}
 
                       <div className="flex items-center justify-center gap-2">
-                        {(editingId === ii && newItemName !==item.name )? (
-                          <button onClick={() =>{ updateItem(selectedGroup.index, ii); setIsEditing(!isEditing);setEditingId(null)}}>
+                        {editingId === ii && newItemName !== item.name ? (
+                          <button
+                            onClick={() => {
+                              updateItem(selectedGroup.index, ii);
+                              setIsEditing(!isEditing);
+                              setEditingId(null);
+                            }}
+                          >
                             ✔️
                           </button>
                         ) : (
                           <button
                             onClick={() => {
-                              (handleEdit(ii,item.name), setIsEditing(!isEditing));
+                              (handleEdit(ii, item.name),
+                                setIsEditing(!isEditing));
                             }}
                           >
                             <EditIcon color="#2E6544"></EditIcon>
@@ -292,7 +295,7 @@ const handleDelete = (groupIndex: number, itemIndex: number) => {
                         )}
 
                         <button
-                         onClick={() => handleDelete(selectedGroup.index,ii)}
+                          onClick={() => handleDelete(selectedGroup.index, ii)}
                         >
                           <BinIcon color="#FF575A"></BinIcon>
                         </button>

@@ -134,7 +134,7 @@ export default function PairingCreate() {
 
       {/* ---- Új kérdés gomb ---- */}
       <div className="flex flex-col gap-LabelDescriptionSpace">
-        <h1 className="text-primary text-[30px] font-semibold">Párok:</h1>
+        <p className="text-primary text-[30px] font-semibold">Párok:</p>
         <p className="text-gray  text-[15px]">
           Kártyánként legalább egy tartalmat és a hozzá tartozó megoldást kell
           megadnia.
@@ -268,7 +268,7 @@ export default function PairingCreate() {
         <button
           type="button"
           onClick={() => addPair()}
-          className="px-3 py-2 rounded-lg cursor-pointer bg-primary text-white disabled:bg-opacity-75"
+          className="px-3 w-[211px] py-2 rounded-lg cursor-pointer bg-primary text-white disabled:bg-opacity-75"
           disabled={!(pairing.pairing_groups.length < 8)}
         >
           + Új kérdés
