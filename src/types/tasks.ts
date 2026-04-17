@@ -43,6 +43,7 @@ export type GroupItem = {
   name: string;
 };
 export type Group = {
+  index: number; //frontend miatt muszaj betenni, majd be fetcheleskor hamozzuk a jsont
   name: string;
   items: GroupItem[];
 };

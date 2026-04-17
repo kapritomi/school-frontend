@@ -250,7 +250,10 @@ export default function Sidebar() {
       <div>
         <p className="text-[22px] font-medium  pt-4">Beállítások:</p>
         <div className="pl-1 flex flex-col gap-2">
-          <label className="text-secondaryFont text-[19px]" htmlFor="worksheetAccess">
+          <label
+            className="text-secondaryFont text-[19px]"
+            htmlFor="worksheetAccess"
+          >
             Feladatlap láthatósága:
           </label>
           <label className="flex items-center gap-4 cursor-pointer group">
@@ -284,11 +287,18 @@ export default function Sidebar() {
           </label>
         </div>
       </div>
-      <div className='pt-4 pl-1 '>
-          <label className="text-secondaryFont text-[19px]" htmlFor="worksheetPassword">
-            Feladatlap jelszava:
-          </label>
-          <input name='worksheetPassword'  className="border-lightBorder shadow-md  p-4 outline-none text-gray  h-[28px] border-[1px] rounded-[8px] focus:border-primary focus:ring-1 focus:ring-primary" type="text" />
+      <div className="pt-4 pl-1 ">
+        <label
+          className="text-secondaryFont text-[19px]"
+          htmlFor="worksheetPassword"
+        >
+          Feladatlap jelszava:
+        </label>
+        <input
+          name="worksheetPassword"
+          className="border-lightBorder shadow-md  p-4 outline-none text-gray  h-[28px] border-[1px] rounded-[8px] focus:border-primary focus:ring-1 focus:ring-primary"
+          type="text"
+        />
       </div>
     </aside>
   );
