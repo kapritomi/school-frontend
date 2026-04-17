@@ -7,17 +7,18 @@ type Placement = Record<number, number | null>;
 
 function Pairing({ task }: { task: TaskJson }) {
   if (!task.pairing) return null;
-  const slots: Slot[] = task.pairing.pairing_groups.map((q) => ({
-    id: q.pair_question.length, // vagy q.id, ha van
-    question: q.pair_question,
-    img: null,
-  }));
 
-  const cards: Card[] = task.pairing.pairing_groups.map((a) => ({
-    id: a.pair_answer.length, // vagy a.id
-    answer: a.pair_answer,
-    img: null,
-  }));
+  const slots: Slot[] = task.pairing.pairing_groups.map((q, index) => ({
+  id: index,
+  question: q.pair_question,
+  img: null,
+}));
+
+const cards: Card[] = task.pairing.pairing_groups.map((a, index) => ({
+  id: index,
+  answer: a.pair_answer,
+  img: null,
+}));
   const shuffle = <T,>(array: T[]): T[] =>
     [...array].sort(() => Math.random() - 0.5);
   const shuffledCards = useMemo(() => shuffle(cards), [task]);
@@ -34,7 +35,7 @@ function Pairing({ task }: { task: TaskJson }) {
   //Épp melyik kártyát húzod
   const [draggingId, setDraggingId] = useState<number | null>(null);
 
-  const cardById = useMemo(() => new Map(cards.map((c) => [c.id, c])), []);
+  const cardById = useMemo(() => new Map(cards.map((c) => [c.id, c])), [cards]);
 
   const slotCardId = (slotId: number) =>
     Object.keys(placement).find((id) => placement[Number(id)] === slotId) ??
@@ -44,7 +45,7 @@ function Pairing({ task }: { task: TaskJson }) {
     Object.values(placement).some((s) => s === slotId);
 
   const dropToSlot = (slotId: number) => {
-    if (!draggingId) return;
+    if (draggingId === null) return;
     if (slotHasCard(slotId)) return; // egy slotba 1 kártya
 
     setPlacement((prev) => ({ ...prev, [draggingId]: slotId }));
@@ -54,7 +55,7 @@ function Pairing({ task }: { task: TaskJson }) {
   };
 
   const dropToPool = () => {
-    if (!draggingId) return;
+   if (draggingId === null) return;
     setPlacement((prev) => ({ ...prev, [draggingId]: null }));
     setDraggingId(null);
 
