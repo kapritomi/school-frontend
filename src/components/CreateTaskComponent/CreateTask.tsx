@@ -11,11 +11,12 @@ export default function CreateTask() {
   const { activeTask, tasksJson } = useTasks();
 
   return (
+    
     <div className="bg-gradient-to-r from-[#E8F7EC] to-[#F0F9FF] h-screen flex">
-      <div className="w-1/6">
+      <div className="fixed top-0 left-0 w-[240px] h-full z-40">
         <Sidebar />
       </div>
-
+      <div className='w-1/6'></div>
       <div className="w-4/6 p-4">
         <button onClick={() => console.log(JSON.stringify(tasksJson, null, 2))}>
           JSON kiírás
@@ -24,17 +25,24 @@ export default function CreateTask() {
         <p>
           <Link to={'/taskPreview'}>feladat előnézet</Link>
         </p>
-        {activeTask?.task_type_id === TASK_TYPE_ID.assignment && (
-          <AssignmentCreate />
-        )}
-        {activeTask?.task_type_id === TASK_TYPE_ID.short && (
-          <ShortAnswerCreate />
-        )}
-        {activeTask?.task_type_id === TASK_TYPE_ID.pair && <PairingCreate />}
-        {activeTask?.task_type_id === TASK_TYPE_ID.grouping && (
-          <GroupingCreate />
-        )}
+        {tasksJson.tasks.map((task) => {
+      switch (task.task_type_id) {
+        case TASK_TYPE_ID.assignment:
+          return <AssignmentCreate key={task.id} />;
 
+        case TASK_TYPE_ID.short:
+          return <ShortAnswerCreate key={task.id} />;
+
+        case TASK_TYPE_ID.pair:
+          return <PairingCreate key={task.id} />;
+
+        case TASK_TYPE_ID.grouping:
+          return <GroupingCreate key={task.id} />;
+
+        default:
+          return null;
+      }
+    })}
         {!activeTask && (
           <div className="text-gray-500">Válassz egy feladatot bal oldalt.</div>
         )}
