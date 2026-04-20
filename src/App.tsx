@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Home } from './pages/Home';
-import { CreateTaskPage } from './pages/CreateTaskPage';
+
 import { Login } from './pages/Login/Login';
 import { TeacherHomePage } from './pages/TeacherHomePage/TeacherHomePage';
 import { ClassEdit } from './pages/ClassView/ClassEdit';
@@ -11,6 +11,7 @@ import TaskPreview from './TaskPreview';
 import { TasksProvider } from './store/TasksContext';
 import { WorksheetSolutions } from './pages/WorksheetSolutions/WorksheetSolutions';
 import { CheckCode } from './pages/Student/CheckCode/CheckCode';
+import CreateTask from './components/CreateTaskComponent/CreateTask';
 export default function App() {
   const router = createBrowserRouter([
     {
@@ -39,7 +40,7 @@ export default function App() {
     },
     {
       path: '/createTask',
-      element: <CreateTaskPage />,
+      element: <CreateTask />,
     },
     {
       path: '/worksheetSolutions/:worksheetId',

@@ -80,7 +80,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="bg-white w-[260px] px-3 h-full shadow-[6px_4px_4px_rgba(0,0,0,0.25)]">
+    <aside className="bg-white w-[260px] max-h-screen overflow-hidden px-3 h-full shadow-[6px_4px_4px_rgba(0,0,0,0.25)]">
       <p className="text-[22px] font-medium  pt-4">Feladatsorod:</p>
       {/* ---- Feladatok ---- */}
       <div className="flex flex-col gap-3">

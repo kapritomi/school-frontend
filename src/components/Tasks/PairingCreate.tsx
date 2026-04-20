@@ -13,6 +13,7 @@ export default function PairingCreate() {
   if (!activeTask) return null;
 
   const task = activeTask;
+  console.log(activeTask)
   const pairing = task.pairing ?? { pairing_groups: [] };
   const prevLengthRef = useRef(pairing.pairing_groups.length);
 
@@ -82,22 +83,27 @@ export default function PairingCreate() {
   }
 
   const scrollToId = (id: string) => {
-    const map = getMap();
-    const node = map.get(id);
-    if (node) {
-      node.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }
-  };
+  const map = getMap();
+  const node = map.get(id);
+  const container = document.getElementById('scroll-container'); // A belső görgethető div ID-ja
+
+  if (node && container) {
+   
+    const topPos = node.offsetTop;
+
+    container.scrollTo({
+      top: topPos,
+      behavior: 'smooth'
+    });
+  }
+};
 
   const handleExpandQuestion = (index: number, item: PairGroup) => {
     updatePair(index, 'isExpanded', !item.isExpanded);
   };
 
   return (
-    <div className="flex flex-col gap-ElementsSpace">
+    <div className="flex  flex-col gap-ElementsSpace">
       {/* ---- Feladat címe ---- */}
       <section className="flex flex-col gap-LabelDescriptionInputSpace">
         <label className="block text-primary text-[30px] font-semibold">
@@ -152,6 +158,7 @@ export default function PairingCreate() {
                 map.delete(String(index));
               }
             }}
+            id={`tasks.${Number(activeTask.id)-1}.pairing.pairing_groups.${index}`}
             key={index}
             className={`border w-full flex flex-col gap-[13px] rounded-[5px] text-gray duration-300  transition-all border-[#8FBF6D] p-4 bg-white ${item.isExpanded ? 'max-h-[600px]' : 'max-h-[140px] overflow-hidden'}`}
           >

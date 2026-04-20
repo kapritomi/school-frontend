@@ -15,6 +15,7 @@ function ShortAnswerCreate() {
   const prevLengthRef = useRef(shortData.questions.length);
 
   const addQuestion = () => {
+    if(shortData.questions.length <18)
     updateTask({
       ...task,
       short_answer: {
@@ -60,15 +61,20 @@ function ShortAnswerCreate() {
   }
 
   const scrollToId = (id: string) => {
-    const map = getMap();
-    const node = map.get(id);
-    if (node) {
-      node.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }
-  };
+  const map = getMap();
+  const node = map.get(id);
+  const container = document.getElementById('scroll-container'); // A belső görgethető div ID-ja
+
+  if (node && container) {
+   
+    const topPos = node.offsetTop;
+
+    container.scrollTo({
+      top: topPos,
+      behavior: 'smooth'
+    });
+  }
+};
 
   useEffect(() => {
     const currentLength = shortData.questions.length;
@@ -247,6 +253,7 @@ function ShortAnswerCreate() {
       </div>
        <div className="mt-8">
         <button
+        disabled={shortData.questions.length <=18}
         type="button"
         onClick={addQuestion}
         className="px-3 w-[211px] py-2 rounded-lg cursor-pointer bg-primary text-white disabled:bg-opacity-75"

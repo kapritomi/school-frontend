@@ -8,11 +8,12 @@ import { useTasks } from '@/store/TasksContext';
 import { Navbar } from '../Navbar';
 import { BgLeftBottom } from '@/assets/Icons/BgLeftBottom';
 import { BgRightTop } from '@/assets/Icons/BgRightTop';
+
 export default function CreateTask() {
-  const { activeTask } = useTasks();
+  const { activeTask,saveWorksheetToDB} = useTasks();
 
   return (
-    <div className="bg-gradient-to-r w-screen  max-h-screen relative overflow-y-hidden  h-screen flex">
+    <div className=" overflow-hidden w-screen  max-h-dvh relative   flex">
       <Navbar></Navbar>
       <div className="absolute bottom-0 left-0 -z-10">
         <BgLeftBottom></BgLeftBottom>
@@ -24,8 +25,8 @@ export default function CreateTask() {
         <div className="w-1/6">
           <Sidebar />
         </div>
-
-        <div className="w-full p-4 overflow-y-scroll">
+       
+        <div id='scroll-container' className="w-full p-4 overflow-y-scroll h-full ">
           {activeTask?.task_type_id === TASK_TYPE_ID.assignment && (
             <AssignmentCreate />
           )}
@@ -37,11 +38,14 @@ export default function CreateTask() {
             <GroupingCreate />
           )}
 
-          {!activeTask && (
+          {!activeTask ? (
             <div className="text-gray-500">
               Válassz egy feladatot bal oldalt.
             </div>
-          )}
+          )
+        :<button onClick={()=>saveWorksheetToDB()}>Feladatlap mentése</button>}
+
+           
         </div>
       </div>
     </div>
