@@ -3,13 +3,13 @@ import { TASK_TYPE_ID } from '../../types/tasks';
 import AssignmentCreate from '../Tasks/AssignmentCreate';
 import ShortAnswerCreate from '../Tasks/ShortAnswerCreate';
 import GroupingCreate from '../Tasks/GroupingCreate';
-import PairingCreate from '../Tasks/PairingCreate';
+import PairingCreate from '../Tasks/PairingCreate/PairingCreate';
 import { useTasks } from '@/store/TasksContext';
 import { Navbar } from '../Navbar';
 import { BgLeftBottom } from '@/assets/Icons/BgLeftBottom';
 import { BgRightTop } from '@/assets/Icons/BgRightTop';
 export default function CreateTask() {
-  const { activeTask } = useTasks();
+  const { activeTask,tasksJson } = useTasks();
 
   return (
     <div className="bg-gradient-to-r w-screen  max-h-screen relative overflow-y-hidden  h-screen flex">
@@ -24,7 +24,7 @@ export default function CreateTask() {
         <div className="w-1/6">
           <Sidebar />
         </div>
-
+          <button onClick={()=>console.log(tasksJson)}>asd</button>
         <div className="w-full p-4 overflow-y-scroll">
           {activeTask?.task_type_id === TASK_TYPE_ID.assignment && (
             <AssignmentCreate />

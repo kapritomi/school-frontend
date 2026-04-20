@@ -1,34 +1,12 @@
 import { ArrowDownIcon } from '@/assets/Icons/ArrowDownIcon';
-import { BinIcon } from '../../assets/Icons/BinIcon';
-
-import { useTasks } from '../../store/TasksContext';
+import { BinIcon } from '../../../assets/Icons/BinIcon';
 import { ArrowUpIcon } from '@/assets/Icons/ArrowUpIcon';
-import type { PairGroup } from '@/types/tasks';
-import { useEffect, useRef } from 'react';
+
+import { useEffect } from 'react';
+import { usePairingCreate } from './usePairingCreate';
 
 export default function PairingCreate() {
-  const { activeTask, updateTask } = useTasks();
-  const itemsRef = useRef<Map<string, HTMLDivElement> | null>(null);
-
-  if (!activeTask) return null;
-
-  const task = activeTask;
-  const pairing = task.pairing ?? { pairing_groups: [] };
-  const prevLengthRef = useRef(pairing.pairing_groups.length);
-
-  const addPair = () => {
-    if (pairing.pairing_groups.length < 8) {
-      updateTask({
-        ...task,
-        pairing: {
-          pairing_groups: [
-            ...pairing.pairing_groups,
-            { pair_question: '', pair_answer: '', isExpanded: true },
-          ],
-        },
-      });
-    }
-  };
+  const {prevLengthRef,itemsRef,pairing,getMap,addPair,removePair,scrollToId,task,updatePair,updateTask} = usePairingCreate()
 
   useEffect(() => {
     const currentLength = pairing.pairing_groups.length;
@@ -48,54 +26,8 @@ export default function PairingCreate() {
     prevLengthRef.current = currentLength;
   }, [pairing.pairing_groups.length]);
 
-  const updatePair = (
-    index: number,
-    field: 'pair_question' | 'pair_answer' | 'isExpanded',
-    value: string | boolean,
-  ) => {
-    const next = pairing.pairing_groups.map((p, i) =>
-      i === index ? { ...p, [field]: value } : p,
-    );
-
-    updateTask({
-      ...task,
-      pairing: {
-        pairing_groups: next,
-      },
-    });
-  };
-
-  const removePair = (index: number) => {
-    updateTask({
-      ...task,
-      pairing: {
-        pairing_groups: pairing.pairing_groups.filter((_, i) => i !== index),
-      },
-    });
-  };
-
-  function getMap() {
-    if (!itemsRef.current) {
-      itemsRef.current = new Map();
-    }
-    return itemsRef.current;
-  }
-
-  const scrollToId = (id: string) => {
-    const map = getMap();
-    const node = map.get(id);
-    if (node) {
-      node.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }
-  };
-
-  const handleExpandQuestion = (index: number, item: PairGroup) => {
-    updatePair(index, 'isExpanded', !item.isExpanded);
-  };
-
+ 
+  if(task)
   return (
     <div className="flex flex-col gap-ElementsSpace">
       {/* ---- Feladat címe ---- */}
@@ -168,12 +100,13 @@ export default function PairingCreate() {
 
                 <div
                   className="cursor-pointer "
-                  onClick={() => handleExpandQuestion(index, item)}
+                  onClick={() => updatePair(index, 'isExpanded', !item.isExpanded)}
                 >
                   {item.isExpanded ? (
-                    <ArrowDownIcon></ArrowDownIcon>
-                  ) : (
                     <ArrowUpIcon></ArrowUpIcon>
+                  ) : (
+                    
+                    <ArrowDownIcon></ArrowDownIcon>
                   )}
                 </div>
               </div>
