@@ -48,7 +48,7 @@ export default function CreateTask() {
                 return (
                   <div className="min-h-dvh">
                     {' '}
-                    <ShortAnswerCreate key={task.id} />
+                    <ShortAnswerCreate taskId={task.id} key={task.id} />
                   </div>
                 );
 
@@ -56,7 +56,7 @@ export default function CreateTask() {
                 return (
                   <div className="min-h-dvh">
                     {' '}
-                    <PairingCreate key={task.id} />
+                    <PairingCreate taskId={task.id} key={task.id} />
                   </div>
                 );
 
@@ -64,7 +64,7 @@ export default function CreateTask() {
                 return (
                   <div className="h-dvh">
                     {' '}
-                    <GroupingCreate key={task.id} />{' '}
+                    <GroupingCreate taskId={task.id} key={task.id} />{' '}
                   </div>
                 );
 

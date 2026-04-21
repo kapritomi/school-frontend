@@ -72,6 +72,11 @@ export const MAX_ITEMS = 10;
 export const TASK_TYPE_ID: Record<TaskType, number> = {
   grouping: 1,
   pair: 2,
-  assignment: 3,
-  short: 4,
+  short: 3,
+  assignment: 4,
 };
+
+
+export type creatingComponentProps={
+  taskId:string
+}

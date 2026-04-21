@@ -1,8 +1,15 @@
 import { useTasks } from '@/store/TasksContext';
+import type { creatingComponentProps, TaskJson } from '@/types/tasks';
+import { useEffect, useState } from 'react';
 
-export const TaskDescription = () => {
-  const { updateTask, activeTask } = useTasks();
-  if (activeTask)
+export const TaskDescription = ({taskId}:creatingComponentProps) => {
+  const { updateTask,tasksJson} = useTasks();
+   const [taskToUpdate,setTaskToUpdate]=useState<null | TaskJson>(null)
+
+     useEffect(()=>{
+       setTaskToUpdate(tasksJson.tasks[Number(taskId)-1])
+     },[taskId,tasksJson])
+  if (taskToUpdate)
     return (
       <section className="flex flex-col gap-LabelDescriptionInputSpace">
         <div className="flex flex-col gap-LabelDescriptionSpace">
@@ -16,9 +23,9 @@ export const TaskDescription = () => {
           </p>
         </div>
         <textarea
-          value={activeTask.task_description}
+          value={taskToUpdate.task_description}
           onChange={(e) =>
-            updateTask({ ...activeTask, task_description: e.target.value })
+            updateTask({ ...taskToUpdate, task_description: e.target.value })
           }
           maxLength={255}
           className="w-full shadow-md resize-none p-4 h-[70px] rounded-[8px] border-[1px] border-lightBorder outline-none text-gray transition-all

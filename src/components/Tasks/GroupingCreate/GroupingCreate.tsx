@@ -4,8 +4,9 @@ import { EditIcon } from '@/assets/Icons/EditIcon';
 import { BinIcon } from '@/assets/Icons/BinIcon';
 import { useGrouping } from './UseGrouping';
 import { useTasks } from '@/store/TasksContext';
+import type { creatingComponentProps } from '@/types/tasks';
 
-export default function GroupingCreate() {
+export default function GroupingCreate({taskId}:creatingComponentProps) {
   const { activeTask, updateTask } = useTasks();
   const {
     selectedGroup,

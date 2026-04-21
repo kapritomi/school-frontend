@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import type {
   Slot,
   TaskJson,
@@ -120,6 +120,10 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
       ),
     );
   };
+
+  useEffect(()=>{
+    console.log(tasksJson)
+  },[tasksJson])
 
   const reorderSlots = (from: number, to: number) => {
     setSlots((prevSlots) => {

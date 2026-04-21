@@ -1,24 +1,35 @@
-import { useTasks } from '@/store/TasksContext';
-import { getFieldError } from '@/utils/GetFieldError';
 
-export const TaskTitle = () => {
-  const { updateTask, activeTask, worksheetErrors } = useTasks();
-  if (activeTask)
+import { useTasks } from '@/store/TasksContext';
+import type { creatingComponentProps, TaskJson } from '@/types/tasks';
+import { getFieldError } from '@/utils/GetFieldError';
+import { useEffect, useState } from 'react';
+
+export const TaskTitle = ({taskId}:creatingComponentProps) => {
+  const { updateTask, worksheetErrors,tasksJson } = useTasks();
+  const [taskToUpdate,setTaskToUpdate]=useState<null | TaskJson>(null)
+
+  
+  useEffect(()=>{
+    setTaskToUpdate(tasksJson.tasks[Number(taskId)-1])
+  },[taskId,tasksJson])
+
+
+  if (taskToUpdate)
     return (
       <section className="flex flex-col gap-LabelDescriptionInputSpace">
         <label className="block text-primary text-[30px] font-semibold">
           A feladat címe:
         </label>
         <input
-          id={`tasks.${activeTask.id}.title`}
-          value={activeTask.task_title}
+          id={`tasks.${taskToUpdate.id}.title`}
+          value={taskToUpdate.task_title}
           onChange={(e) =>
-            updateTask({ ...activeTask, task_title: e.target.value })
+            updateTask({ ...taskToUpdate, task_title: e.target.value })
           }
           className={` ${
             worksheetErrors &&
             Object.keys(worksheetErrors).includes(
-              `tasks.${Number(activeTask.id) - 1}.task_title`,
+              `tasks.${Number(taskToUpdate.id) - 1}.task_title`,
             )
               ? 'border-alert border-[2px]'
               : 'border-lightBorder'
@@ -27,12 +38,12 @@ export const TaskTitle = () => {
 
         {worksheetErrors &&
           Object.keys(worksheetErrors).includes(
-            `tasks.${Number(activeTask.id) - 1}.task_title`,
+            `tasks.${Number(taskToUpdate.id) - 1}.task_title`,
           ) && (
             <p className="text-[18px] text-alert">
               {getFieldError(
                 worksheetErrors,
-                `tasks.${Number(activeTask.id) - 1}.task_title`,
+                `tasks.${Number(taskToUpdate.id) - 1}.task_title`,
               )}
             </p>
           )}

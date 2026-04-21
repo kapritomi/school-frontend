@@ -1,17 +1,14 @@
-import { ArrowDownIcon } from '@/assets/Icons/ArrowDownIcon';
-import { BinIcon } from '../../../assets/Icons/BinIcon';
-
 import { useTasks } from '../../../store/TasksContext';
-import { ArrowUpIcon } from '@/assets/Icons/ArrowUpIcon';
-
 import { useEffect } from 'react';
 import { usePairing } from './UsePairing';
 import { getFieldError } from '@/utils/GetFieldError';
 import { PairingCard } from './PairingCard';
 import { TaskTitle } from '../TaskTitle';
 import { TaskDescription } from '../TaskDescription';
+import { AddButton } from '../AddButton';
+import type { creatingComponentProps } from '@/types/tasks';
 
-export default function PairingCreate() {
+export default function PairingCreate({taskId}:creatingComponentProps) {
   const {
     getMap,
     prevLengthRef,
@@ -21,7 +18,7 @@ export default function PairingCreate() {
     pairing,
     addPair,
   } = usePairing();
-  const {activeTask, worksheetErrors } = useTasks();
+  const { activeTask, worksheetErrors } = useTasks();
 
   useEffect(() => {
     const currentLength = pairing.pairing_groups.length;
@@ -45,9 +42,9 @@ export default function PairingCreate() {
     return (
       <div className="flex  flex-col gap-ElementsSpace">
         {/* ---- Feladat címe ---- */}
-        <TaskTitle></TaskTitle>
+        <TaskTitle taskId={taskId}></TaskTitle>
         {/* ---- Feladatleírás ---- */}
-        <TaskDescription></TaskDescription>
+        <TaskDescription  taskId={taskId}></TaskDescription>
         <section
           id={`tasks.${activeTask.id}.pairing.pairing_groups`}
           className="flex flex-col gap-[13px]"
@@ -86,16 +83,11 @@ export default function PairingCreate() {
             )}
         </section>
 
-        <div>
-          <button
-            type="button"
-            onClick={() => addPair()}
-            className="px-3 w-[211px] py-2 rounded-lg cursor-pointer bg-primary text-white disabled:bg-opacity-75"
-            disabled={!(pairing.pairing_groups.length < 8)}
-          >
-            + Új kérdés
-          </button>
-        </div>
+        <AddButton
+          label="+ Új kérdés"
+          onClick={addPair}
+          disabled={!(pairing.pairing_groups.length < 8)}
+        ></AddButton>
       </div>
     );
 }
