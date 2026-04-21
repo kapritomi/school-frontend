@@ -10,10 +10,10 @@ import { BgLeftBottom } from '@/assets/Icons/BgLeftBottom';
 import { BgRightTop } from '@/assets/Icons/BgRightTop';
 
 export default function CreateTask() {
-  const { activeTask,saveWorksheetToDB} = useTasks();
+  const { activeTask,saveWorksheetToDB,tasksJson} = useTasks();
 
   return (
-    <div className=" overflow-hidden w-screen  max-h-dvh relative   flex">
+    <div className=" overflow-hidden w-screen h-dvh max-h-dvh relative   flex">
       <Navbar></Navbar>
       <div className="absolute bottom-0 left-0 -z-10">
         <BgLeftBottom></BgLeftBottom>
@@ -25,18 +25,25 @@ export default function CreateTask() {
         <div className="w-1/6">
           <Sidebar />
         </div>
-       
         <div id='scroll-container' className="w-full p-4 overflow-y-scroll h-full ">
-          {activeTask?.task_type_id === TASK_TYPE_ID.assignment && (
-            <AssignmentCreate />
-          )}
-          {activeTask?.task_type_id === TASK_TYPE_ID.short && (
-            <ShortAnswerCreate />
-          )}
-          {activeTask?.task_type_id === TASK_TYPE_ID.pair && <PairingCreate />}
-          {activeTask?.task_type_id === TASK_TYPE_ID.grouping && (
-            <GroupingCreate />
-          )}
+          {tasksJson.tasks.map((task) => {
+            switch (task.task_type_id) {
+              case TASK_TYPE_ID.assignment:
+                return <AssignmentCreate key={task.id} />;
+
+              case TASK_TYPE_ID.short:
+                return <ShortAnswerCreate key={task.id} />;
+
+              case TASK_TYPE_ID.pair:
+                return <PairingCreate key={task.id} />;
+
+              case TASK_TYPE_ID.grouping:
+                return <GroupingCreate key={task.id} />;
+
+              default:
+                return null;
+            }
+          })}
 
           {!activeTask ? (
             <div className="text-gray-500">

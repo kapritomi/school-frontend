@@ -304,7 +304,7 @@ export default function AssignmentCreate() {
           </div>
         )}
 
-        <div className="w-1/2">
+        <div className="w-1/2 z-1">
           {/* ---- Jelöléseid ---- */}
           <div className="flex flex-wrap ">
             <div className="w-full text-primary text-[30px] font-semibold">

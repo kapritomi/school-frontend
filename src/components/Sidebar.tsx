@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import type { TaskType } from '../types/tasks';
 import { useTasks } from '../store/TasksContext';
+import { DeleteIcon } from '../icons/Delete';
+
 export default function Sidebar() {
   const { slots, selectTask, createTask, removeTask, reorderSlots } =
     useTasks();
@@ -12,12 +14,17 @@ export default function Sidebar() {
     { type: 'short', title: 'Rövid válasz' },
   ];
 
+  const [isOpen, setIsOpen] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingIndex, setPendingIndex] = useState<number | null>(null);
   const [newLabel, setNewLabel] = useState('');
   const [selectedType, setSelectedType] = useState<TaskType | null>(null);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [overIndex, setOverIndex] = useState<number | null>(null);
+
+  const taskCount = slots.filter(Boolean).length;
+  const canAddMore = taskCount < 10;
+  const firstEmptyIndex = slots.findIndex((s) => s === null);
 
   const onDragStart = (index: number) => (e: React.DragEvent) => {
     if (slots[index] === null) {
@@ -26,7 +33,6 @@ export default function Sidebar() {
     }
 
     setDragIndex(index);
-
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('slotIndex', String(index));
   };
@@ -61,8 +67,7 @@ export default function Sidebar() {
     if (pendingIndex === null) return;
 
     const label = newLabel.trim();
-    if (!label) return;
-    if (!selectedType) return;
+    if (!label || !selectedType) return;
 
     createTask(pendingIndex, label, selectedType);
 
@@ -80,101 +85,119 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="bg-white w-[260px] max-h-screen overflow-hidden px-3 h-full shadow-[6px_4px_4px_rgba(0,0,0,0.25)]">
-      <p className="text-[22px] font-medium  pt-4">Feladatsorod:</p>
-      {/* ---- Feladatok ---- */}
-      <div className="flex flex-col gap-3">
-        {slots.map((slot, idx) => {
-          const isOver =
-            overIndex === idx && dragIndex !== null && dragIndex !== idx;
+    <div className="h-full">
+      <aside
+        className={`bg-white w-[240px] h-full shadow-[6px_4px_4px_rgba(0,0,0,0.25)] transition-transform duration-300 ease-in-out ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <div className="text-[22px] font-medium pl-3 pt-5">
+          Feladatsorod:
+        </div>
 
-          if (slot) {
-            return (
-              <div
-                className="select-none border-[2px] border-primary rounded-[8px] cursor-grab"
-                key={idx}
-                draggable
-                onClick={() => selectTask(slot)}
-                onDragStart={onDragStart(idx)}
-                onDragOver={onDragOver(idx)}
-                onDrop={onDrop(idx)}
-                onDragEnd={onDragEnd}
-                style={{
-                  background: isOver ? '#f2f2f2' : '#fff',
-                  userSelect: 'none',
-                }}
-              >
-                <div className="flex flex-wrap">
-                  <div className="  w-full pl-2">
-                    <span className="text-[15px] font-medium text-secondaryFont">
-                      {idx + 1}.{' '}
-                      {slot.type === 'assignment'
-                        ? 'Hozzárendelés képeken'
-                        : slot.type === 'grouping'
+        <button
+          className="absolute top-5 -right-10 w-10 h-10 bg-white shadow-[6px_4px_4px_rgba(0,0,0,0.25)] rounded-r-lg"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          {isOpen ? <p>🡰</p> : <p>🡲</p>}
+        </button>
+
+        <div className="flex flex-col gap-3 p-3">
+          {slots.map((slot, idx) => {
+            const isOver =
+              overIndex === idx && dragIndex !== null && dragIndex !== idx;
+
+            if (slot) {
+              return (
+                <div
+                  key={idx}
+                  className="group select-none border-[2px] border-primary rounded-[8px] cursor-grab"
+                  draggable
+                  onClick={() => selectTask(slot)}
+                  onDragStart={onDragStart(idx)}
+                  onDragOver={onDragOver(idx)}
+                  onDrop={onDrop(idx)}
+                  onDragEnd={onDragEnd}
+                  style={{
+                    background: isOver ? '#f2f2f2' : '#fff',
+                    userSelect: 'none',
+                  }}
+                >
+                  <div className="flex flex-wrap">
+                    <div className="w-full pl-2">
+                      <span className="text-[15px] font-medium text-secondaryFont">
+                        {idx + 1}.{' '}
+                        {slot.type === 'assignment'
+                          ? 'Hozzárendelés képeken'
+                          : slot.type === 'grouping'
                           ? 'Csoportba rendezés'
                           : slot.type === 'pair'
-                            ? 'Párkereső'
-                            : slot.type === 'short'
-                              ? 'Rövid válasz'
-                              : ''}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center w-full">
-                    {idx < 9 ? (
+                          ? 'Párkereső'
+                          : slot.type === 'short'
+                          ? 'Rövid válasz'
+                          : ''}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center w-full">
                       <div className="ml-6 text-[15px] text-gray">
                         {slot.label}
                       </div>
-                    ) : (
-                      <div className="ml-8 text-[15px] text-gray">
-                        {slot.label}
-                      </div>
-                    )}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        removeTask(slot.id);
-                      }}
-                      className="ml-2 mr-1 px-1 text-white bg-delete rounded-[5px] text-[12px]"
-                    >
-                      Törlés
-                    </button>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeTask(slot.id);
+                        }}
+                        className="ml-2 mr-1 px-1 text-white bg-delete rounded-[5px] text-[12px] opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+                      >
+                        Törlés
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          }
-          // ---- Hozzáadás gomb ---
-          return (
-            <button
-              className="select-none rounded-[8px]"
-              key={idx}
-              type="button"
-              onClick={() => {
-                setPendingIndex(idx);
-                setNewLabel('');
-                setIsModalOpen(true);
-                setSelectedType(null);
-              }}
-              onDragOver={onDragOver(idx)}
-              onDrop={onDrop(idx)}
-              onDragEnd={onDragEnd}
-              style={{
-                height: 44,
-                width: '100%',
-                border: '2px dashed #8FBF6D',
-                background: 'transparent',
-                cursor: 'pointer',
-                fontSize: 20,
-              }}
-              aria-label="Elem hozzáadása"
-            >
-              +
-            </button>
-          );
-        })}
-      </div>
+              );
+            }
 
-      {/* ---- Új feladat létrehozása modal ---- */}
+            if (canAddMore && idx === firstEmptyIndex) {
+              return (
+                <button
+                  key={idx}
+                  className="select-none rounded-[8px]"
+                  type="button"
+                  onClick={() => {
+                    setPendingIndex(idx);
+                    setNewLabel('');
+                    setIsModalOpen(true);
+                    setSelectedType(null);
+                  }}
+                  onDragOver={onDragOver(idx)}
+                  onDrop={onDrop(idx)}
+                  onDragEnd={onDragEnd}
+                  style={{
+                    height: 44,
+                    width: '100%',
+                    border: '2px dashed #8FBF6D',
+                    background: 'transparent',
+                    cursor: 'pointer',
+                    fontSize: 20,
+                  }}
+                >
+                  +
+                </button>
+              );
+            }
+
+            return null;
+          })}
+        </div>
+
+        <div className="text-[22px] font-medium pl-3 pt-5">
+          Beállítások:
+        </div>
+      </aside>
+
+      {/* MODAL */}
       {isModalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center"
@@ -191,7 +214,7 @@ export default function Sidebar() {
             </div>
 
             <input
-              className="w-full border-[1px] focus:border-primary focus:border-[2.5px]  border-lightBorder rounded-lg px-3 py-2 outline-none"
+              className="w-full border-[1px] focus:border-primary focus:border-[2.5px] border-lightBorder rounded-lg px-3 py-2 outline-none"
               placeholder="Feladat címe"
               value={newLabel}
               onChange={(e) => setNewLabel(e.target.value)}
@@ -221,7 +244,7 @@ export default function Sidebar() {
                     ].join(' ')}
                   >
                     <div className="h-[140px] rounded-[8px] border-[1px] border-lightBorder bg-white" />
-                    <div className=" mt-2">{c.title}</div>
+                    <div className="mt-2">{c.title}</div>
                   </button>
                 );
               })}
@@ -237,7 +260,7 @@ export default function Sidebar() {
               </button>
               <button
                 type="button"
-                className="px-3 py-2 rounded-lg disabled:bg-primaryDisabled cursor-pointer  disabled:cursor-auto bg-primary text-white font-semibold"
+                className="px-3 py-2 rounded-lg disabled:bg-primaryDisabled bg-primary text-white font-semibold"
                 onClick={confirmCreate}
                 disabled={!newLabel.trim() || !selectedType}
               >
@@ -247,59 +270,6 @@ export default function Sidebar() {
           </div>
         </div>
       )}
-      <div>
-        <p className="text-[22px] font-medium  pt-4">Beállítások:</p>
-        <div className="pl-1 flex flex-col gap-2">
-          <label
-            className="text-secondaryFont text-[19px]"
-            htmlFor="worksheetAccess"
-          >
-            Feladatlap láthatósága:
-          </label>
-          <label className="flex items-center gap-4 cursor-pointer group">
-            <div className="relative flex items-center justify-center">
-              <input
-                type="radio"
-                name="visibility"
-                className="peer appearance-none w-[17px] h-[17px] border-[1px] border-secondary rounded-full checked:bg-transparent transition-all"
-                // checked={visibility === 'public'}
-                // onChange={() => setVisibility('public')}
-              />
-              {/* A belső teli kör, ami csak akkor látszik ha 'checked' */}
-              <div className="absolute w-[15px] h-[15px] bg-[#2D5A43] rounded-full scale-0 peer-checked:scale-100 transition-transform" />
-            </div>
-            <span className="text-[18px] text-gray font-medium">Publikus</span>
-          </label>
-
-          {/* Privát opció */}
-          <label className="flex items-center gap-4 cursor-pointer group">
-            <div className="relative flex items-center justify-center">
-              <input
-                type="radio"
-                name="visibility"
-                className="peer appearance-none w-[17px] h-[17px] border-[1px] border-secondary rounded-full checked:bg-transparent transition-all"
-                // checked={visibility === 'private'}
-                // onChange={() => setVisibility('private')}
-              />
-              <div className="absolute w-[15px] h-[15px] bg-primary rounded-full scale-0 peer-checked:scale-100 transition-transform" />
-            </div>
-            <span className="text-[18px]  text-gray font-medium">Privát</span>
-          </label>
-        </div>
-      </div>
-      <div className="pt-4 pl-1 ">
-        <label
-          className="text-secondaryFont text-[19px]"
-          htmlFor="worksheetPassword"
-        >
-          Feladatlap jelszava:
-        </label>
-        <input
-          name="worksheetPassword"
-          className="border-lightBorder shadow-md  p-4 outline-none text-gray  h-[28px] border-[1px] rounded-[8px] focus:border-primary focus:ring-1 focus:ring-primary"
-          type="text"
-        />
-      </div>
-    </aside>
+    </div>
   );
 }
