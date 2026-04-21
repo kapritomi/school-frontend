@@ -1,30 +1,34 @@
-import { useEffect, useState } from 'react';
-import { useTasks } from '../../store/TasksContext';
-import type { Group } from '@/types/tasks';
+import { useEffect } from 'react';
+
 import { EditIcon } from '@/assets/Icons/EditIcon';
 import { BinIcon } from '@/assets/Icons/BinIcon';
+import { useGrouping } from './UseGrouping';
+import { useTasks } from '@/store/TasksContext';
 
 export default function GroupingCreate() {
   const { activeTask, updateTask } = useTasks();
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [selectedGroup, setSelectedGroup] = useState<null | Group>(null);
-  const [itemName, setItemName] = useState<null | string>(null);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [newItemName, setNewItemName] = useState<string | null>(null);
-  if (!activeTask) return null;
+  const {
+    selectedGroup,
+    setSelectedId,
+    addGroup,
+    addItem,
+    grouping,
+    itemName,
+    newItemName,
+    setItemName,
+    setNewItemName,
+    setIsEditing,
+    setEditingId,
+    editingId,
+    handleDelete,
+    handleEdit,
+    isEditing,
+    selectedId,
+    updateGroupName,
+    updateItem,
+    setSelectedGroup,
+  } = useGrouping();
 
-  const task = activeTask;
-  const grouping = task.grouping ?? { groups: [] };
-
-  const addGroup = (index: number) => {
-    updateTask({
-      ...task,
-      grouping: {
-        groups: [...grouping.groups, { index: index, name: '', items: [] }],
-      },
-    });
-  };
   useEffect(() => {
     if (selectedId !== null && typeof selectedId !== 'undefined') {
       if (typeof grouping.groups[selectedId] === 'undefined') {
@@ -34,83 +38,10 @@ export default function GroupingCreate() {
   }, [selectedId]);
 
   useEffect(() => {
-    console.log(grouping.groups);
-  }, [grouping]);
-
-  useEffect(() => {
     if (selectedId !== null && typeof selectedId !== 'undefined')
       setSelectedGroup(grouping.groups[selectedId]);
   }, [selectedId, grouping]);
-
-  const updateGroupName = (index: number, value: string) => {
-    const next = grouping.groups.map((g, i) =>
-      i === index ? { ...g, name: value } : g,
-    );
-
-    updateTask({
-      ...task,
-      grouping: { groups: next },
-    });
-  };
-
-  const addItem = (groupIndex: number) => {
-    if (itemName && selectedGroup) {
-      const next = grouping.groups.map((g, i) =>
-        i === groupIndex
-          ? { ...g, items: [...g.items, { name: itemName }] }
-          : g,
-      );
-
-      updateTask({
-        ...task,
-        grouping: { groups: next },
-      });
-      setItemName(null);
-    }
-  };
-
-  const updateItem = (groupIndex: number, itemIndex: number) => {
-    if (newItemName) {
-      const next = grouping.groups.map((g, i) => {
-        if (i !== groupIndex) return g;
-
-        const newItems = g.items.map((item, j) =>
-          j === itemIndex ? { ...item, name: newItemName } : item,
-        );
-
-        return { ...g, items: newItems };
-      });
-
-      updateTask({
-        ...task,
-        grouping: { groups: next },
-      });
-    }
-  };
-  const handleEdit = (index: number, itemName: string) => {
-    if (index === editingId) {
-      setEditingId(null);
-      setNewItemName(null);
-    } else {
-      setEditingId(index);
-      setNewItemName(itemName);
-    }
-  };
-  const handleDelete = (groupIndex: number, itemIndex: number) => {
-    const updatedGroups = grouping.groups.map((g, i) => {
-      if (i !== groupIndex) return g;
-      const filteredItems = g.items.filter((_, j) => j !== itemIndex);
-      return { ...g, items: filteredItems };
-    });
-
-    updateTask({
-      ...task,
-      grouping: {
-        ...task.grouping,
-        groups: updatedGroups,
-      },
-    });
-  };
+  if (!activeTask) return null;
   return (
     <div className="flex flex-col gap-ElementsSpace">
       <section className="flex flex-col gap-LabelDescriptionInputSpace">
@@ -118,8 +49,10 @@ export default function GroupingCreate() {
           A feladat címe:
         </label>
         <input
-          value={task.task_title}
-          onChange={(e) => updateTask({ ...task, task_title: e.target.value })}
+          value={activeTask.task_title}
+          onChange={(e) =>
+            updateTask({ ...activeTask, task_title: e.target.value })
+          }
           className="border-lightBorder shadow-md w-full p-4 outline-none text-gray  h-[48px] border-[1px] rounded-[8px] focus:border-primary focus:ring-1 focus:ring-primary"
         />
       </section>
@@ -135,9 +68,9 @@ export default function GroupingCreate() {
           </p>
         </div>
         <textarea
-          value={task.task_description}
+          value={activeTask.task_description}
           onChange={(e) =>
-            updateTask({ ...task, task_description: e.target.value })
+            updateTask({ ...activeTask, task_description: e.target.value })
           }
           maxLength={255}
           className="w-full shadow-md resize-none p-4 h-[70px] rounded-[8px] border-[1px] border-lightBorder outline-none text-gray transition-all

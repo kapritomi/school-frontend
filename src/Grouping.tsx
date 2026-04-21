@@ -47,7 +47,7 @@ function Grouping({ task }: { task: TaskJson }) {
   };
 
   const dropToPool = () => {
-   if (draggingId === null) return;
+    if (draggingId === null) return;
     setPlacement((prev) => ({ ...prev, [draggingId]: null }));
     setDraggingId(null);
   };

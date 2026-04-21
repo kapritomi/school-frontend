@@ -1,8 +1,13 @@
-import type { AssignmentJson, GroupingJson, PairingJson, ShortAnswerJson } from '@/types/tasks';
+import type {
+  AssignmentJson,
+  GroupingJson,
+  PairingJson,
+  ShortAnswerJson,
+} from '@/types/tasks';
 import { apiClient } from '../clients';
 export interface Assignment {
   classroom_id: number;
-  password?: string; 
+  password?: string;
 }
 
 export interface Task {
@@ -14,7 +19,7 @@ export interface Task {
   short_answer?: ShortAnswerJson;
   pairing?: PairingJson;
   grouping?: GroupingJson;
-  [key: string]: any; 
+  [key: string]: any;
 }
 
 export interface WorksheetInfo {

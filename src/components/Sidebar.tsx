@@ -91,9 +91,7 @@ export default function Sidebar() {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="text-[22px] font-medium pl-3 pt-5">
-          Feladatsorod:
-        </div>
+        <div className="text-[22px] font-medium pl-3 pt-5">Feladatsorod:</div>
 
         <button
           className="absolute top-5 -right-10 w-10 h-10 bg-white shadow-[6px_4px_4px_rgba(0,0,0,0.25)] rounded-r-lg"
@@ -130,12 +128,12 @@ export default function Sidebar() {
                         {slot.type === 'assignment'
                           ? 'Hozzárendelés képeken'
                           : slot.type === 'grouping'
-                          ? 'Csoportba rendezés'
-                          : slot.type === 'pair'
-                          ? 'Párkereső'
-                          : slot.type === 'short'
-                          ? 'Rövid válasz'
-                          : ''}
+                            ? 'Csoportba rendezés'
+                            : slot.type === 'pair'
+                              ? 'Párkereső'
+                              : slot.type === 'short'
+                                ? 'Rövid válasz'
+                                : ''}
                       </span>
                     </div>
 
@@ -192,9 +190,7 @@ export default function Sidebar() {
           })}
         </div>
 
-        <div className="text-[22px] font-medium pl-3 pt-5">
-          Beállítások:
-        </div>
+        <div className="text-[22px] font-medium pl-3 pt-5">Beállítások:</div>
       </aside>
 
       {/* MODAL */}

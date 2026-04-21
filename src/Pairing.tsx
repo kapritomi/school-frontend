@@ -9,16 +9,16 @@ function Pairing({ task }: { task: TaskJson }) {
   if (!task.pairing) return null;
 
   const slots: Slot[] = task.pairing.pairing_groups.map((q, index) => ({
-  id: index,
-  question: q.pair_question,
-  img: null,
-}));
+    id: index,
+    question: q.pair_question,
+    img: null,
+  }));
 
-const cards: Card[] = task.pairing.pairing_groups.map((a, index) => ({
-  id: index,
-  answer: a.pair_answer,
-  img: null,
-}));
+  const cards: Card[] = task.pairing.pairing_groups.map((a, index) => ({
+    id: index,
+    answer: a.pair_answer,
+    img: null,
+  }));
   const shuffle = <T,>(array: T[]): T[] =>
     [...array].sort(() => Math.random() - 0.5);
   const shuffledCards = useMemo(() => shuffle(cards), [task]);
@@ -55,7 +55,7 @@ const cards: Card[] = task.pairing.pairing_groups.map((a, index) => ({
   };
 
   const dropToPool = () => {
-   if (draggingId === null) return;
+    if (draggingId === null) return;
     setPlacement((prev) => ({ ...prev, [draggingId]: null }));
     setDraggingId(null);
 

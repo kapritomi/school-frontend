@@ -23,7 +23,7 @@ export type AssignmentJson = {
 export type ShortQuestion = {
   question: string;
   answer: string;
-  isExpanded:boolean,
+  isExpanded: boolean;
 };
 export type ShortAnswerJson = {
   questions: ShortQuestion[];
@@ -75,5 +75,3 @@ export const TASK_TYPE_ID: Record<TaskType, number> = {
   assignment: 3,
   short: 4,
 };
-
-

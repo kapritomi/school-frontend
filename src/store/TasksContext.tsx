@@ -15,21 +15,21 @@ type TasksContextType = {
   tasksJson: TasksJson;
   activeId: string | null;
   activeTask: TaskJson | null;
-  worksheetMessage:MessageType | null;
-
-
+  worksheetMessage: MessageType | null;
+  worksheetErrors: worksheetErrors[] | null;
   selectTask: (item: SidebarItem) => void;
   createTask: (slotIndex: number, label: string, type: TaskType) => void;
   removeTask: (id: string) => void;
   updateTask: (task: TaskJson) => void;
   reorderSlots: (from: number, to: number) => void;
-  saveWorksheetToDB:()=>void;
-  setWorksheetMessage:(message:MessageType | null) =>void;
+  saveWorksheetToDB: () => void;
+  setWorksheetMessage: (message: MessageType | null) => void;
+  isLoading: boolean | null;
 };
 type worksheetErrors = {
-  key:string,
-  message:string[]
-}
+  key: string;
+  message: string[];
+};
 
 const TasksContext = createContext<TasksContextType | null>(null);
 
@@ -38,9 +38,14 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   const [tasksJson, setTasksJson] = useState<TasksJson>({ tasks: [] });
   const [activeId, setActiveId] = useState<string | null>(null);
   const [nextId, setNextId] = useState(1);
-  
-  const [worksheetMessage,setWorksheetMessage]=useState<null|MessageType>(null)
-  const [worksheetErrors,setWorksheetErrors]=useState<null | worksheetErrors[]>(null)
+  const [isLoading, setIsLoading] = useState<boolean | null>(null);
+
+  const [worksheetMessage, setWorksheetMessage] = useState<null | MessageType>(
+    null,
+  );
+  const [worksheetErrors, setWorksheetErrors] = useState<
+    null | worksheetErrors[]
+  >(null);
 
   const activeTask = useMemo(() => {
     if (!activeId) return null;
@@ -140,32 +145,34 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const saveWorksheetToDB =async ()=>{
-    try{
+  const saveWorksheetToDB = async () => {
+    setIsLoading(true);
+    try {
       const worksheetData = {
-        title:'test',
-         assignments: [
+        title: 'test',
+        assignments: [
           {
-              classroom_id: 6,
-              password: "alma123"
-          }
-      ],
-      subject_id: 1,
-      lifetime_minutes: 60,
-      max_time_to_resolve_minutes: 45,
-      max_points: 1,
-      is_public: 0,
-      tasks:tasksJson.tasks
-      }
-      
-      const res = await uploadWorksheet(worksheetData)
-     setWorksheetMessage({type:'success',message:res.message})
-    }catch(e:any){
-      setWorksheetErrors(e.response.data.errors)
-    }
+            classroom_id: 6,
+            password: 'alma123',
+          },
+        ],
+        subject_id: 1,
+        lifetime_minutes: 60,
+        max_time_to_resolve_minutes: 45,
+        max_points: 1,
+        is_public: 0,
+        tasks: tasksJson.tasks,
+      };
 
-   
-  }
+      const res = await uploadWorksheet(worksheetData);
+      setWorksheetMessage({ type: 'success', message: res.message });
+    } catch (e: any) {
+      setWorksheetErrors(e.response.data.errors);
+      console.log(e.response.data.errors);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const value = {
     slots,
@@ -179,7 +186,9 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     reorderSlots,
     saveWorksheetToDB,
     worksheetMessage,
-    setWorksheetMessage
+    setWorksheetMessage,
+    worksheetErrors,
+    isLoading,
   };
 
   return (
