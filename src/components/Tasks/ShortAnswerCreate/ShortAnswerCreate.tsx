@@ -8,7 +8,7 @@ import { getFieldError } from '@/utils/GetFieldError';
 import { ShortAnswerCard } from './ShortAnswerCard';
 import type { creatingComponentProps } from '@/types/tasks';
 
-function ShortAnswerCreate({taskId}:creatingComponentProps) {
+function ShortAnswerCreate({ taskId }: creatingComponentProps) {
   const { activeTask, worksheetErrors } = useTasks();
   const {
     addQuestion,
@@ -43,7 +43,7 @@ function ShortAnswerCreate({taskId}:creatingComponentProps) {
         {/* ---- Feladat címe ---- */}
         <TaskTitle taskId={taskId}></TaskTitle>
         {/* ---- Feladatleírás ---- */}
-        <TaskDescription  taskId={taskId}></TaskDescription>
+        <TaskDescription taskId={taskId}></TaskDescription>
         {/* ---- Új kérdés gomb ---- */}
         <section>
           <div className="flex flex-col gap-LabelDescriptionSpace">

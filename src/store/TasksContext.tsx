@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import type {
   Slot,
   TaskJson,
@@ -24,7 +30,8 @@ type TasksContextType = {
   reorderSlots: (from: number, to: number) => void;
   saveWorksheetToDB: () => void;
   setWorksheetMessage: (message: MessageType | null) => void;
-  isLoading: boolean | null;
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
 };
 type worksheetErrors = {
   key: string;
@@ -38,7 +45,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   const [tasksJson, setTasksJson] = useState<TasksJson>({ tasks: [] });
   const [activeId, setActiveId] = useState<string | null>(null);
   const [nextId, setNextId] = useState(1);
-  const [isLoading, setIsLoading] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [worksheetMessage, setWorksheetMessage] = useState<null | MessageType>(
     null,
@@ -121,9 +128,6 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  useEffect(()=>{
-    console.log(tasksJson)
-  },[tasksJson])
 
   const reorderSlots = (from: number, to: number) => {
     setSlots((prevSlots) => {
@@ -168,11 +172,23 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
         tasks: tasksJson.tasks,
       };
 
-      const res = await uploadWorksheet(worksheetData);
-      setWorksheetMessage({ type: 'success', message: res.message });
+      console.log(worksheetData)
+      await uploadWorksheet(worksheetData);
+      setWorksheetMessage({ type: 'success', message: "Sikeres mentés"});
     } catch (e: any) {
-      setWorksheetErrors(e.response.data.errors);
-      console.log(e.response.data.errors);
+      const errorData = e.response?.data;
+      const errors = errorData?.errors;
+
+      if (errors) {
+        setWorksheetErrors(errors);
+      }
+
+      console.log('Szerver hiba:', errorData);
+
+      setWorksheetMessage({
+        message: errorData?.message || 'Ismeretlen hiba történt',
+        type: 'error',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -193,6 +209,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     setWorksheetMessage,
     worksheetErrors,
     isLoading,
+    setIsLoading,
   };
 
   return (

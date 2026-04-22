@@ -12,9 +12,9 @@ interface QuestionCardProps {
   getMap: () => Map<string, HTMLDivElement>;
   removeQuestion: (index: number) => void;
   updateQuestion: (
-    index: number, 
-    field: 'question' | 'answer' | 'isExpanded', 
-    value: string | boolean
+    index: number,
+    field: 'question' | 'answer' | 'isExpanded',
+    value: string | boolean,
   ) => void;
 }
 
@@ -86,7 +86,7 @@ export const ShortAnswerCard = ({
           </div>
 
           {/* Kép feltöltés */}
-            <div className="flex flex-col gap-[15px]">
+          <div className="flex flex-col gap-[15px]">
             <label htmlFor="pairQuestionImage" className="block font-medium">
               Kép
             </label>

@@ -4,6 +4,8 @@ import { BinIcon } from '@/assets/Icons/BinIcon';
 import { useTasks } from '@/store/TasksContext';
 import type { PairGroup } from '@/types/tasks';
 import { getFieldError } from '@/utils/GetFieldError';
+import { MediaUploadButton } from '../MediaUploadButton';
+import { useState } from 'react';
 
 type PairingCardProps = {
   item: PairGroup;
@@ -14,7 +16,11 @@ type PairingCardProps = {
   };
   updatePair: (
     index: number,
-    field: 'pair_question' | 'pair_answer' | 'isExpanded',
+    field:
+      | 'pair_question'
+      | 'pair_answer'
+      | 'isExpanded'
+      | 'pair_question_image',
     value: string | boolean,
   ) => void;
   removePair: (index: number) => void;
@@ -37,10 +43,12 @@ export const PairingCard = ({
     worksheetErrors && Object.keys(worksheetErrors).includes(fieldPath)
   );
 
+  const [inputDisabled, setInputDisabled] = useState(false);
+
   const cardClasses = `
     border w-full flex flex-col gap-[13px] rounded-[5px] text-gray duration-300 transition-all p-4 bg-white
     ${hasError ? 'border-alert border-[2px]' : 'border-secondary'}
-    ${item.isExpanded ? 'max-h-[600px]' : 'max-h-[140px] overflow-hidden'}
+    ${item.isExpanded ? 'max-h-[620px]' : 'max-h-[140px] overflow-hidden'}
   `;
 
   return (
@@ -81,44 +89,24 @@ export const PairingCard = ({
           <div className="flex flex-col gap-[15px]">
             <label className="font-medium">Kérdés vagy leírás</label>
             <textarea
+              disabled={inputDisabled}
               maxLength={130}
               value={item.pair_question}
               onChange={(e) =>
                 updatePair(index, 'pair_question', e.target.value)
               }
-              className="w-full shadow-md resize-none h-[90px] p-4 rounded-[8px] border border-lightBorder outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+              className="w-full disabled:bg-gray/20 shadow-md resize-none h-[90px] p-4 rounded-[8px] border border-lightBorder outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
             />
           </div>
 
           {/* Kép szekció */}
-          <div className="flex flex-col gap-[15px]">
-            <label htmlFor="pairQuestionImage" className="block font-medium">
-              Kép
-            </label>
-            <input
-              className="
-                  w-1/2
-                  text-sm 
-                  file:cursor-pointer
-                  file:mr-4
-                  file:py-2
-                  file:px-4
-                  file:rounded-md
-                  file:border-[1px]   
-                  file:border-solid
-                  file:border-lightBorder
-                  file:text-sm
-                  file:bg-white
-                  file:text-gray
-                 
-                  disabled:opacity-50
-                  disabled:cursor-not-allowed
-                  "
-              type="file"
-              accept="image/*"
-              disabled={item.pair_question ? true : false}
-            />
-          </div>
+          <MediaUploadButton
+            setInputDisabled={setInputDisabled}
+            onUploadSuccess={(url) =>
+              updatePair(index, 'pair_question_image', url)
+            }
+            disabled={item.pair_question ? true : false}
+          ></MediaUploadButton>
 
           {/* Válasz szekció */}
           <div className="flex flex-col gap-[15px]">
@@ -133,7 +121,7 @@ export const PairingCard = ({
 
           {/* Hibaüzenet megjelenítése */}
           {hasError && (
-            <p className="text-[18px] text-alert mt-2 font-semibold">
+            <p className="text-[16px] text-alert">
               {getFieldError(worksheetErrors, fieldPath)}
             </p>
           )}
@@ -141,15 +129,24 @@ export const PairingCard = ({
       ) : (
         /* Összecsukott állapot */
         <div className="flex text-[16px] flex-col opacity-70">
-          <p className="w-3/4 truncate font-medium italic">
-            {item.pair_question || 'Nincs kérdés megadva'}
-          </p>
-          {item.pair_answer && item.pair_question && (
-            <div className="h-[1px] w-8 bg-gray-300 my-1" />
+          {hasError ? (
+            <p className="text-[16px] text-alert">
+              {getFieldError(worksheetErrors, fieldPath)}
+            </p>
+          ) : (
+            <>
+              <p className="w-3/4 truncate font-medium italic">
+                {!(item.pair_question || item.pair_question_image) &&
+                  'Nincs kérdés vagy kép megadva'}
+              </p>
+              {item.pair_answer && item.pair_question && (
+                <div className="h-[1px] w-8 bg-gray-300 my-1" />
+              )}
+              <p className="w-3/4 truncate font-medium italic">
+                {item.pair_answer || 'Nincs válasz megadva'}
+              </p>
+            </>
           )}
-          <p className="w-3/4 truncate font-medium italic">
-            {item.pair_answer || 'Nincs válasz megadva'}
-          </p>
         </div>
       )}
     </div>

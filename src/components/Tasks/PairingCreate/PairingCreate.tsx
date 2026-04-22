@@ -8,7 +8,7 @@ import { TaskDescription } from '../TaskDescription';
 import { AddButton } from '../AddButton';
 import type { creatingComponentProps } from '@/types/tasks';
 
-export default function PairingCreate({taskId}:creatingComponentProps) {
+export default function PairingCreate({ taskId }: creatingComponentProps) {
   const {
     getMap,
     prevLengthRef,
@@ -44,7 +44,7 @@ export default function PairingCreate({taskId}:creatingComponentProps) {
         {/* ---- Feladat címe ---- */}
         <TaskTitle taskId={taskId}></TaskTitle>
         {/* ---- Feladatleírás ---- */}
-        <TaskDescription  taskId={taskId}></TaskDescription>
+        <TaskDescription taskId={taskId}></TaskDescription>
         <section
           id={`tasks.${activeTask.id}.pairing.pairing_groups`}
           className="flex flex-col gap-[13px]"

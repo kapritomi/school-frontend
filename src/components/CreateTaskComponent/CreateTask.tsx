@@ -9,9 +9,17 @@ import { Navbar } from '../Navbar';
 import { BgLeftBottom } from '@/assets/Icons/BgLeftBottom';
 import { BgRightTop } from '@/assets/Icons/BgRightTop';
 import { ClipLoader } from 'react-spinners';
+import { Modal } from '../Modal';
 
 export default function CreateTask() {
-  const { activeTask, saveWorksheetToDB, tasksJson, isLoading } = useTasks();
+  const {
+    activeTask,
+    saveWorksheetToDB,
+    tasksJson,
+    isLoading,
+    worksheetMessage,
+    setWorksheetMessage,
+  } = useTasks();
 
   return (
     <div className=" overflow-hidden w-screen h-dvh max-h-dvh relative   flex">
@@ -28,6 +36,13 @@ export default function CreateTask() {
         <BgRightTop></BgRightTop>
       </div>
       <div className="mt-[70px] flex w-full">
+        {worksheetMessage && (
+          <Modal
+            setModalErrorMessage={setWorksheetMessage}
+            text={worksheetMessage.message}
+            type={worksheetMessage.type}
+          />
+        )}
         <div className="w-1/6">
           <Sidebar />
         </div>
@@ -39,14 +54,14 @@ export default function CreateTask() {
             switch (task.task_type_id) {
               case TASK_TYPE_ID.assignment:
                 return (
-                  <div className="h-dvh">
+                  <div key={task.id} className="h-dvh">
                     <AssignmentCreate key={task.id} />
                   </div>
                 );
 
               case TASK_TYPE_ID.short:
                 return (
-                  <div className="min-h-dvh">
+                  <div key={task.id} className="min-h-dvh">
                     {' '}
                     <ShortAnswerCreate taskId={task.id} key={task.id} />
                   </div>
@@ -54,7 +69,7 @@ export default function CreateTask() {
 
               case TASK_TYPE_ID.pair:
                 return (
-                  <div className="min-h-dvh">
+                  <div key={task.id} className="min-h-dvh">
                     {' '}
                     <PairingCreate taskId={task.id} key={task.id} />
                   </div>
@@ -62,7 +77,7 @@ export default function CreateTask() {
 
               case TASK_TYPE_ID.grouping:
                 return (
-                  <div className="h-dvh">
+                  <div key={task.id} className="h-dvh">
                     {' '}
                     <GroupingCreate taskId={task.id} key={task.id} />{' '}
                   </div>

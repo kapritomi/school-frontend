@@ -2,13 +2,13 @@ import { useTasks } from '@/store/TasksContext';
 import type { creatingComponentProps, TaskJson } from '@/types/tasks';
 import { useEffect, useState } from 'react';
 
-export const TaskDescription = ({taskId}:creatingComponentProps) => {
-  const { updateTask,tasksJson} = useTasks();
-   const [taskToUpdate,setTaskToUpdate]=useState<null | TaskJson>(null)
+export const TaskDescription = ({ taskId }: creatingComponentProps) => {
+  const { updateTask, tasksJson } = useTasks();
+  const [taskToUpdate, setTaskToUpdate] = useState<null | TaskJson>(null);
 
-     useEffect(()=>{
-       setTaskToUpdate(tasksJson.tasks[Number(taskId)-1])
-     },[taskId,tasksJson])
+  useEffect(() => {
+    setTaskToUpdate(tasksJson.tasks[Number(taskId) - 1]);
+  }, [taskId, tasksJson]);
   if (taskToUpdate)
     return (
       <section className="flex flex-col gap-LabelDescriptionInputSpace">

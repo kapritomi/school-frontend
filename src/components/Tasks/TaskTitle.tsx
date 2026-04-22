@@ -1,18 +1,15 @@
-
 import { useTasks } from '@/store/TasksContext';
 import type { creatingComponentProps, TaskJson } from '@/types/tasks';
 import { getFieldError } from '@/utils/GetFieldError';
 import { useEffect, useState } from 'react';
 
-export const TaskTitle = ({taskId}:creatingComponentProps) => {
-  const { updateTask, worksheetErrors,tasksJson } = useTasks();
-  const [taskToUpdate,setTaskToUpdate]=useState<null | TaskJson>(null)
+export const TaskTitle = ({ taskId }: creatingComponentProps) => {
+  const { updateTask, worksheetErrors, tasksJson } = useTasks();
+  const [taskToUpdate, setTaskToUpdate] = useState<null | TaskJson>(null);
 
-  
-  useEffect(()=>{
-    setTaskToUpdate(tasksJson.tasks[Number(taskId)-1])
-  },[taskId,tasksJson])
-
+  useEffect(() => {
+    setTaskToUpdate(tasksJson.tasks[Number(taskId) - 1]);
+  }, [taskId, tasksJson]);
 
   if (taskToUpdate)
     return (

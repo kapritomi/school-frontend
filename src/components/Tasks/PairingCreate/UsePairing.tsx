@@ -42,7 +42,9 @@ export const usePairing = () => {
 
     const newPair: PairGroup = {
       pair_question: '',
+      pair_question_image: '',
       pair_answer: '',
+      pair_answer_image: '',
       isExpanded: true,
     };
 

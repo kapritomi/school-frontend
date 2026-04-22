@@ -6,7 +6,7 @@ import { useGrouping } from './UseGrouping';
 import { useTasks } from '@/store/TasksContext';
 import type { creatingComponentProps } from '@/types/tasks';
 
-export default function GroupingCreate({taskId}:creatingComponentProps) {
+export default function GroupingCreate({ taskId }: creatingComponentProps) {
   const { activeTask, updateTask } = useTasks();
   const {
     selectedGroup,

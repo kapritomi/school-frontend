@@ -32,7 +32,9 @@ export type ShortAnswerJson = {
 // ---- Pairing ----
 export type PairGroup = {
   pair_question: string;
+  pair_question_image: string;
   pair_answer: string;
+  pair_answer_image: string;
   isExpanded: boolean; //frontend miatt muszaj betenni, majd be fetcheleskor hamozzuk a jsont
 };
 export type PairingJson = {
@@ -76,7 +78,6 @@ export const TASK_TYPE_ID: Record<TaskType, number> = {
   assignment: 4,
 };
 
-
-export type creatingComponentProps={
-  taskId:string
-}
+export type creatingComponentProps = {
+  taskId: string;
+};
