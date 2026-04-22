@@ -1,18 +1,14 @@
-import { useTasks } from "@/store/TasksContext";
-import type { PairGroup } from "@/types/tasks";
-import { useRef } from "react";
+import { useTasks } from '@/store/TasksContext';
+import { useRef } from 'react';
 
 export const usePairingCreate = () => {
   const { activeTask, updateTask } = useTasks();
-  
 
   const itemsRef = useRef<Map<string, HTMLDivElement> | null>(null);
-  
-  
+
   const task = activeTask;
   const pairing = task?.pairing ?? { pairing_groups: [] };
-  
-  
+
   const prevLengthRef = useRef(pairing.pairing_groups.length);
 
   function getMap() {
@@ -37,7 +33,13 @@ export const usePairingCreate = () => {
         pairing: {
           pairing_groups: [
             ...pairing.pairing_groups,
-            { pair_question: '', pair_answer: '', isExpanded: true },
+            {
+              pair_question: '',
+              pair_answer_image: '',
+              pair_question_image: '',
+              pair_answer: '',
+              isExpanded: true,
+            },
           ],
         },
       });
@@ -56,7 +58,12 @@ export const usePairingCreate = () => {
 
   const updatePair = (
     index: number,
-    field: 'pair_question' | 'pair_answer' | 'isExpanded',
+    field:
+      | 'pair_question'
+      | 'pair_answer'
+      | 'pair_answer_image'
+      | 'isExpanded'
+      | 'pair_question_image',
     value: string | boolean,
   ) => {
     if (!task) return;
@@ -65,7 +72,6 @@ export const usePairingCreate = () => {
     );
     updateTask({ ...task, pairing: { pairing_groups: next } });
   };
-  
 
   return {
     itemsRef,
@@ -75,8 +81,8 @@ export const usePairingCreate = () => {
     addPair,
     removePair,
     updatePair,
-    task, 
+    task,
     scrollToId,
-    updateTask
+    updateTask,
   };
 };

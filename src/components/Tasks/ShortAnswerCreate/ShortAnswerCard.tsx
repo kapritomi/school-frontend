@@ -4,6 +4,8 @@ import { BinIcon } from '@/assets/Icons/BinIcon';
 import { useTasks } from '@/store/TasksContext';
 import type { ShortQuestion } from '@/types/tasks';
 import { getFieldError } from '@/utils/GetFieldError';
+import { MediaUploadButton } from '../MediaUploadButton';
+import { useState } from 'react';
 
 interface QuestionCardProps {
   item: ShortQuestion;
@@ -13,7 +15,7 @@ interface QuestionCardProps {
   removeQuestion: (index: number) => void;
   updateQuestion: (
     index: number,
-    field: 'question' | 'answer' | 'isExpanded',
+    field: 'question' | 'answer' | 'isExpanded' | 'question_image',
     value: string | boolean,
   ) => void;
 }
@@ -29,7 +31,7 @@ export const ShortAnswerCard = ({
   const { worksheetErrors } = useTasks();
   const fieldPath = `tasks.${Number(activeTaskId) - 1}.questions.${index}`;
   const error = getFieldError(worksheetErrors, fieldPath);
-
+  const [inputDisabled, setInputDisabled] = useState(false);
   const containerClasses = `
     border w-full flex flex-col gap-[13px] rounded-[5px] text-gray duration-300 transition-all p-4 bg-white
     ${error ? 'border-alert border-[2px]' : 'border-[#8FBF6D]'}
@@ -76,44 +78,25 @@ export const ShortAnswerCard = ({
           <div className="flex flex-col gap-[15px]">
             <label className="font-medium">Kérdés vagy kép</label>
             <textarea
+            disabled={inputDisabled}
               maxLength={150}
               value={item.question}
               onChange={(e) =>
                 updateQuestion(index, 'question', e.target.value)
               }
-              className="w-full shadow-md resize-none h-[110px] p-4 rounded-[8px] border border-lightBorder outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+              className="w-full shadow-md disabled:bg-gray/20  resize-none h-[110px] p-4 rounded-[8px] border border-lightBorder outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
             />
           </div>
 
           {/* Kép feltöltés */}
-          <div className="flex flex-col gap-[15px]">
-            <label htmlFor="pairQuestionImage" className="block font-medium">
-              Kép
-            </label>
-            <input
-              className="
-                  w-1/2
-                  text-sm 
-                  file:cursor-pointer
-                  file:mr-4
-                  file:py-2
-                  file:px-4
-                  file:rounded-md
-                  file:border-[1px]   
-                  file:border-solid
-                  file:border-lightBorder
-                  file:text-sm
-                  file:bg-white
-                  file:text-gray
-                 
-                  disabled:opacity-50
-                  disabled:cursor-not-allowed
-                  "
-              type="file"
-              accept="image/*"
-              disabled={item.question ? true : false}
-            />
-          </div>
+          <MediaUploadButton
+            disabled={item.question ? true : false}
+            itemUrl={item.question_image}
+            setInputDisabled={setInputDisabled}
+            onUploadSuccess={(url) =>
+              updateQuestion(index, 'question_image', url)
+            }
+          ></MediaUploadButton>
 
           {/* Válasz Input */}
           <div className="flex flex-col gap-[15px]">

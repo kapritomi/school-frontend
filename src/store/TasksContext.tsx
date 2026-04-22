@@ -128,7 +128,6 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-
   const reorderSlots = (from: number, to: number) => {
     setSlots((prevSlots) => {
       if (from === to) return prevSlots;
@@ -155,7 +154,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
 
   const saveWorksheetToDB = async () => {
     setIsLoading(true);
-    setWorksheetErrors(null)
+    setWorksheetErrors(null);
     try {
       const worksheetData = {
         title: 'test',
@@ -173,9 +172,9 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
         tasks: tasksJson.tasks,
       };
 
-      console.log(worksheetData)
+      console.log(worksheetData);
       await uploadWorksheet(worksheetData);
-      setWorksheetMessage({ type: 'success', message: "Sikeres mentés"});
+      setWorksheetMessage({ type: 'success', message: 'Sikeres mentés' });
     } catch (e: any) {
       const errorData = e.response?.data;
       const errors = errorData?.errors;

@@ -11,7 +11,12 @@ export const usePairing = () => {
 
   const updatePair = (
     index: number,
-    field: 'pair_question' | 'pair_answer' | 'isExpanded',
+    field:
+      | 'pair_question'
+      | 'pair_answer'
+      | 'pair_answer_image'
+      | 'isExpanded'
+      | 'pair_question_image',
     value: string | boolean,
   ) => {
     // Csak akkor fut le, ha van aktív feladat
@@ -42,9 +47,9 @@ export const usePairing = () => {
 
     const newPair: PairGroup = {
       pair_question: '',
-      pair_question_image: '',
+      pair_question_image: null,
       pair_answer: '',
-      pair_answer_image: '',
+      pair_answer_image: null,
       isExpanded: true,
     };
 

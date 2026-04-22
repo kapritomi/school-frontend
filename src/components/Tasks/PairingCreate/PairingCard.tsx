@@ -19,6 +19,7 @@ type PairingCardProps = {
     field:
       | 'pair_question'
       | 'pair_answer'
+      | 'pair_answer_image'
       | 'isExpanded'
       | 'pair_question_image',
     value: string | boolean,
@@ -68,7 +69,7 @@ export const PairingCard = ({
           <button
             type="button"
             onClick={() => removePair(index)}
-            className="hover:opacity-80 transition-opacity"
+            className="hover:opacity-80 rounded-full p-1 transition-opacity hover:bg-red-50"
           >
             <BinIcon color="#FF575A" />
           </button>
@@ -101,6 +102,7 @@ export const PairingCard = ({
 
           {/* Kép szekció */}
           <MediaUploadButton
+            itemUrl={item.pair_question_image}
             setInputDisabled={setInputDisabled}
             onUploadSuccess={(url) =>
               updatePair(index, 'pair_question_image', url)

@@ -40,7 +40,7 @@ export default function PairingCreate({ taskId }: creatingComponentProps) {
 
   if (activeTask)
     return (
-      <div className="flex  flex-col gap-ElementsSpace">
+      <div className="flex  flex-col gap-ElementsSpace transition-all">
         {/* ---- Feladat címe ---- */}
         <TaskTitle taskId={taskId}></TaskTitle>
         {/* ---- Feladatleírás ---- */}

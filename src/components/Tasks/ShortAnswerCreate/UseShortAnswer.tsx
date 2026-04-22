@@ -16,7 +16,12 @@ export const useShortAnswer = () => {
         short_answer: {
           questions: [
             ...shortData.questions,
-            { question: '', answer: '', isExpanded: true },
+            {
+              question: '',
+              question_image: null,
+              answer: '',
+              isExpanded: true,
+            },
           ],
         },
       });
@@ -24,7 +29,7 @@ export const useShortAnswer = () => {
 
   const updateQuestion = (
     index: number,
-    field: 'question' | 'answer' | 'isExpanded',
+    field: 'question' | 'answer' | 'isExpanded' | 'question_image',
     value: string | boolean,
   ) => {
     const nextQuestions = shortData.questions.map((item, i) =>

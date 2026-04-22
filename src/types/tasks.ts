@@ -24,6 +24,7 @@ export type ShortQuestion = {
   question: string;
   answer: string;
   isExpanded: boolean;
+  question_image: string | null;
 };
 export type ShortAnswerJson = {
   questions: ShortQuestion[];
@@ -32,9 +33,9 @@ export type ShortAnswerJson = {
 // ---- Pairing ----
 export type PairGroup = {
   pair_question: string;
-  pair_question_image: string;
+  pair_question_image: string | null;
   pair_answer: string;
-  pair_answer_image: string;
+  pair_answer_image: string | null;
   isExpanded: boolean; //frontend miatt muszaj betenni, majd be fetcheleskor hamozzuk a jsont
 };
 export type PairingJson = {
