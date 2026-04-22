@@ -39,7 +39,7 @@ function Grouping({ task }: { task: TaskJson }) {
     Object.keys(placement).filter((id) => placement[Number(id)] === slotId);
 
   const dropToSlot = (slotId: number) => {
-    if (!draggingId) return;
+    if (draggingId === null) return;
     // egy slotba 1 kártya
 
     setPlacement((prev) => ({ ...prev, [draggingId]: slotId }));
@@ -47,7 +47,7 @@ function Grouping({ task }: { task: TaskJson }) {
   };
 
   const dropToPool = () => {
-    if (!draggingId) return;
+    if (draggingId === null) return;
     setPlacement((prev) => ({ ...prev, [draggingId]: null }));
     setDraggingId(null);
   };
@@ -55,7 +55,7 @@ function Grouping({ task }: { task: TaskJson }) {
   const poolCards = cards.filter((c) => placement[c.id] === null);
   useEffect(() => {
     setPlacement(initialPlacement);
-  }, [initialPlacement]);
+  }, [task]);
   return (
     <div>
       {/* Csoportok */}

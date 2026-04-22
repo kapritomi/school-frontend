@@ -1,27 +1,26 @@
 import { useTasks } from '../../../store/TasksContext';
 import { useEffect } from 'react';
-import { usePairing } from './UsePairing';
-import { getFieldError } from '@/utils/GetFieldError';
-import { PairingCard } from './PairingCard';
+import { useShortAnswer } from './UseShortAnswer';
 import { TaskTitle } from '../TaskTitle';
 import { TaskDescription } from '../TaskDescription';
 import { AddButton } from '../AddButton';
+import { getFieldError } from '@/utils/GetFieldError';
+import { ShortAnswerCard } from './ShortAnswerCard';
 import type { creatingComponentProps } from '@/types/tasks';
 
-export default function PairingCreate({ taskId }: creatingComponentProps) {
+function ShortAnswerCreate({ taskId }: creatingComponentProps) {
+  const { activeTask, worksheetErrors } = useTasks();
   const {
+    addQuestion,
     getMap,
     prevLengthRef,
-    removePair,
+    removeQuestion,
     scrollToId,
-    updatePair,
-    pairing,
-    addPair,
-  } = usePairing();
-  const { activeTask, worksheetErrors } = useTasks();
-
+    shortData,
+    updateQuestion,
+  } = useShortAnswer();
   useEffect(() => {
-    const currentLength = pairing.pairing_groups.length;
+    const currentLength = shortData.questions.length;
     const prevLength = prevLengthRef.current;
 
     if (currentLength > prevLength) {
@@ -36,48 +35,47 @@ export default function PairingCreate({ taskId }: creatingComponentProps) {
     }
 
     prevLengthRef.current = currentLength;
-  }, [pairing.pairing_groups.length]);
+  }, [shortData.questions.length]);
 
   if (activeTask)
     return (
-      <div className="flex  flex-col gap-ElementsSpace">
+      <div className="flex flex-col gap-ElementsSpace">
         {/* ---- Feladat címe ---- */}
         <TaskTitle taskId={taskId}></TaskTitle>
         {/* ---- Feladatleírás ---- */}
         <TaskDescription taskId={taskId}></TaskDescription>
-        <section
-          id={`tasks.${activeTask.id}.pairing.pairing_groups`}
-          className="flex flex-col gap-[13px]"
-        >
+        {/* ---- Új kérdés gomb ---- */}
+        <section>
           <div className="flex flex-col gap-LabelDescriptionSpace">
-            <p className="text-primary text-[30px] font-semibold">Párok:</p>
+            <p className="text-primary text-[30px] font-semibold">Kártyák:</p>
             <p className="text-gray  text-[15px]">
               Kártyánként legalább egy tartalmat és a hozzá tartozó megoldást
               kell megadnia.
             </p>
           </div>
-          {/* ---- Kérdés létrehozás field */}
-          <div className="flex  flex-col gap-4 w-1/2">
-            {pairing.pairing_groups.map((item, index) => (
-              <PairingCard
-                activeTask={activeTask}
+
+          <div className="flex flex-col gap-4 w-1/2">
+            {shortData.questions.map((item, index) => (
+              <ShortAnswerCard
+                activeTaskId={activeTask.id}
                 getMap={getMap}
                 index={index}
                 item={item}
-                removePair={removePair}
-                updatePair={updatePair}
+                removeQuestion={removeQuestion}
+                updateQuestion={updateQuestion}
                 key={index}
-              ></PairingCard>
+              ></ShortAnswerCard>
             ))}
           </div>
+
           {worksheetErrors &&
             Object.keys(worksheetErrors).includes(
-              `tasks.${Number(activeTask.id) - 1}.pairing.pairing_groups`,
+              `tasks.${Number(activeTask.id) - 1}.short_answer.questions`,
             ) && (
               <p className="text-[18px] text-alert">
                 {getFieldError(
                   worksheetErrors,
-                  `tasks.${Number(activeTask.id) - 1}.pairing.pairing_groups`,
+                  `tasks.${Number(activeTask.id) - 1}.short_answer.questions`,
                 )}
               </p>
             )}
@@ -85,9 +83,11 @@ export default function PairingCreate({ taskId }: creatingComponentProps) {
 
         <AddButton
           label="+ Új kérdés"
-          onClick={addPair}
-          disabled={!(pairing.pairing_groups.length < 8)}
+          onClick={addQuestion}
+          disabled={shortData.questions.length >= 18}
         ></AddButton>
       </div>
     );
 }
+
+export default ShortAnswerCreate;

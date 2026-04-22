@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import type {
   Slot,
   TaskJson,
@@ -7,18 +13,29 @@ import type {
   SidebarItem,
 } from '../types/tasks';
 import { MAX_ITEMS, TASK_TYPE_ID } from '../types/tasks';
+import { uploadWorksheet } from '@/api/Worksheet/uploadWorksheet';
+import type { MessageType } from '@/types/messageType';
 
 type TasksContextType = {
   slots: Slot[];
   tasksJson: TasksJson;
   activeId: string | null;
   activeTask: TaskJson | null;
-
+  worksheetMessage: MessageType | null;
+  worksheetErrors: worksheetErrors[] | null;
   selectTask: (item: SidebarItem) => void;
   createTask: (slotIndex: number, label: string, type: TaskType) => void;
   removeTask: (id: string) => void;
   updateTask: (task: TaskJson) => void;
   reorderSlots: (from: number, to: number) => void;
+  saveWorksheetToDB: () => void;
+  setWorksheetMessage: (message: MessageType | null) => void;
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
+};
+type worksheetErrors = {
+  key: string;
+  message: string[];
 };
 
 const TasksContext = createContext<TasksContextType | null>(null);
@@ -28,6 +45,14 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   const [tasksJson, setTasksJson] = useState<TasksJson>({ tasks: [] });
   const [activeId, setActiveId] = useState<string | null>(null);
   const [nextId, setNextId] = useState(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [worksheetMessage, setWorksheetMessage] = useState<null | MessageType>(
+    null,
+  );
+  const [worksheetErrors, setWorksheetErrors] = useState<
+    null | worksheetErrors[]
+  >(null);
 
   const activeTask = useMemo(() => {
     if (!activeId) return null;
@@ -103,6 +128,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+
   const reorderSlots = (from: number, to: number) => {
     setSlots((prevSlots) => {
       if (from === to) return prevSlots;
@@ -127,6 +153,48 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
+  const saveWorksheetToDB = async () => {
+    setIsLoading(true);
+    setWorksheetErrors(null)
+    try {
+      const worksheetData = {
+        title: 'test',
+        assignments: [
+          {
+            classroom_id: 6,
+            password: 'alma123',
+          },
+        ],
+        subject_id: 1,
+        lifetime_minutes: 60,
+        max_time_to_resolve_minutes: 45,
+        max_points: 1,
+        is_public: 0,
+        tasks: tasksJson.tasks,
+      };
+
+      console.log(worksheetData)
+      await uploadWorksheet(worksheetData);
+      setWorksheetMessage({ type: 'success', message: "Sikeres mentés"});
+    } catch (e: any) {
+      const errorData = e.response?.data;
+      const errors = errorData?.errors;
+
+      if (errors) {
+        setWorksheetErrors(errors);
+      }
+
+      console.log('Szerver hiba:', errorData);
+
+      setWorksheetMessage({
+        message: errorData?.message || 'Ismeretlen hiba történt',
+        type: 'error',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const value = {
     slots,
     tasksJson,
@@ -137,6 +205,12 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     removeTask,
     updateTask,
     reorderSlots,
+    saveWorksheetToDB,
+    worksheetMessage,
+    setWorksheetMessage,
+    worksheetErrors,
+    isLoading,
+    setIsLoading,
   };
 
   return (
