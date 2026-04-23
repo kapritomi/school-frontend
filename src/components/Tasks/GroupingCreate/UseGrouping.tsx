@@ -1,6 +1,6 @@
 import { useTasks } from '@/store/TasksContext';
 import type { Group } from '@/types/tasks';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 export const useGrouping = () => {
   const { activeTask, updateTask } = useTasks();
@@ -11,7 +11,10 @@ export const useGrouping = () => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [newItemName, setNewItemName] = useState<string | null>(null);
 
+
   const grouping = activeTask?.grouping ?? { groups: [] };
+  
+
 
   const addGroup = (index: number) => {
     if (!activeTask) return;
@@ -94,6 +97,27 @@ export const useGrouping = () => {
     });
   };
 
+
+  const scrollToId = () => {
+ 
+    const container = document.getElementById('scroll-container'); 
+    const node = document.getElementById('addGroupElements')
+
+    console.log(node)
+
+    if (node && container) {
+      const containerRect = container.getBoundingClientRect();
+      const nodeRect = node.getBoundingClientRect();
+
+      const scrollTarget = nodeRect.top - containerRect.top + container.scrollTop;
+
+      container.scrollTo({
+        top: scrollTarget,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   return {
     handleDelete,
     handleEdit,
@@ -114,5 +138,6 @@ export const useGrouping = () => {
     setIsEditing,
     setEditingId,
     newItemName,
+    scrollToId
   };
 };

@@ -5,6 +5,8 @@ import { BinIcon } from '@/assets/Icons/BinIcon';
 import { useGrouping } from './UseGrouping';
 import { useTasks } from '@/store/TasksContext';
 import type { creatingComponentProps } from '@/types/tasks';
+import { TaskTitle } from '../TaskTitle';
+import { TaskDescription } from '../TaskDescription';
 
 export default function GroupingCreate({ taskId }: creatingComponentProps) {
   const { activeTask, updateTask } = useTasks();
@@ -28,6 +30,7 @@ export default function GroupingCreate({ taskId }: creatingComponentProps) {
     updateGroupName,
     updateItem,
     setSelectedGroup,
+    scrollToId
   } = useGrouping();
 
   useEffect(() => {
@@ -38,46 +41,25 @@ export default function GroupingCreate({ taskId }: creatingComponentProps) {
     }
   }, [selectedId]);
 
+  //a csoport letrehozasanal siman belehet bugoltatni, hogy 2 ugyanolyan indexszel letrehozzon elemet szval ezt megkell nezni
   useEffect(() => {
+    console.log(grouping)
     if (selectedId !== null && typeof selectedId !== 'undefined')
       setSelectedGroup(grouping.groups[selectedId]);
+        const timer = setTimeout(() => {
+        scrollToId();
+      }, 300);
+
+
+      return () => clearTimeout(timer);
   }, [selectedId, grouping]);
+
+
   if (!activeTask) return null;
   return (
-    <div className="flex flex-col gap-ElementsSpace">
-      <section className="flex flex-col gap-LabelDescriptionInputSpace">
-        <label className="block text-primary text-[30px] font-semibold">
-          A feladat címe:
-        </label>
-        <input
-          value={activeTask.task_title}
-          onChange={(e) =>
-            updateTask({ ...activeTask, task_title: e.target.value })
-          }
-          className="border-lightBorder shadow-md w-full p-4 outline-none text-gray  h-[48px] border-[1px] rounded-[8px] focus:border-primary focus:ring-1 focus:ring-primary"
-        />
-      </section>
-      <section className="flex flex-col gap-LabelDescriptionInputSpace">
-        <div className="flex flex-col gap-LabelDescriptionSpace">
-          <label className="block text-primary text-[30px] font-semibold">
-            Feladatleírás:
-          </label>
-          <p className="text-[#818181]  text-[15px]">
-            Adja meg a feladat leírását. Ez a feladat índításakor fog
-            megjelenni. A leírás megadása nem kötelező, üresen hagyhatja a
-            mezőt.
-          </p>
-        </div>
-        <textarea
-          value={activeTask.task_description}
-          onChange={(e) =>
-            updateTask({ ...activeTask, task_description: e.target.value })
-          }
-          maxLength={255}
-          className="w-full shadow-md resize-none p-4 h-[70px] rounded-[8px] border-[1px] border-lightBorder outline-none text-gray transition-all
-             focus:border-primary focus:ring-1 focus:ring-primary"
-        />
-      </section>
+    <div className="flex  flex-col gap-ElementsSpace">
+      <TaskTitle taskId={taskId}></TaskTitle>
+      <TaskDescription taskId={taskId}></TaskDescription>
       <section className="flex flex-col gap-LabelDescriptionInputSpace">
         <p className="block text-primary text-[30px] font-semibold">
           Csoportok
@@ -96,9 +78,9 @@ export default function GroupingCreate({ taskId }: creatingComponentProps) {
           ))}
         </div>
       </section>
-      <div className="w-full h-[1px] bg-secondary"></div>
+      <div  className="w-full h-[1px] bg-secondary"></div>
       {selectedGroup && (
-        <div className="flex flex-col gap-LabelDescriptionInputSpace">
+        <div id="addGroupElements" className="flex flex-col gap-LabelDescriptionInputSpace">
           <div className="flex flex-col gap-LabelDescriptionInputSpace">
             <label
               className="text-[24px] font-medium text-gray"
