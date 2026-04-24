@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { TaskJson } from './types/tasks';
+import type { TaskPreviewProps } from './Pairing';
 
 type XY = { x: number; y: number };
 type Point = {
@@ -7,7 +7,7 @@ type Point = {
   xy: XY;
   answers: string[];
 };
-function Assignment({ task }: { task: TaskJson }) {
+function Assignment({task,dataType}:TaskPreviewProps) {
   if (!task.assignment) return null;
 
   const frameW = 1800;

@@ -37,7 +37,7 @@ function ShortAnswerCreate({ taskId }: creatingComponentProps) {
     prevLengthRef.current = currentLength;
   }, [shortData.questions.length]);
 
-  if (activeTask)
+  if (activeTask && taskId)
     return (
       <div className="flex flex-col gap-ElementsSpace">
         {/* ---- Feladat címe ---- */}

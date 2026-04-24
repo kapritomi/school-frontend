@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import type { TaskType } from '../types/tasks';
 import { useTasks } from '../store/TasksContext';
 import { DeleteIcon } from '../icons/Delete';
+import { useNavigate } from 'react-router-dom';
 
 export default function Sidebar() {
   const { slots, selectTask, createTask, removeTask, reorderSlots } =
     useTasks();
-
+  const navigate = useNavigate();
   const taskCards: { type: TaskType; title: string }[] = [
     { type: 'pair', title: 'Párkereső' },
     { type: 'grouping', title: 'Csoportba rendezés' },
@@ -191,6 +192,7 @@ export default function Sidebar() {
         </div>
 
         <div className="text-[22px] font-medium pl-3 pt-5">Beállítások:</div>
+        <button onClick={() => navigate('/taskPreview')}>Elonezet</button>
       </aside>
 
       {/* MODAL */}

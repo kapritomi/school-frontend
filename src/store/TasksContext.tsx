@@ -194,6 +194,10 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // useEffect(() => {
+  //   console.log(tasksJson);
+  // }, [tasksJson]);
+
   const value = {
     slots,
     tasksJson,

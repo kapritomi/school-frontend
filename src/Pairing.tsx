@@ -1,24 +1,36 @@
-import { useMemo, useState } from 'react';
-import type { TaskJson } from './types/tasks';
+import { useEffect, useMemo, useState } from 'react';
+import type {TaskJson } from './types/tasks';
+import { normalizePairingData } from './utils/TaskNormalizers';
 
-type Card = { id: number; answer: string; img: string | null };
-type Slot = { id: number; question: string; img: string | null };
+
 type Placement = Record<number, number | null>;
+export type TaskPreviewProps = {
+  task:TaskJson,
+  dataType :"frontend" | "backend"
+}
+function Pairing({task,dataType}:TaskPreviewProps) {
+  const hasData = dataType === "frontend" 
+    ? !!task.pairing 
+    : !!(task as any).pairQuestions;
 
-function Pairing({ task }: { task: TaskJson }) {
-  if (!task.pairing) return null;
+  if (!hasData) {
+    console.warn("Nincs párosítási adat a taskban:", task);
+    return null;
+  }
 
-  const slots: Slot[] = task.pairing.pairing_groups.map((q, index) => ({
-    id: index,
-    question: q.pair_question,
-    img: null,
-  }));
+  const normalizedPairs = useMemo(
+    () => normalizePairingData(task, dataType),
+    [task, dataType]
+  );
 
-  const cards: Card[] = task.pairing.pairing_groups.map((a, index) => ({
-    id: index,
-    answer: a.pair_answer,
-    img: null,
-  }));
+  // Innentől már csak a normalizedPairs-szel dolgozol
+  const slots = normalizedPairs.map(p => ({ id: p.id, question: p.question, img: p.questionImg }));
+  const cards = normalizedPairs.map(p => ({ id: p.id, answer: p.answer, img: p.answerImg }));
+
+  useEffect(()=>{
+    console.log(normalizedPairs)
+  },[normalizedPairs])
+
   const shuffle = <T,>(array: T[]): T[] =>
     [...array].sort(() => Math.random() - 0.5);
   const shuffledCards = useMemo(() => shuffle(cards), [task]);

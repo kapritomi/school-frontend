@@ -54,7 +54,8 @@ export default function CreateTask() {
             switch (task.task_type_id) {
               case TASK_TYPE_ID.assignment:
                 return (
-                  <div key={task.id} className="h-dvh">
+                  <div key={task.id} className="min-h-dvh">
+                    {task.id}
                     <AssignmentCreate key={task.id} />
                   </div>
                 );
@@ -62,7 +63,7 @@ export default function CreateTask() {
               case TASK_TYPE_ID.short:
                 return (
                   <div key={task.id} className="min-h-dvh">
-                    {' '}
+                    {task.id}
                     <ShortAnswerCreate taskId={task.id} key={task.id} />
                   </div>
                 );
@@ -70,15 +71,15 @@ export default function CreateTask() {
               case TASK_TYPE_ID.pair:
                 return (
                   <div key={task.id} className="min-h-dvh">
-                    {' '}
+                    {task.id}
                     <PairingCreate taskId={task.id} key={task.id} />
                   </div>
                 );
 
               case TASK_TYPE_ID.grouping:
                 return (
-                  <div key={task.id} className="h-dvh">
-                    {' '}
+                  <div key={task.id} className="min-h-dvh">
+                    {task.id}
                     <GroupingCreate taskId={task.id} key={task.id} />{' '}
                   </div>
                 );

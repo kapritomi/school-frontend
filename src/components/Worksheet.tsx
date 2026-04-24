@@ -38,6 +38,12 @@ export const Worksheet = ({
             Szerkesztés
           </p>
           <p
+            onClick={() => navigate(`/taskPreview/${id}`)}
+            className="cursor-pointer hover:font-medium transition-all duration-150"
+          >
+            Előnézet
+          </p>
+          <p
             className="text-alert cursor-pointer hover:font-medium transition-all duration-150"
             onClick={() => handleDeleteWorksheet(id)}
           >

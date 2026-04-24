@@ -1,6 +1,6 @@
 import { useTasks } from '@/store/TasksContext';
 import type { Group } from '@/types/tasks';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 export const useGrouping = () => {
   const { activeTask, updateTask } = useTasks();
@@ -10,11 +10,9 @@ export const useGrouping = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [newItemName, setNewItemName] = useState<string | null>(null);
-
-
+  const [itemNameInputDisabled, setItemNameInputDisabled] =
+    useState<boolean>(false);
   const grouping = activeTask?.grouping ?? { groups: [] };
-  
-
 
   const addGroup = (index: number) => {
     if (!activeTask) return;
@@ -38,10 +36,31 @@ export const useGrouping = () => {
   };
 
   const addItem = (groupIndex: number) => {
-    if (itemName && selectedGroup) {
+    const targetGroup = grouping.groups[groupIndex];
+
+    if (itemName && targetGroup && targetGroup.items.length < 10) {
       const next = grouping.groups.map((g, i) =>
         i === groupIndex
-          ? { ...g, items: [...g.items, { name: itemName }] }
+          ? { ...g, items: [...g.items, { image: null, name: itemName }] }
+          : g,
+      );
+
+      if (!activeTask) return;
+
+      updateTask({
+        ...activeTask,
+        grouping: { groups: next },
+      });
+
+      setItemName(null);
+    }
+  };
+
+  const addItemImage = (url: string, groupIndex: number) => {
+    if (url && selectedGroup) {
+      const next = grouping.groups.map((g, i) =>
+        i === groupIndex
+          ? { ...g, items: [...g.items, { image: url, name: null }] }
           : g,
       );
       if (!activeTask) return;
@@ -49,7 +68,6 @@ export const useGrouping = () => {
         ...activeTask,
         grouping: { groups: next },
       });
-      setItemName(null);
     }
   };
 
@@ -97,19 +115,16 @@ export const useGrouping = () => {
     });
   };
 
-
-  const scrollToId = () => {
- 
-    const container = document.getElementById('scroll-container'); 
-    const node = document.getElementById('addGroupElements')
-
-    console.log(node)
+  const scrollToId = (taskId: string) => {
+    const container = document.getElementById('scroll-container');
+    const node = document.getElementById(`addGroupElements.${taskId}`);
 
     if (node && container) {
       const containerRect = container.getBoundingClientRect();
       const nodeRect = node.getBoundingClientRect();
 
-      const scrollTarget = nodeRect.top - containerRect.top + container.scrollTop;
+      const scrollTarget =
+        nodeRect.top - containerRect.top + container.scrollTop;
 
       container.scrollTo({
         top: scrollTarget,
@@ -138,6 +153,9 @@ export const useGrouping = () => {
     setIsEditing,
     setEditingId,
     newItemName,
-    scrollToId
+    scrollToId,
+    addItemImage,
+    itemNameInputDisabled,
+    setItemNameInputDisabled,
   };
 };

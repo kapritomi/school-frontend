@@ -7,11 +7,10 @@ import { ClassEdit } from './pages/ClassView/ClassEdit';
 import { BulkStudentUpload } from './pages/BulkStudentUpload/BulkStudentUpload';
 import { Worksheets } from './pages/Worksheets/Worksheets';
 
-import TaskPreview from './TaskPreview';
-import { TasksProvider } from './store/TasksContext';
 import { WorksheetSolutions } from './pages/WorksheetSolutions/WorksheetSolutions';
 import { CheckCode } from './pages/Student/CheckCode/CheckCode';
 import CreateTask from './components/CreateTaskComponent/CreateTask';
+import TaskPreview from './TaskPreview';
 export default function App() {
   const router = createBrowserRouter([
     {
@@ -51,12 +50,8 @@ export default function App() {
       element: <CheckCode />,
     },
     {
-      path: '/taskPreview',
-      element: (
-        <TasksProvider>
-          <TaskPreview />
-        </TasksProvider>
-      ),
+      path: '/taskPreview/:worksheet_id?',
+      element: <TaskPreview />,
     },
   ]);
   return <RouterProvider router={router} />;

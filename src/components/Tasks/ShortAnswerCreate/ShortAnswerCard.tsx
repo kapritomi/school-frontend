@@ -78,7 +78,7 @@ export const ShortAnswerCard = ({
           <div className="flex flex-col gap-[15px]">
             <label className="font-medium">Kérdés vagy kép</label>
             <textarea
-            disabled={inputDisabled}
+              disabled={inputDisabled}
               maxLength={150}
               value={item.question}
               onChange={(e) =>

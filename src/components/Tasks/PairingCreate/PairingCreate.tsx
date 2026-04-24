@@ -38,7 +38,7 @@ export default function PairingCreate({ taskId }: creatingComponentProps) {
     prevLengthRef.current = currentLength;
   }, [pairing.pairing_groups.length]);
 
-  if (activeTask)
+  if (activeTask && taskId)
     return (
       <div className="flex  flex-col gap-ElementsSpace transition-all">
         {/* ---- Feladat címe ---- */}

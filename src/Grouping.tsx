@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import type { TaskJson } from './types/tasks';
+import type { TaskPreviewProps } from './Pairing';
 type Card = { id: number; name: string };
 type Placement = Record<number, number | null>;
 
@@ -10,7 +10,7 @@ const groupColors: Record<number, string> = {
   4: '#FEF3C7', // hüllők
 };
 
-function Grouping({ task }: { task: TaskJson }) {
+function Grouping({task,dataType}:TaskPreviewProps) {
   if (!task.grouping) return null;
 
   const groups = task.grouping.groups.map((g, index) => ({

@@ -44,7 +44,8 @@ export type PairingJson = {
 
 // ---- Grouping ----
 export type GroupItem = {
-  name: string;
+  name: string | null;
+  image: null | string;
 };
 export type Group = {
   index: number; //frontend miatt muszaj betenni, majd be fetcheleskor hamozzuk a jsont
@@ -66,6 +67,9 @@ export type TaskJson = {
   grouping?: GroupingJson;
 };
 
+
+
+
 export type TasksJson = {
   tasks: TaskJson[];
 };
@@ -82,3 +86,4 @@ export const TASK_TYPE_ID: Record<TaskType, number> = {
 export type creatingComponentProps = {
   taskId: string;
 };
+
