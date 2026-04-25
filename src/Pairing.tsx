@@ -83,10 +83,7 @@ const cards: Card[] = task.pairing.pairing_groups.map((a, index) => ({
 
   return (
     <div>
-      {/* feladat címe */}
-      <div className="task-padding font-semibold text-TaskTitle">
-        {task.task_title}
-      </div>
+      
       {/* feladat leírása */}
       <div className="task-padding font-semibold text-TaskDesc">
         {task.task_description}

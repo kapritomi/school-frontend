@@ -3,18 +3,16 @@ import { useTasks } from '../../store/TasksContext';
 import type { Group } from '@/types/tasks';
 import { EditIcon } from '@/assets/Icons/EditIcon';
 import { BinIcon } from '@/assets/Icons/BinIcon';
-
-export default function GroupingCreate() {
-  const { activeTask, updateTask } = useTasks();
+import type { TaskJson } from '@/types/tasks';
+export default function GroupingCreate({ task }: { task: TaskJson }) {
+  const { updateTask } = useTasks();
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<null | Group>(null);
   const [itemName, setItemName] = useState<null | string>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [newItemName, setNewItemName] = useState<string | null>(null);
-  if (!activeTask) return null;
-
-  const task = activeTask;
+ 
   const grouping = task.grouping ?? { groups: [] };
 
   const addGroup = (index: number) => {
@@ -112,7 +110,7 @@ export default function GroupingCreate() {
     });
   };
   return (
-    <div className="flex flex-col gap-ElementsSpace">
+    <div id={`task-${task.id}`} className="flex min-h-[900px] flex-col gap-ElementsSpace">
       <section className="flex flex-col gap-LabelDescriptionInputSpace">
         <label className="block text-primary text-[30px] font-semibold">
           A feladat címe:

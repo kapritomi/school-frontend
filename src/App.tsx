@@ -12,6 +12,7 @@ import { TasksProvider } from './store/TasksContext';
 import { WorksheetSolutions } from './pages/WorksheetSolutions/WorksheetSolutions';
 import { CheckCode } from './pages/Student/CheckCode/CheckCode';
 import CreateTask from './components/CreateTaskComponent/CreateTask';
+import StudentView from './StudentView';
 export default function App() {
   const router = createBrowserRouter([
     {
@@ -53,11 +54,15 @@ export default function App() {
     {
       path: '/taskPreview',
       element: (
-        <TasksProvider>
           <TaskPreview />
-        </TasksProvider>
       ),
     },
+    {
+      path: '/StudentView',
+      element: (
+        <StudentView />
+      )
+    }
   ]);
   return <RouterProvider router={router} />;
 }

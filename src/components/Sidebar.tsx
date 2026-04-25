@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import type { TaskType } from '../types/tasks';
 import { useTasks } from '../store/TasksContext';
-import { DeleteIcon } from '../icons/Delete';
-
+import { Link } from 'react-router-dom';
 export default function Sidebar() {
-  const { slots, selectTask, createTask, removeTask, reorderSlots } =
-    useTasks();
+  const { slots, createTask, removeTask, reorderSlots } = useTasks();
 
   const taskCards: { type: TaskType; title: string }[] = [
     { type: 'pair', title: 'Párkereső' },
@@ -113,14 +111,21 @@ export default function Sidebar() {
                   key={idx}
                   className="group select-none border-[2px] border-primary rounded-[8px] cursor-grab"
                   draggable
-                  onClick={() => selectTask(slot)}
+                  onClick={() => {
+                    const el = document.getElementById(`task-${slot.id}`);
+                    if (el) {
+                      el.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start',
+                      });
+                    }
+                  }}
                   onDragStart={onDragStart(idx)}
                   onDragOver={onDragOver(idx)}
                   onDrop={onDrop(idx)}
                   onDragEnd={onDragEnd}
                   style={{
                     background: isOver ? '#f2f2f2' : '#fff',
-                    userSelect: 'none',
                   }}
                 >
                   <div className="flex flex-wrap">
@@ -178,9 +183,6 @@ export default function Sidebar() {
                     height: 44,
                     width: '100%',
                     border: '2px dashed #8FBF6D',
-                    background: 'transparent',
-                    cursor: 'pointer',
-                    fontSize: 20,
                   }}
                 >
                   +
@@ -191,85 +193,12 @@ export default function Sidebar() {
             return null;
           })}
         </div>
-
-        <div className="text-[22px] font-medium pl-3 pt-5">
-          Beállítások:
-        </div>
+        <div className="text-[22px] font-medium pl-3 pt-5"> Beállítások: </div>
+         <Link to={'/taskPreview'}><span className='pl-3 pt-5'>Előnézet</span></Link>
       </aside>
 
-      {/* MODAL */}
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center"
-          onMouseDown={cancelCreate}
-        >
-          <div className="absolute inset-0 bg-black/40" />
+            {isModalOpen && ( <div className="fixed inset-0 z-50 flex items-center justify-center" onMouseDown={cancelCreate} > <div className="absolute inset-0 bg-black/40" /> <div className="relative z-10 w-[820px] rounded-xl bg-white p-4 shadow-lg" onMouseDown={(e) => e.stopPropagation()} > <div className="text-lg font-medium mb-3"> Új feladat létrehozása </div> <input className="w-full border-[1px] focus:border-primary focus:border-[2.5px] border-lightBorder rounded-lg px-3 py-2 outline-none" placeholder="Feladat címe" value={newLabel} onChange={(e) => setNewLabel(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') confirmCreate(); if (e.key === 'Escape') cancelCreate(); }} autoFocus /> <div className="flex gap-2 mt-2"> {taskCards.map((c) => { const selected = selectedType === c.type; return ( <button key={c.type} type="button" onClick={() => setSelectedType(c.type)} className={[ 'rounded-[8px] border bg-white shadow-md w-1/4 shadow-[4px_8px_6px_rgba(0,0,0,0.25)] border-[1px] border-lightBorder', 'flex flex-col justify-between', 'h-[200px] p-2', selected ? 'ring-2 ring-green-700 border-green-700' : 'hover:ring-1 hover:ring-gray-300', ].join(' ')} > <div className="h-[140px] rounded-[8px] border-[1px] border-lightBorder bg-white" /> <div className="mt-2">{c.title}</div> </button> ); })} </div> <div className="flex justify-end gap-2 mt-4"> <button type="button" className="px-3 py-2 rounded-lg border border-lightBorder" onClick={cancelCreate} > Mégse </button> <button type="button" className="px-3 py-2 rounded-lg disabled:bg-primaryDisabled bg-primary text-white font-semibold" onClick={confirmCreate} disabled={!newLabel.trim() || !selectedType} > Létrehozás </button> </div> </div> </div> )}
 
-          <div
-            className="relative z-10 w-[820px] rounded-xl bg-white p-4 shadow-lg"
-            onMouseDown={(e) => e.stopPropagation()}
-          >
-            <div className="text-lg font-medium mb-3">
-              Új feladat létrehozása
-            </div>
-
-            <input
-              className="w-full border-[1px] focus:border-primary focus:border-[2.5px] border-lightBorder rounded-lg px-3 py-2 outline-none"
-              placeholder="Feladat címe"
-              value={newLabel}
-              onChange={(e) => setNewLabel(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') confirmCreate();
-                if (e.key === 'Escape') cancelCreate();
-              }}
-              autoFocus
-            />
-
-            <div className="flex gap-2 mt-2">
-              {taskCards.map((c) => {
-                const selected = selectedType === c.type;
-
-                return (
-                  <button
-                    key={c.type}
-                    type="button"
-                    onClick={() => setSelectedType(c.type)}
-                    className={[
-                      'rounded-[8px] border bg-white shadow-md w-1/4 shadow-[4px_8px_6px_rgba(0,0,0,0.25)] border-[1px] border-lightBorder',
-                      'flex flex-col justify-between',
-                      'h-[200px] p-2',
-                      selected
-                        ? 'ring-2 ring-green-700 border-green-700'
-                        : 'hover:ring-1 hover:ring-gray-300',
-                    ].join(' ')}
-                  >
-                    <div className="h-[140px] rounded-[8px] border-[1px] border-lightBorder bg-white" />
-                    <div className="mt-2">{c.title}</div>
-                  </button>
-                );
-              })}
-            </div>
-
-            <div className="flex justify-end gap-2 mt-4">
-              <button
-                type="button"
-                className="px-3 py-2 rounded-lg border border-lightBorder"
-                onClick={cancelCreate}
-              >
-                Mégse
-              </button>
-              <button
-                type="button"
-                className="px-3 py-2 rounded-lg disabled:bg-primaryDisabled bg-primary text-white font-semibold"
-                onClick={confirmCreate}
-                disabled={!newLabel.trim() || !selectedType}
-              >
-                Létrehozás
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

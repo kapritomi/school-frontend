@@ -8,6 +8,7 @@ import { useTasks } from '@/store/TasksContext';
 import { Navbar } from '../Navbar';
 import { BgLeftBottom } from '@/assets/Icons/BgLeftBottom';
 import { BgRightTop } from '@/assets/Icons/BgRightTop';
+import { Link } from 'react-router-dom';
 
 export default function CreateTask() {
   const { activeTask,saveWorksheetToDB,tasksJson} = useTasks();
@@ -26,19 +27,21 @@ export default function CreateTask() {
           <Sidebar />
         </div>
         <div id='scroll-container' className="w-full p-4 overflow-y-scroll h-full ">
+           <Link to={'/StudentView'}>Tanulói nézet</Link>
           {tasksJson.tasks.map((task) => {
+            
             switch (task.task_type_id) {
               case TASK_TYPE_ID.assignment:
-                return <AssignmentCreate key={task.id} />;
+                return <AssignmentCreate key={task.id} task={task}/>;
 
               case TASK_TYPE_ID.short:
-                return <ShortAnswerCreate key={task.id} />;
+                return <ShortAnswerCreate key={task.id} task={task}/>;
 
               case TASK_TYPE_ID.pair:
-                return <PairingCreate key={task.id} />;
+                return <PairingCreate key={task.id} task={task}/>;
 
               case TASK_TYPE_ID.grouping:
-                return <GroupingCreate key={task.id} />;
+                return <GroupingCreate key={task.id} task={task}/>;
 
               default:
                 return null;

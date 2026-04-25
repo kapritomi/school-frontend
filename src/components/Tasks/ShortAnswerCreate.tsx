@@ -4,13 +4,11 @@ import { useEffect, useRef } from 'react';
 import { ArrowUpIcon } from '@/assets/Icons/ArrowUpIcon';
 import { ArrowDownIcon } from '@/assets/Icons/ArrowDownIcon';
 import { BinIcon } from '@/assets/Icons/BinIcon';
-
-function ShortAnswerCreate() {
-  const { activeTask, updateTask } = useTasks();
+import type { TaskJson } from '@/types/tasks';
+function ShortAnswerCreate({ task }: { task: TaskJson }) {
+  const { updateTask } = useTasks();
   const itemsRef = useRef<Map<string, HTMLDivElement> | null>(null);
-  if (!activeTask) return null;
-
-  const task = activeTask;
+  
   const shortData = task.short_answer ?? { questions: [] };
   const prevLengthRef = useRef(shortData.questions.length);
 
@@ -99,7 +97,7 @@ function ShortAnswerCreate() {
   };
 
   return (
-    <div className="flex flex-col gap-ElementsSpace">
+    <div id={`task-${task.id}`} className="flex min-h-[900px] flex-col gap-ElementsSpace">
       {/* ---- Feladat címe ---- */}
       <section className="flex flex-col gap-LabelDescriptionInputSpace">
         <label className="block text-primary text-[30px] font-semibold">
