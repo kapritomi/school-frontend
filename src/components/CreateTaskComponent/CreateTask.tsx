@@ -11,6 +11,7 @@ import { BgRightTop } from '@/assets/Icons/BgRightTop';
 import { ClipLoader } from 'react-spinners';
 import { Modal } from '../Modal';
 
+
 export default function CreateTask() {
   const {
     activeTask,
@@ -51,12 +52,13 @@ export default function CreateTask() {
           className="w-full p-4 overflow-y-scroll h-full "
         >
           {tasksJson.tasks.map((task) => {
+            
             switch (task.task_type_id) {
               case TASK_TYPE_ID.assignment:
                 return (
                   <div key={task.id} className="min-h-dvh">
                     {task.id}
-                    <AssignmentCreate key={task.id} />
+                    <AssignmentCreate  task={task} key={task.id} />
                   </div>
                 );
 

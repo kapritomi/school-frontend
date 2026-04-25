@@ -2,15 +2,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { CoordinateAndAnswers } from '../../types/tasks';
 import { useTasks } from '../../store/TasksContext';
 import { DeleteIcon } from '../../icons/Delete';
+import type { TaskJson } from '../../types/tasks';
 
 type XY = { x: number; y: number };
 type CoordItem = { id: number; coordinate: string; answer: string };
 
-export default function AssignmentCreate() {
-  const { activeTask, updateTask } = useTasks();
-  if (!activeTask) return null;
-
-  const task = activeTask;
+export default function AssignmentCreate({ task }: { task: TaskJson }) {
+  const { updateTask } = useTasks();
+ 
   const onChange = updateTask;
   const frameW = 700;
   const frameH = 500;
@@ -175,7 +174,7 @@ export default function AssignmentCreate() {
   };
 
   return (
-    <div>
+    <div id={`task-${task.id}`}>
       <form className="mb-4">
         <section className="space-y-4 mt-4">
           <label

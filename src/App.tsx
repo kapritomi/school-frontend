@@ -11,6 +11,7 @@ import { WorksheetSolutions } from './pages/WorksheetSolutions/WorksheetSolution
 import { CheckCode } from './pages/Student/CheckCode/CheckCode';
 import CreateTask from './components/CreateTaskComponent/CreateTask';
 import TaskPreview from './TaskPreview';
+import StudentView from './StudentView';
 export default function App() {
   const router = createBrowserRouter([
     {
@@ -53,6 +54,12 @@ export default function App() {
       path: '/taskPreview/:worksheet_id?',
       element: <TaskPreview />,
     },
+    {
+      path: '/StudentView',
+      element: (
+        <StudentView />
+      )
+    }
   ]);
   return <RouterProvider router={router} />;
 }
