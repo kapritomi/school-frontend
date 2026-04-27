@@ -1,15 +1,16 @@
 import { useTasks } from '@/store/TasksContext';
-import type { PairGroup } from '@/types/tasks';
+import type { PairGroup, TaskJson } from '@/types/tasks';
 import { useRef } from 'react';
 
 export const usePairing = () => {
   const { activeTask, updateTask } = useTasks();
   const itemsRef = useRef<Map<string, HTMLDivElement> | null>(null);
 
-  const pairing = activeTask?.pairing ?? { pairing_groups: [] };
-  const prevLengthRef = useRef(pairing.pairing_groups.length);
+  // const pairing = activeTask?.pairing ?? { pairing_groups: [] };
+  // const prevLengthRef = useRef(pairing.pairing_groups.length);
 
   const updatePair = (
+    task: TaskJson,
     index: number,
     field:
       | 'pair_question'
@@ -19,32 +20,34 @@ export const usePairing = () => {
       | 'pair_question_image',
     value: string | boolean,
   ) => {
-    // Csak akkor fut le, ha van aktív feladat
-    if (!activeTask) return;
-
-    const next = pairing.pairing_groups.map((p, i) =>
+    if (!task.pairing) return;
+    const nextGroups = task.pairing.pairing_groups.map((p, i) =>
       i === index ? { ...p, [field]: value } : p,
     );
-
     updateTask({
-      ...activeTask,
-      pairing: { pairing_groups: next },
+      ...task,
+      pairing: {
+        ...task.pairing,
+        pairing_groups: nextGroups,
+      },
     });
   };
 
-  const removePair = (index: number) => {
-    if (!activeTask) return;
+  const removePair = (index: number, task: TaskJson) => {
+    if (!task) return;
+
+    const pairing = task?.pairing ?? { pairing_groups: [] };
     updateTask({
-      ...activeTask,
+      ...task,
       pairing: {
         pairing_groups: pairing.pairing_groups.filter((_, i) => i !== index),
       },
     });
   };
 
-  const addPair = () => {
-    if (!activeTask) return;
-
+  const addPair = (task: TaskJson) => {
+    if (!task) return;
+    const pairing = task?.pairing ?? { pairing_groups: [] };
     const newPair: PairGroup = {
       pair_question: '',
       pair_question_image: null,
@@ -54,7 +57,7 @@ export const usePairing = () => {
     };
 
     updateTask({
-      ...activeTask,
+      ...task,
       pairing: {
         pairing_groups: [...pairing.pairing_groups, newPair],
       },
@@ -83,8 +86,6 @@ export const usePairing = () => {
     removePair,
     updatePair,
     addPair,
-    prevLengthRef,
     itemsRef,
-    pairing,
   };
 };

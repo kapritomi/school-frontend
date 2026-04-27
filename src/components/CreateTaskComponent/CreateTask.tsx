@@ -11,7 +11,6 @@ import { BgRightTop } from '@/assets/Icons/BgRightTop';
 import { ClipLoader } from 'react-spinners';
 import { Modal } from '../Modal';
 
-
 export default function CreateTask() {
   const {
     activeTask,
@@ -52,13 +51,12 @@ export default function CreateTask() {
           className="w-full p-4 overflow-y-scroll h-full "
         >
           {tasksJson.tasks.map((task) => {
-            
             switch (task.task_type_id) {
               case TASK_TYPE_ID.assignment:
                 return (
                   <div key={task.id} className="min-h-dvh">
                     {task.id}
-                    <AssignmentCreate  task={task} key={task.id} />
+                    <AssignmentCreate task={task} key={task.id} />
                   </div>
                 );
 
@@ -66,7 +64,7 @@ export default function CreateTask() {
                 return (
                   <div key={task.id} className="min-h-dvh">
                     {task.id}
-                    <ShortAnswerCreate taskId={task.id} key={task.id} />
+                    <ShortAnswerCreate task={task} key={task.id} />
                   </div>
                 );
 
@@ -74,7 +72,7 @@ export default function CreateTask() {
                 return (
                   <div key={task.id} className="min-h-dvh">
                     {task.id}
-                    <PairingCreate taskId={task.id} key={task.id} />
+                    <PairingCreate task={task} key={task.id} />
                   </div>
                 );
 
@@ -82,7 +80,7 @@ export default function CreateTask() {
                 return (
                   <div key={task.id} className="min-h-dvh">
                     {task.id}
-                    <GroupingCreate taskId={task.id} key={task.id} />{' '}
+                    <GroupingCreate task={task} key={task.id} />{' '}
                   </div>
                 );
 

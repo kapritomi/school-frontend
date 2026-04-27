@@ -2,7 +2,7 @@ import { ArrowDownIcon } from '@/assets/Icons/ArrowDownIcon';
 import { ArrowUpIcon } from '@/assets/Icons/ArrowUpIcon';
 import { BinIcon } from '@/assets/Icons/BinIcon';
 import { useTasks } from '@/store/TasksContext';
-import type { PairGroup } from '@/types/tasks';
+import type { PairGroup, TaskJson } from '@/types/tasks';
 import { getFieldError } from '@/utils/GetFieldError';
 import { MediaUploadButton } from '../MediaUploadButton';
 import { useState } from 'react';

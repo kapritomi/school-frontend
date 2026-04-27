@@ -1,18 +1,18 @@
 import { useTasks } from '@/store/TasksContext';
+import type { TaskJson } from '@/types/tasks';
 import { useRef } from 'react';
 
 export const useShortAnswer = () => {
   const itemsRef = useRef<Map<string, HTMLDivElement> | null>(null);
-  const { activeTask, updateTask } = useTasks();
+  const { updateTask } = useTasks();
 
-  const shortData = activeTask?.short_answer ?? { questions: [] };
-  const prevLengthRef = useRef(shortData.questions.length);
+  const addQuestion = (task: TaskJson) => {
+    if (!task) return;
+    const shortData = task?.short_answer ?? { questions: [] };
 
-  const addQuestion = () => {
-    if (!activeTask) return;
     if (shortData.questions.length < 18)
       updateTask({
-        ...activeTask,
+        ...task,
         short_answer: {
           questions: [
             ...shortData.questions,
@@ -28,26 +28,29 @@ export const useShortAnswer = () => {
   };
 
   const updateQuestion = (
+    task: TaskJson,
     index: number,
     field: 'question' | 'answer' | 'isExpanded' | 'question_image',
     value: string | boolean,
   ) => {
+    const shortData = task?.short_answer ?? { questions: [] };
     const nextQuestions = shortData.questions.map((item, i) =>
       i === index ? { ...item, [field]: value } : item,
     );
-    if (!activeTask) return;
+    if (!task) return;
     updateTask({
-      ...activeTask,
+      ...task,
       short_answer: {
         questions: nextQuestions,
       },
     });
   };
 
-  const removeQuestion = (index: number) => {
-    if (!activeTask) return;
+  const removeQuestion = (index: number, task: TaskJson) => {
+    if (!task) return;
+    const shortData = task?.short_answer ?? { questions: [] };
     updateTask({
-      ...activeTask,
+      ...task,
       short_answer: {
         questions: shortData.questions.filter((_, i) => i !== index),
       },
@@ -82,7 +85,5 @@ export const useShortAnswer = () => {
     removeQuestion,
     updateQuestion,
     addQuestion,
-    prevLengthRef,
-    shortData,
   };
 };

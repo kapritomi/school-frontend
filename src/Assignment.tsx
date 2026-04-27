@@ -7,7 +7,7 @@ type Point = {
   xy: XY;
   answers: string[];
 };
-function Assignment({task,dataType}:TaskPreviewProps) {
+function Assignment({ task, dataType }: TaskPreviewProps) {
   if (!task.assignment) return null;
 
   const frameW = 1800;

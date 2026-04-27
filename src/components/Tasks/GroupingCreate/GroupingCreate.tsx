@@ -1,19 +1,16 @@
 import { useEffect } from 'react';
 import { useGrouping } from './UseGrouping';
-import { useTasks } from '@/store/TasksContext';
-import type { creatingComponentProps } from '@/types/tasks';
 import { TaskTitle } from '../TaskTitle';
 import { TaskDescription } from '../TaskDescription';
 import { CreateGroupItemField } from './CreateGroupItemField';
+import type { TaskJson } from '@/types/tasks';
 
-export default function GroupingCreate({ taskId }: creatingComponentProps) {
-  const { activeTask } = useTasks();
+export default function GroupingCreate({ task }: { task: TaskJson }) {
   const {
     selectedGroup,
     setSelectedId,
     addGroup,
     addItem,
-    grouping,
     itemName,
     newItemName,
     setItemName,
@@ -33,6 +30,7 @@ export default function GroupingCreate({ taskId }: creatingComponentProps) {
     itemNameInputDisabled,
     setItemNameInputDisabled,
   } = useGrouping();
+  const grouping = task?.grouping ?? { groups: [] };
 
   useEffect(() => {
     if (selectedId === null || selectedId === undefined) return;
@@ -42,7 +40,7 @@ export default function GroupingCreate({ taskId }: creatingComponentProps) {
     );
 
     if (!alreadyExists) {
-      addGroup(selectedId);
+      addGroup(selectedId, task);
     }
   }, [selectedId]);
 
@@ -56,18 +54,17 @@ export default function GroupingCreate({ taskId }: creatingComponentProps) {
       }
 
       const timer = setTimeout(() => {
-        scrollToId(taskId);
+        scrollToId(task.id);
       }, 300);
       return () => clearTimeout(timer);
     }
   }, [selectedId, grouping]);
 
-  if (activeTask && taskId)
+  if (task)
     return (
       <div className="flex  flex-col gap-ElementsSpace">
-        <TaskTitle taskId={taskId}></TaskTitle>
-        <p>{taskId}</p>
-        <TaskDescription taskId={taskId}></TaskDescription>
+        <TaskTitle taskId={task.id}></TaskTitle>
+        <TaskDescription taskId={task.id}></TaskDescription>
         <section className="flex flex-col gap-LabelDescriptionInputSpace">
           <p className="block text-primary text-[30px] font-semibold">
             Csoportok
@@ -89,11 +86,11 @@ export default function GroupingCreate({ taskId }: creatingComponentProps) {
         <div className="w-full h-[1px] bg-secondary"></div>
         {selectedGroup && (
           <CreateGroupItemField
-            taskId={taskId}
-            addItem={addItem}
-            addItemImage={addItemImage}
+            taskId={task.id}
+            addItem={(idx) => addItem(idx, task)}
+            addItemImage={(url, idx) => addItemImage(url, idx, task)}
             editingId={editingId}
-            handleDelete={handleDelete}
+            handleDelete={(gi, ii) => handleDelete(gi, ii, task)}
             handleEdit={handleEdit}
             isEditing={isEditing}
             itemName={itemName}
@@ -105,8 +102,8 @@ export default function GroupingCreate({ taskId }: creatingComponentProps) {
             setItemName={setItemName}
             setItemNameInputDisabled={setItemNameInputDisabled}
             setNewItemName={setNewItemName}
-            updateGroupName={updateGroupName}
-            updateItem={updateItem}
+            updateGroupName={(idx, val) => updateGroupName(idx, val, task)}
+            updateItem={(ii, gi) => updateItem(ii, gi, task)}
             key={selectedGroup.index}
           ></CreateGroupItemField>
         )}

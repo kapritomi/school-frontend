@@ -1,24 +1,18 @@
 import { useTasks } from '../../../store/TasksContext';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { usePairing } from './UsePairing';
 import { getFieldError } from '@/utils/GetFieldError';
 import { PairingCard } from './PairingCard';
 import { TaskTitle } from '../TaskTitle';
 import { TaskDescription } from '../TaskDescription';
 import { AddButton } from '../AddButton';
-import type { creatingComponentProps } from '@/types/tasks';
+import type { TaskJson } from '@/types/tasks';
 
-export default function PairingCreate({ taskId }: creatingComponentProps) {
-  const {
-    getMap,
-    prevLengthRef,
-    removePair,
-    scrollToId,
-    updatePair,
-    pairing,
-    addPair,
-  } = usePairing();
+export default function PairingCreate({ task }: { task: TaskJson }) {
+  const { getMap, removePair, scrollToId, updatePair, addPair } = usePairing();
   const { activeTask, worksheetErrors } = useTasks();
+  const pairing = task?.pairing ?? { pairing_groups: [] };
+  const prevLengthRef = useRef(pairing.pairing_groups.length);
 
   useEffect(() => {
     const currentLength = pairing.pairing_groups.length;
@@ -38,13 +32,13 @@ export default function PairingCreate({ taskId }: creatingComponentProps) {
     prevLengthRef.current = currentLength;
   }, [pairing.pairing_groups.length]);
 
-  if (activeTask && taskId)
+  if (activeTask && task)
     return (
       <div className="flex  flex-col gap-ElementsSpace transition-all">
         {/* ---- Feladat címe ---- */}
-        <TaskTitle taskId={taskId}></TaskTitle>
+        <TaskTitle taskId={task.id}></TaskTitle>
         {/* ---- Feladatleírás ---- */}
-        <TaskDescription taskId={taskId}></TaskDescription>
+        <TaskDescription taskId={task.id}></TaskDescription>
         <section
           id={`tasks.${activeTask.id}.pairing.pairing_groups`}
           className="flex flex-col gap-[13px]"
@@ -64,8 +58,10 @@ export default function PairingCreate({ taskId }: creatingComponentProps) {
                 getMap={getMap}
                 index={index}
                 item={item}
-                removePair={removePair}
-                updatePair={updatePair}
+                removePair={(idx) => removePair(idx, task)}
+                updatePair={(idx, field, val) =>
+                  updatePair(task, idx, field, val)
+                }
                 key={index}
               ></PairingCard>
             ))}
@@ -85,7 +81,7 @@ export default function PairingCreate({ taskId }: creatingComponentProps) {
 
         <AddButton
           label="+ Új kérdés"
-          onClick={addPair}
+          onClick={() => addPair(task)}
           disabled={!(pairing.pairing_groups.length < 8)}
         ></AddButton>
       </div>

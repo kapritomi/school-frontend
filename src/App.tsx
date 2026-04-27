@@ -56,10 +56,8 @@ export default function App() {
     },
     {
       path: '/StudentView',
-      element: (
-        <StudentView />
-      )
-    }
+      element: <StudentView />,
+    },
   ]);
   return <RouterProvider router={router} />;
 }

@@ -9,7 +9,7 @@ type CoordItem = { id: number; coordinate: string; answer: string };
 
 export default function AssignmentCreate({ task }: { task: TaskJson }) {
   const { updateTask } = useTasks();
- 
+
   const onChange = updateTask;
   const frameW = 700;
   const frameH = 500;

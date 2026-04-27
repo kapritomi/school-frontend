@@ -67,9 +67,6 @@ export type TaskJson = {
   grouping?: GroupingJson;
 };
 
-
-
-
 export type TasksJson = {
   tasks: TaskJson[];
 };
@@ -82,8 +79,3 @@ export const TASK_TYPE_ID: Record<TaskType, number> = {
   short: 3,
   assignment: 4,
 };
-
-export type creatingComponentProps = {
-  taskId: string;
-};
-

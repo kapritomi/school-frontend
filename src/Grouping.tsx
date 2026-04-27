@@ -10,7 +10,7 @@ const groupColors: Record<number, string> = {
   4: '#FEF3C7', // hüllők
 };
 
-function Grouping({task,dataType}:TaskPreviewProps) {
+function Grouping({ task, dataType }: TaskPreviewProps) {
   if (!task.grouping) return null;
 
   const groups = task.grouping.groups.map((g, index) => ({

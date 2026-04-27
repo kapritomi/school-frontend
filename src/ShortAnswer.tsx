@@ -1,7 +1,7 @@
 import type { TaskPreviewProps } from './Pairing';
 import { useState } from 'react';
 
-function ShortAnswer({task,dataType}:TaskPreviewProps) {
+function ShortAnswer({ task, dataType }: TaskPreviewProps) {
   if (!task.short_answer) return null;
 
   const questions = task.short_answer.questions;

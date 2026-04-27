@@ -1,9 +1,9 @@
 import { useTasks } from '@/store/TasksContext';
-import type { Group } from '@/types/tasks';
+import type { Group, TaskJson } from '@/types/tasks';
 import { useState } from 'react';
 
 export const useGrouping = () => {
-  const { activeTask, updateTask } = useTasks();
+  const { updateTask } = useTasks();
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<null | Group>(null);
   const [itemName, setItemName] = useState<null | string>(null);
@@ -12,30 +12,37 @@ export const useGrouping = () => {
   const [newItemName, setNewItemName] = useState<string | null>(null);
   const [itemNameInputDisabled, setItemNameInputDisabled] =
     useState<boolean>(false);
-  const grouping = activeTask?.grouping ?? { groups: [] };
+  // const grouping = activeTask?.grouping ?? { groups: [] };
 
-  const addGroup = (index: number) => {
-    if (!activeTask) return;
+  const addGroup = (index: number, task: TaskJson) => {
+    if (!task) return;
+    const grouping = task?.grouping ?? { groups: [] };
     updateTask({
-      ...activeTask,
+      ...task,
       grouping: {
         groups: [...grouping.groups, { index: index, name: '', items: [] }],
       },
     });
   };
 
-  const updateGroupName = (index: number, value: string) => {
+  const updateGroupName = (index: number, value: string, task: TaskJson) => {
+    if (!task) return;
+    const grouping = task?.grouping ?? { groups: [] };
+
     const next = grouping.groups.map((g, i) =>
       i === index ? { ...g, name: value } : g,
     );
-    if (!activeTask) return;
+    if (!task) return;
     updateTask({
-      ...activeTask,
+      ...task,
       grouping: { groups: next },
     });
   };
 
-  const addItem = (groupIndex: number) => {
+  const addItem = (groupIndex: number, task: TaskJson) => {
+    if (!task) return;
+
+    const grouping = task?.grouping ?? { groups: [] };
     const targetGroup = grouping.groups[groupIndex];
 
     if (itemName && targetGroup && targetGroup.items.length < 10) {
@@ -45,10 +52,10 @@ export const useGrouping = () => {
           : g,
       );
 
-      if (!activeTask) return;
+      if (!task) return;
 
       updateTask({
-        ...activeTask,
+        ...task,
         grouping: { groups: next },
       });
 
@@ -56,22 +63,30 @@ export const useGrouping = () => {
     }
   };
 
-  const addItemImage = (url: string, groupIndex: number) => {
+  const addItemImage = (url: string, groupIndex: number, task: TaskJson) => {
+    if (!task) return;
+    const grouping = task?.grouping ?? { groups: [] };
     if (url && selectedGroup) {
       const next = grouping.groups.map((g, i) =>
         i === groupIndex
           ? { ...g, items: [...g.items, { image: url, name: null }] }
           : g,
       );
-      if (!activeTask) return;
+      if (!task) return;
       updateTask({
-        ...activeTask,
+        ...task,
         grouping: { groups: next },
       });
     }
   };
 
-  const updateItem = (groupIndex: number, itemIndex: number) => {
+  const updateItem = (
+    groupIndex: number,
+    itemIndex: number,
+    task: TaskJson,
+  ) => {
+    if (!task) return;
+    const grouping = task?.grouping ?? { groups: [] };
     if (newItemName) {
       const next = grouping.groups.map((g, i) => {
         if (i !== groupIndex) return g;
@@ -82,9 +97,9 @@ export const useGrouping = () => {
 
         return { ...g, items: newItems };
       });
-      if (!activeTask) return;
+      if (!task) return;
       updateTask({
-        ...activeTask,
+        ...task,
         grouping: { groups: next },
       });
     }
@@ -99,17 +114,24 @@ export const useGrouping = () => {
       setNewItemName(itemName);
     }
   };
-  const handleDelete = (groupIndex: number, itemIndex: number) => {
+  const handleDelete = (
+    groupIndex: number,
+    itemIndex: number,
+    task: TaskJson,
+  ) => {
+    if (!task) return;
+    const grouping = task?.grouping ?? { groups: [] };
+
     const updatedGroups = grouping.groups.map((g, i) => {
       if (i !== groupIndex) return g;
       const filteredItems = g.items.filter((_, j) => j !== itemIndex);
       return { ...g, items: filteredItems };
     });
-    if (!activeTask) return;
+    if (!task) return;
     updateTask({
-      ...activeTask,
+      ...task,
       grouping: {
-        ...activeTask.grouping,
+        ...task.grouping,
         groups: updatedGroups,
       },
     });
@@ -143,7 +165,6 @@ export const useGrouping = () => {
     setSelectedGroup,
     setSelectedId,
     selectedGroup,
-    grouping,
     isEditing,
     selectedId,
     itemName,

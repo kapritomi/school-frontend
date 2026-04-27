@@ -1,24 +1,21 @@
 import { useTasks } from '../../../store/TasksContext';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useShortAnswer } from './UseShortAnswer';
 import { TaskTitle } from '../TaskTitle';
 import { TaskDescription } from '../TaskDescription';
 import { AddButton } from '../AddButton';
 import { getFieldError } from '@/utils/GetFieldError';
 import { ShortAnswerCard } from './ShortAnswerCard';
-import type { creatingComponentProps } from '@/types/tasks';
+import type { TaskJson } from '@/types/tasks';
 
-function ShortAnswerCreate({ taskId }: creatingComponentProps) {
+function ShortAnswerCreate({ task }: { task: TaskJson }) {
   const { activeTask, worksheetErrors } = useTasks();
-  const {
-    addQuestion,
-    getMap,
-    prevLengthRef,
-    removeQuestion,
-    scrollToId,
-    shortData,
-    updateQuestion,
-  } = useShortAnswer();
+  const { addQuestion, getMap, removeQuestion, scrollToId, updateQuestion } =
+    useShortAnswer();
+
+  const shortData = task?.short_answer ?? { questions: [] };
+  const prevLengthRef = useRef(shortData.questions.length);
+
   useEffect(() => {
     const currentLength = shortData.questions.length;
     const prevLength = prevLengthRef.current;
@@ -37,13 +34,13 @@ function ShortAnswerCreate({ taskId }: creatingComponentProps) {
     prevLengthRef.current = currentLength;
   }, [shortData.questions.length]);
 
-  if (activeTask && taskId)
+  if (activeTask && task)
     return (
       <div className="flex flex-col gap-ElementsSpace">
         {/* ---- Feladat címe ---- */}
-        <TaskTitle taskId={taskId}></TaskTitle>
+        <TaskTitle taskId={task.id}></TaskTitle>
         {/* ---- Feladatleírás ---- */}
-        <TaskDescription taskId={taskId}></TaskDescription>
+        <TaskDescription taskId={task.id}></TaskDescription>
         {/* ---- Új kérdés gomb ---- */}
         <section>
           <div className="flex flex-col gap-LabelDescriptionSpace">
@@ -61,8 +58,10 @@ function ShortAnswerCreate({ taskId }: creatingComponentProps) {
                 getMap={getMap}
                 index={index}
                 item={item}
-                removeQuestion={removeQuestion}
-                updateQuestion={updateQuestion}
+                removeQuestion={(idx) => removeQuestion(idx, task)}
+                updateQuestion={(idx, field, val) =>
+                  updateQuestion(task, idx, field, val)
+                }
                 key={index}
               ></ShortAnswerCard>
             ))}
@@ -83,7 +82,7 @@ function ShortAnswerCreate({ taskId }: creatingComponentProps) {
 
         <AddButton
           label="+ Új kérdés"
-          onClick={addQuestion}
+          onClick={() => addQuestion(task)}
           disabled={shortData.questions.length >= 18}
         ></AddButton>
       </div>
