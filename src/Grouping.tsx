@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect } from 'react';
 import type { TaskPreviewProps } from './Pairing';
+import { normalizeGroupingData } from './utils/TaskNormalizers';
 type Card = { id: number; name: string };
 type Placement = Record<number, number | null>;
 
@@ -11,19 +12,18 @@ const groupColors: Record<number, string> = {
 };
 
 function Grouping({ task, dataType }: TaskPreviewProps) {
-  if (!task.grouping) return null;
-
-  const groups = task.grouping.groups.map((g, index) => ({
-    id: index + 1,
-    name: g.name,
-  }));
-
-  const cards = task.grouping.groups.flatMap((g, gIndex) =>
-    g.items.map((item, itemIndex) => ({
-      id: gIndex * 100 + itemIndex,
-      name: item.name,
-    })),
+  if (!task) return;
+  const { groups, cards } = useMemo(
+    () => normalizeGroupingData(task, dataType),
+    [task, dataType],
   );
+
+  useEffect(() => {
+    console.log(groups);
+    console.log(cards);
+  }, [groups, cards]);
+
+  // Most már csak ezen a két tiszta tömbön mész végig a renderelésnél
 
   const initialPlacement: Placement = useMemo(
     () => Object.fromEntries(cards.map((c) => [c.id, null])),
@@ -117,21 +117,41 @@ function Grouping({ task, dataType }: TaskPreviewProps) {
         ) : (
           //berakott kártya
           <div className="flex flex-wrap gap-2 px-2 ">
-            {poolCards.map((c) => (
-              <div
-                className="bg-white flex  h-[50px] rounded-[8px] p-[10px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] font-semibold text-[18px]"
-                key={c.id}
-                draggable
-                onDragStart={() => setDraggingId(c.id)}
-                onDragEnd={() => setDraggingId(null)}
-                style={{
-                  cursor: 'grab',
-                  userSelect: 'none',
-                }}
-              >
-                {c.name}
-              </div>
-            ))}
+            {poolCards.map((c) =>
+              c.name ? (
+                <div
+                  className="bg-white flex  h-[50px] rounded-[8px] p-[10px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] font-semibold text-[18px]"
+                  key={c.id}
+                  draggable
+                  onDragStart={() => setDraggingId(c.id)}
+                  onDragEnd={() => setDraggingId(null)}
+                  style={{
+                    cursor: 'grab',
+                    userSelect: 'none',
+                  }}
+                >
+                  {c.name}
+                </div>
+              ) : (
+                <div
+                  className="bg-white flex w-[143px]  h-[116px] rounded-[8px] p-[10px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] font-semibold text-[18px]"
+                  key={c.id}
+                  draggable
+                  onDragStart={() => setDraggingId(c.id)}
+                  onDragEnd={() => setDraggingId(null)}
+                  style={{
+                    cursor: 'grab',
+                    userSelect: 'none',
+                  }}
+                >
+                  <img
+                    className="w-full h-full object-cover"
+                    src={`http://localhost:${import.meta.env.VITE_PORT}/storage/temp${c.imgURL}`}
+                    alt="Kép"
+                  />
+                </div>
+              ),
+            )}
           </div>
         )}
       </div>

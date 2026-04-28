@@ -10,7 +10,7 @@ import type { TaskJson } from '@/types/tasks';
 
 export default function PairingCreate({ task }: { task: TaskJson }) {
   const { getMap, removePair, scrollToId, updatePair, addPair } = usePairing();
-  const { activeTask, worksheetErrors } = useTasks();
+  const { worksheetErrors } = useTasks();
   const pairing = task?.pairing ?? { pairing_groups: [] };
   const prevLengthRef = useRef(pairing.pairing_groups.length);
 
@@ -32,7 +32,7 @@ export default function PairingCreate({ task }: { task: TaskJson }) {
     prevLengthRef.current = currentLength;
   }, [pairing.pairing_groups.length]);
 
-  if (activeTask && task)
+  if (task)
     return (
       <div className="flex  flex-col gap-ElementsSpace transition-all">
         {/* ---- Feladat címe ---- */}
@@ -40,7 +40,7 @@ export default function PairingCreate({ task }: { task: TaskJson }) {
         {/* ---- Feladatleírás ---- */}
         <TaskDescription taskId={task.id}></TaskDescription>
         <section
-          id={`tasks.${activeTask.id}.pairing.pairing_groups`}
+          id={`tasks.${task.id}.pairing.pairing_groups`}
           className="flex flex-col gap-[13px]"
         >
           <div className="flex flex-col gap-LabelDescriptionSpace">
@@ -54,7 +54,7 @@ export default function PairingCreate({ task }: { task: TaskJson }) {
           <div className="flex  flex-col gap-4 w-1/2">
             {pairing.pairing_groups.map((item, index) => (
               <PairingCard
-                activeTask={activeTask}
+                activeTask={task}
                 getMap={getMap}
                 index={index}
                 item={item}
@@ -68,12 +68,12 @@ export default function PairingCreate({ task }: { task: TaskJson }) {
           </div>
           {worksheetErrors &&
             Object.keys(worksheetErrors).includes(
-              `tasks.${Number(activeTask.id) - 1}.pairing.pairing_groups`,
+              `tasks.${Number(task.id) - 1}.pairing.pairing_groups`,
             ) && (
               <p className="text-[18px] text-alert">
                 {getFieldError(
                   worksheetErrors,
-                  `tasks.${Number(activeTask.id) - 1}.pairing.pairing_groups`,
+                  `tasks.${Number(task.id) - 1}.pairing.pairing_groups`,
                 )}
               </p>
             )}

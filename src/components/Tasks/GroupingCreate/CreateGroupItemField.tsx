@@ -3,6 +3,8 @@ import { EditIcon } from '@/assets/Icons/EditIcon';
 import { MediaUploadButton } from '../MediaUploadButton';
 import type { Group } from '@/types/tasks';
 import { AddButton } from '../AddButton';
+import { useTasks } from '@/store/TasksContext';
+import { getFieldError } from '@/utils/GetFieldError';
 type CreateGroupItemFieldProps = {
   selectedGroup: Group;
   itemName: string | null;
@@ -43,6 +45,7 @@ export const CreateGroupItemField = ({
   handleDelete,
   taskId,
 }: CreateGroupItemFieldProps) => {
+  const { worksheetErrors } = useTasks();
   return (
     <div
       id={`addGroupElements.${taskId}`}
@@ -50,19 +53,31 @@ export const CreateGroupItemField = ({
     >
       <div className="flex flex-col gap-LabelDescriptionInputSpace">
         <label
-          className="text-[24px] font-medium text-gray"
+          className={`text-[24px] font-medium text-gray`}
           htmlFor={`grouping${selectedGroup.index}name`}
         >
           Csoport neve
         </label>
         <input
           maxLength={30}
-          className="border-lightBorder shadow-md w-1/2 p-4 outline-none text-gray  h-[40px] border-[1px] rounded-[8px] focus:border-primary focus:ring-1 focus:ring-primary"
+          className={` ${worksheetErrors && Object.keys(worksheetErrors).includes(`tasks.${Number(taskId) - 1}.grouping.groups.${selectedGroup.index}.name`) ? 'border-[2px] border-alert' : 'border-lightBorder border-[1px]'} shadow-md w-1/2 p-4 outline-none text-gray  h-[40px]  rounded-[8px] focus:border-primary focus:ring-1 focus:ring-primary`}
           name={`grouping${selectedGroup.index}name`}
+          id={`tasks.${taskId}.grouping.groups.${selectedGroup.index}.name`}
           defaultValue={selectedGroup.name}
           onChange={(e) => updateGroupName(selectedGroup.index, e.target.value)}
           placeholder="Csoport neve"
         />
+        {worksheetErrors &&
+          Object.keys(worksheetErrors).includes(
+            `tasks.${Number(taskId) - 1}.grouping.groups.${selectedGroup.index}.name`,
+          ) && (
+            <p className="text-[16px] text-alert">
+              {getFieldError(
+                worksheetErrors,
+                `tasks.${Number(taskId) - 1}.grouping.groups.${selectedGroup.index}.name`,
+              )}
+            </p>
+          )}
       </div>
       <div className="flex flex-col gap-[30px] ">
         <div className="flex flex-col gap-[10px]">
@@ -94,6 +109,7 @@ export const CreateGroupItemField = ({
             </div>
 
             <MediaUploadButton
+              id={selectedGroup.index}
               itemUrl={null}
               setInputDisabled={setItemNameInputDisabled}
               disabled={itemName ? true : false}
@@ -105,8 +121,14 @@ export const CreateGroupItemField = ({
               onClick={() => addItem(selectedGroup.index)}
             ></AddButton>
           </div>
-          <div className="w-1/2 border-l-[1px] py- pl-[35px] border-gray">
-            <div className="h-[363px] py-4 px-4 bg-white flex gap-2 flex-wrap border-[1px] border-lightBorder rounded-[6px]">
+          {/* tasks.0.grouping.groups.0.name */}
+          <div
+            id={`tasks.${Number(taskId) - 1}.grouping.groups.${selectedGroup.index}.items`}
+            className={`w-1/2 border-l-[1px] py- pl-[35px]  `}
+          >
+            <div
+              className={`h-[363px] py-4 px-4 bg-white flex gap-2 flex-wrap  rounded-[6px] ${worksheetErrors && Object.keys(worksheetErrors).includes(`tasks.${Number(taskId) - 1}.grouping.groups.${selectedGroup.index}.items`) ? 'border-[2px] border-alert' : 'border-lightBorder border-[1px]'}`}
+            >
               {selectedGroup.items.map((item, ii) =>
                 item.image !== null ? (
                   <div
@@ -180,6 +202,18 @@ export const CreateGroupItemField = ({
                 ),
               )}
             </div>
+
+            {worksheetErrors &&
+              Object.keys(worksheetErrors).includes(
+                `tasks.${Number(taskId) - 1}.grouping.groups.${selectedGroup.index}.items`,
+              ) && (
+                <p className="text-[16px] mt-2 text-alert">
+                  {getFieldError(
+                    worksheetErrors,
+                    `tasks.${Number(taskId) - 1}.grouping.groups.${selectedGroup.index}.items`,
+                  )}
+                </p>
+              )}
           </div>
         </div>
       </div>

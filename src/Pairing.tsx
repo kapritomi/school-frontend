@@ -33,10 +33,6 @@ function Pairing({ task, dataType }: TaskPreviewProps) {
     img: p.answerImg,
   }));
 
-  useEffect(() => {
-    console.log(normalizedPairs);
-  }, [normalizedPairs]);
-
   const shuffle = <T,>(array: T[]): T[] =>
     [...array].sort(() => Math.random() - 0.5);
   const shuffledCards = useMemo(() => shuffle(cards), [task]);
@@ -123,9 +119,19 @@ function Pairing({ task, dataType }: TaskPreviewProps) {
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={() => dropToSlot(slot.id)}
               >
-                <div className="w-1/2 font-semibold text-[18px] p-2">
-                  {slot.question}
-                </div>
+                {slot.img ? (
+                  <div className="w-1/2 font-semibold text-[18px] p-2">
+                    <img
+                      className="w-full h-full object-cover"
+                      src={`http://localhost:${import.meta.env.VITE_PORT}/storage${slot.img}`}
+                      alt="Kép"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-1/2 font-semibold text-[18px] p-2">
+                    {slot.question}
+                  </div>
+                )}
 
                 {card ? (
                   <div

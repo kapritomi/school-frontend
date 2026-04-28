@@ -9,7 +9,7 @@ import { ShortAnswerCard } from './ShortAnswerCard';
 import type { TaskJson } from '@/types/tasks';
 
 function ShortAnswerCreate({ task }: { task: TaskJson }) {
-  const { activeTask, worksheetErrors } = useTasks();
+  const { worksheetErrors } = useTasks();
   const { addQuestion, getMap, removeQuestion, scrollToId, updateQuestion } =
     useShortAnswer();
 
@@ -34,7 +34,7 @@ function ShortAnswerCreate({ task }: { task: TaskJson }) {
     prevLengthRef.current = currentLength;
   }, [shortData.questions.length]);
 
-  if (activeTask && task)
+  if (task)
     return (
       <div className="flex flex-col gap-ElementsSpace">
         {/* ---- Feladat címe ---- */}
@@ -54,7 +54,7 @@ function ShortAnswerCreate({ task }: { task: TaskJson }) {
           <div className="flex flex-col gap-4 w-1/2">
             {shortData.questions.map((item, index) => (
               <ShortAnswerCard
-                activeTaskId={activeTask.id}
+                activeTaskId={task.id}
                 getMap={getMap}
                 index={index}
                 item={item}
@@ -69,12 +69,12 @@ function ShortAnswerCreate({ task }: { task: TaskJson }) {
 
           {worksheetErrors &&
             Object.keys(worksheetErrors).includes(
-              `tasks.${Number(activeTask.id) - 1}.short_answer.questions`,
+              `tasks.${Number(task.id) - 1}.short_answer.questions`,
             ) && (
               <p className="text-[18px] text-alert">
                 {getFieldError(
                   worksheetErrors,
-                  `tasks.${Number(activeTask.id) - 1}.short_answer.questions`,
+                  `tasks.${Number(task.id) - 1}.short_answer.questions`,
                 )}
               </p>
             )}

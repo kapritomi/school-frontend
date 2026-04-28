@@ -102,6 +102,7 @@ export const PairingCard = ({
 
           {/* Kép szekció */}
           <MediaUploadButton
+            id={index}
             itemUrl={item.pair_question_image}
             setInputDisabled={setInputDisabled}
             onUploadSuccess={(url) =>

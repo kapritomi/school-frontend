@@ -157,7 +157,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     setWorksheetErrors(null);
     try {
       const worksheetData = {
-        title: 'test',
+        title: 'csoportositas',
         assignments: [
           {
             classroom_id: 6,
@@ -172,8 +172,8 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
         tasks: tasksJson.tasks,
       };
 
-      console.log(worksheetData);
       await uploadWorksheet(worksheetData);
+      setTasksJson({ tasks: [] });
       setWorksheetMessage({ type: 'success', message: 'Sikeres mentés' });
     } catch (e: any) {
       const errorData = e.response?.data;
@@ -194,9 +194,9 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // useEffect(() => {
-  //   console.log(tasksJson);
-  // }, [tasksJson]);
+  useEffect(() => {
+    console.log(worksheetErrors);
+  }, [worksheetErrors]);
 
   const value = {
     slots,

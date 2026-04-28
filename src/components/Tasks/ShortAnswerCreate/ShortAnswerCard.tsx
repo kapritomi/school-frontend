@@ -29,13 +29,13 @@ export const ShortAnswerCard = ({
   updateQuestion,
 }: QuestionCardProps) => {
   const { worksheetErrors } = useTasks();
-  const fieldPath = `tasks.${Number(activeTaskId) - 1}.questions.${index}`;
+  const fieldPath = `tasks.${Number(activeTaskId) - 1}.short_answer.questions.${index}`;
   const error = getFieldError(worksheetErrors, fieldPath);
   const [inputDisabled, setInputDisabled] = useState(false);
   const containerClasses = `
     border w-full flex flex-col gap-[13px] rounded-[5px] text-gray duration-300 transition-all p-4 bg-white
     ${error ? 'border-alert border-[2px]' : 'border-[#8FBF6D]'}
-    ${item.isExpanded ? 'max-h-[600px]' : 'max-h-[140px] overflow-hidden'}
+    ${item.isExpanded ? 'max-h-[620px]' : 'max-h-[140px] overflow-hidden'}
   `;
 
   return (
@@ -90,6 +90,7 @@ export const ShortAnswerCard = ({
 
           {/* Kép feltöltés */}
           <MediaUploadButton
+            id={index}
             disabled={item.question ? true : false}
             itemUrl={item.question_image}
             setInputDisabled={setInputDisabled}
@@ -110,9 +111,7 @@ export const ShortAnswerCard = ({
           </div>
 
           {/* Hibaüzenet */}
-          {error && (
-            <p className="text-alert text-[18px] font-medium mt-1">{error}</p>
-          )}
+          {error && <p className="text-[16px] text-alert">{error}</p>}
         </div>
       ) : (
         /* Összecsukott állapot */

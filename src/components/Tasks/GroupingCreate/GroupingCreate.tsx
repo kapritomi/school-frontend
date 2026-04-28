@@ -4,6 +4,8 @@ import { TaskTitle } from '../TaskTitle';
 import { TaskDescription } from '../TaskDescription';
 import { CreateGroupItemField } from './CreateGroupItemField';
 import type { TaskJson } from '@/types/tasks';
+import { useTasks } from '@/store/TasksContext';
+import { getFieldError } from '@/utils/GetFieldError';
 
 export default function GroupingCreate({ task }: { task: TaskJson }) {
   const {
@@ -31,7 +33,7 @@ export default function GroupingCreate({ task }: { task: TaskJson }) {
     setItemNameInputDisabled,
   } = useGrouping();
   const grouping = task?.grouping ?? { groups: [] };
-
+  const { worksheetErrors } = useTasks();
   useEffect(() => {
     if (selectedId === null || selectedId === undefined) return;
 
@@ -60,6 +62,21 @@ export default function GroupingCreate({ task }: { task: TaskJson }) {
     }
   }, [selectedId, grouping]);
 
+  const getBorderClass = (index: number) => {
+    const hasError =
+      !!worksheetErrors &&
+      Object.keys(worksheetErrors).some((key) =>
+        key.startsWith(`tasks.${Number(task.id) - 1}.grouping.groups.${index}`),
+      );
+    const isSelected = index === selectedId;
+
+    if (hasError) return 'border-alert border-[2px]';
+
+    if (isSelected) return 'border-primary border-[2px]';
+
+    return 'border-dashed border-secondary';
+  };
+
   if (task)
     return (
       <div className="flex  flex-col gap-ElementsSpace">
@@ -72,8 +89,11 @@ export default function GroupingCreate({ task }: { task: TaskJson }) {
           <div className="flex gap-[19px]">
             {Array.from({ length: 4 }).map((_, index) => (
               <button
+                id={`tasks.${Number(task.id) - 1}.grouping.groups.${index}.name`}
                 key={index}
-                className={`w-[197px] h-[190px] border-[3px]  rounded-[5px] transition-all  ${index === selectedId ? 'border-primary' : 'border-dashed border-secondary'}`}
+                className={`w-[197px] h-[190px] border-[3px]  rounded-[5px] transition-all  ${getBorderClass(index)}
+                
+                `}
                 onClick={() => setSelectedId(index)}
               >
                 <p className="text-[22px] w-full truncate font-semibold text-secondaryFont">
