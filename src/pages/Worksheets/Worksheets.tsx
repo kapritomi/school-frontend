@@ -1,5 +1,4 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Navbar } from '../../components/Navbar';
 import { getWorksheets } from '../../api/getWorksheets';
 import { Worksheet } from '../../components/Worksheet';
 import { ClipLoader } from 'react-spinners';
@@ -73,39 +72,36 @@ export const Worksheets = () => {
     );
   }
   return (
-    <div className="w-screen h-screen max-h-screen relative overflow-y-hidden">
-      <Navbar />
-
-      <div className="mt-[70px] px-[41px] w-full flex flex-col gap-[40px] h-full overflow-y-auto">
-        {isLoading && (
-          <div className="w-full h-full z-20 top-0 flex right-0 items-center justify-center absolute bg-zinc-400 bg-opacity-40">
-            <ClipLoader size={90} color="#2E6544" />
-          </div>
-        )}
-        <p className="text-[40px] font-semibold text-primary">
-          Feladatlapjaid:
-        </p>
-        <div className="w-full  flex flex-wrap gap-[60px]">
-          {worksheets &&
-            worksheets.map((item: WorksheetsResponseType) => (
-              <Worksheet
-                handleDeleteWorksheet={handleDeleteWorksheet}
-                handleSelectWorksheet={handleSelectWorksheet}
-                selectedWorksheetId={selectedWorksheetId}
-                id={item.id}
-                title={item.title}
-              ></Worksheet>
-            ))}
-          <div
-            onClick={() => navigate('/createTask')}
-            className={` w-[197px] h-[300px] flex p-[30px] rounded-[12px] cursor-pointer border-primary border-2 border-dashed text-white    tranition-all  `}
-          >
-            <p className="text-[20px] font-bold text-center text-primary">
-              + Új létrehozása
-            </p>
-          </div>
+    <div className=" w-full flex flex-col gap-[40px] h-full overflow-y-auto">
+      {isLoading && (
+        <div className="w-full h-full z-20 top-0 flex right-0 items-center justify-center absolute bg-zinc-400 bg-opacity-40">
+          <ClipLoader size={90} color="#2E6544" />
+        </div>
+      )}
+      <p className="text-[40px] font-semibold text-primary">Feladatlapjaid:</p>
+      {
+        worksheets &&
+      <div className="w-full  flex flex-wrap gap-[60px]">
+        {worksheets &&
+          worksheets.map((item: WorksheetsResponseType) => (
+            <Worksheet
+              handleDeleteWorksheet={handleDeleteWorksheet}
+              handleSelectWorksheet={handleSelectWorksheet}
+              selectedWorksheetId={selectedWorksheetId}
+              id={item.id}
+              title={item.title}
+            ></Worksheet>
+          ))}
+        <div
+          onClick={() => navigate('/createTask')}
+          className={` w-[197px] h-[300px] flex p-[30px] rounded-[12px] cursor-pointer border-primary border-2 border-dashed text-white    tranition-all  `}
+        >
+          <p className="text-[20px] font-bold text-center text-primary">
+            + Új létrehozása
+          </p>
         </div>
       </div>
+      }
     </div>
   );
 };

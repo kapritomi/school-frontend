@@ -102,6 +102,18 @@ export default function GroupingCreate({ task }: { task: TaskJson }) {
               </button>
             ))}
           </div>
+
+          {worksheetErrors &&
+            Object.keys(worksheetErrors).includes(
+              `tasks.${Number(task.id) - 1}.grouping.groups`,
+            ) && (
+              <p className="text-[16px] text-alert">
+                {getFieldError(
+                  worksheetErrors,
+                  `tasks.${Number(task.id) - 1}.grouping.groups`,
+                )}
+              </p>
+            )}
         </section>
         <div className="w-full h-[1px] bg-secondary"></div>
         {selectedGroup && (

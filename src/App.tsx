@@ -12,6 +12,7 @@ import { CheckCode } from './pages/Student/CheckCode/CheckCode';
 import CreateTask from './components/CreateTaskComponent/CreateTask';
 import TaskPreview from './TaskPreview';
 import StudentView from './StudentView';
+import { WorksheetsPage } from './pages/Worksheets/WorksheetsPage';
 export default function App() {
   const router = createBrowserRouter([
     {
@@ -24,7 +25,7 @@ export default function App() {
     },
     {
       path: '/worksheets',
-      element: <Worksheets />,
+      element: <WorksheetsPage />,
     },
     {
       path: '/editClass/:classroomId',

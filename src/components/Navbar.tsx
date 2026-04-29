@@ -18,11 +18,12 @@ export const Navbar = () => {
         >
           Feladatsoraim
         </button>
+
         <button
           onClick={() => navigate('/teacherHomePage')}
-          className={`hover:text-secondary transition-all duration-150 ${location.pathname.includes('Class') || location.pathname.includes('teacherHomePage') ? ' border-b-[1px] border-primary' : 'border-none'}`}
+          className={`hover:text-secondary transition-all duration-150 ${location.pathname.includes('teacherHomePage') ? 'border-b-[1px]  border-primary' : 'border-none'}`}
         >
-          Osztályok
+          Kezdőlap
         </button>
         <button className={`hover:text-secondary transition-all duration-150`}>
           Kijelentkezés

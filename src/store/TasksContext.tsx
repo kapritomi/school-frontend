@@ -15,6 +15,7 @@ import type {
 import { MAX_ITEMS, TASK_TYPE_ID } from '../types/tasks';
 import { uploadWorksheet } from '@/api/Worksheet/uploadWorksheet';
 import type { MessageType } from '@/types/messageType';
+import { useQueryClient } from '@tanstack/react-query';
 
 type TasksContextType = {
   slots: Slot[];
@@ -22,7 +23,9 @@ type TasksContextType = {
   activeId: string | null;
   activeTask: TaskJson | null;
   worksheetMessage: MessageType | null;
+  isLoading: boolean;
   worksheetErrors: worksheetErrors[] | null;
+
   selectTask: (item: SidebarItem) => void;
   createTask: (slotIndex: number, label: string, type: TaskType) => void;
   removeTask: (id: string) => void;
@@ -30,9 +33,8 @@ type TasksContextType = {
   reorderSlots: (from: number, to: number) => void;
   saveWorksheetToDB: () => void;
   setWorksheetMessage: (message: MessageType | null) => void;
-  isLoading: boolean;
-  setIsLoading: (loading: boolean) => void;
 };
+
 type worksheetErrors = {
   key: string;
   message: string[];
@@ -44,9 +46,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   const [slots, setSlots] = useState<Slot[]>(() => Array(MAX_ITEMS).fill(null));
   const [tasksJson, setTasksJson] = useState<TasksJson>({ tasks: [] });
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [nextId, setNextId] = useState(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const [worksheetMessage, setWorksheetMessage] = useState<null | MessageType>(
     null,
   );
@@ -54,13 +54,27 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     null | worksheetErrors[]
   >(null);
 
+  const queryClient = useQueryClient();
+
   const activeTask = useMemo(() => {
     if (!activeId) return null;
     return tasksJson.tasks.find((t) => t.id === activeId) ?? null;
   }, [activeId, tasksJson.tasks]);
 
-  // -----------------------
-  // ACTIONS
+  // ✅ NEW: legkisebb szabad ID
+  const getNextId = (tasks: TaskJson[]) => {
+    const ids = tasks.map((t) => Number(t.id)).sort((a, b) => a - b);
+
+    let next = 1;
+
+    for (const id of ids) {
+      if (id !== next) break;
+      next++;
+    }
+
+    return String(next);
+  };
+
   // -----------------------
 
   const selectTask = (item: SidebarItem) => {
@@ -68,24 +82,25 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   };
 
   const createTask = (slotIndex: number, label: string, type: TaskType) => {
-    const id = String(nextId);
+    if (slots[slotIndex] !== null) return;
+
+    const newId = getNextId(tasksJson.tasks);
 
     // SLOT
     setSlots((prev) => {
       const copy = prev.slice();
-      if (copy[slotIndex] !== null) return prev;
-      copy[slotIndex] = { id, label, type };
+      copy[slotIndex] = { id: newId, label, type };
       return copy;
     });
 
     // TASK JSON
     const base: TaskJson = {
-      id,
+      id: newId,
       task_title: label,
       task_description: '',
       task_type_id: TASK_TYPE_ID[type],
     };
-    //test
+
     const task =
       type === 'assignment'
         ? { ...base, assignment: { image: '', coordinatesAndAnswers: [] } }
@@ -101,8 +116,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
       tasks: [...prev.tasks, task],
     }));
 
-    setActiveId(id);
-    setNextId((n) => n + 1);
+    setActiveId(newId);
   };
 
   const removeTask = (id: string) => {
@@ -120,7 +134,6 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
       tasks: prev.tasks.map((t) => (t.id === task.id ? task : t)),
     }));
 
-    // sidebar label sync
     setSlots((prev) =>
       prev.map((s) =>
         s?.id === task.id ? { ...s, label: task.task_title } : s,
@@ -136,7 +149,6 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
       const copy = prevSlots.slice();
       [copy[from], copy[to]] = [copy[to], copy[from]];
 
-      // JSON reorder
       setTasksJson((prevJson) => {
         const map = new Map(prevJson.tasks.map((t) => [t.id, t]));
 
@@ -173,6 +185,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
       };
 
       await uploadWorksheet(worksheetData);
+      queryClient.invalidateQueries({ queryKey: ['worksheets', 'all'] });
       setTasksJson({ tasks: [] });
       setWorksheetMessage({ type: 'success', message: 'Sikeres mentés' });
     } catch (e: any) {
@@ -213,7 +226,6 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     setWorksheetMessage,
     worksheetErrors,
     isLoading,
-    setIsLoading,
   };
 
   return (

@@ -94,9 +94,17 @@ export default function CreateTask() {
               Válassz egy feladatot bal oldalt.
             </div>
           ) : (
-            <button onClick={() => saveWorksheetToDB()}>
-              Feladatlap mentése
-            </button>
+            <div className="mt-6">
+              <button
+                className="   px-3 py-2 rounded-lg cursor-pointer transition-all duration-200
+                bg-primary text-white  w-[211px]
+                disabled:bg-opacity-75 disabled:cursor-not-allowed
+                active:scale-95"
+                onClick={() => saveWorksheetToDB()}
+              >
+                Feladatlap mentése
+              </button>
+            </div>
           )}
         </div>
       </div>

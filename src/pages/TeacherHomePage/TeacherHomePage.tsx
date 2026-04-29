@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Navbar } from '../../components/Navbar';
 import { Modal } from '../../components/Modal';
 import { useTeacherHomePage } from './useTeacherHomePage';
+import { Worksheets } from '../Worksheets/Worksheets';
 
 export const TeacherHomePage = () => {
   const navigate = useNavigate();
@@ -22,15 +23,7 @@ export const TeacherHomePage = () => {
     setMessage,
     mutation,
   } = useTeacherHomePage();
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-red-500 font-bold">
-          Hiba történt az adatok betöltésekor!
-        </p>
-      </div>
-    );
-  }
+
   return (
     <div className="relative w-screen h-screen max-h-screen overflow-y-hidden">
       <Navbar></Navbar>
@@ -83,7 +76,7 @@ export const TeacherHomePage = () => {
           </div>
         </div>
       )}
-      <div className="px-[41px] mt-[70px] overflow-y-auto w-full h-full">
+      <div className="px-[41px] mt-[70px] flex flex-col gap-16 overflow-y-auto w-full h-full">
         {message && (
           <Modal
             setModalErrorMessage={setMessage}
@@ -91,32 +84,43 @@ export const TeacherHomePage = () => {
             type={message.type}
           />
         )}
-        <p className="text-primary text-[40px] font-semibold mb-[41px]">
-          Osztályok
-        </p>
-        {isLoading ||
-          (mutation.isPending && (
-            <ClipLoader size={90} color="#2E6544"></ClipLoader>
-          ))}
+        <div>
+          <Worksheets></Worksheets>
+        </div>
 
-        {classrooms && (
-          <div className="flex flex-wrap gap-[56px]">
-            {classrooms.map((item: ClassType) => (
-              <ClassComponent
-                onClick={() => navigate(`/editClass/${item.id}`)}
-                id={item.id}
-                name={item.name}
-                key={item.id}
-              ></ClassComponent>
+        <div>
+          <p className="text-primary text-[40px] font-semibold mb-[41px]">
+            Osztályok
+          </p>
+          {error && (
+            <p className="text-[16px] text-alert">
+              Hiba az osztályok betöltése közben.
+            </p>
+          )}
+          {isLoading ||
+            (mutation.isPending && (
+              <ClipLoader size={90} color="#2E6544"></ClipLoader>
             ))}
-            <div
-              onClick={() => setIsModalOpen(true)}
-              className="w-[164px] cursor-pointer text-white items-center justify-center shadow-md h-[157px] flex bg-primary rounded-[12px]"
-            >
-              <p className="text-[40px] font-bold">+</p>
+
+          {classrooms && (
+            <div className="flex flex-wrap gap-[56px]">
+              {classrooms.map((item: ClassType) => (
+                <ClassComponent
+                  onClick={() => navigate(`/editClass/${item.id}`)}
+                  id={item.id}
+                  name={item.name}
+                  key={item.id}
+                ></ClassComponent>
+              ))}
+              <div
+                onClick={() => setIsModalOpen(true)}
+                className="w-[164px] cursor-pointer text-white items-center justify-center shadow-md h-[157px] flex bg-primary rounded-[12px]"
+              >
+                <p className="text-[40px] font-bold">+</p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

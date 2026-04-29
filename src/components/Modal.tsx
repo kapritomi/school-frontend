@@ -11,14 +11,13 @@ export const Modal = ({
   setModalErrorMessage,
   type,
 }: ErrorModalProps) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setModalErrorMessage(null);
+    }, 5000);
 
-  useEffect(()=>{
-    const timer = setTimeout(()=>{
-      setModalErrorMessage(null)
-    },5000)
-
-    return ()=> clearTimeout(timer)
-  },[])
+    return () => clearTimeout(timer);
+  }, []);
   if (type === 'error')
     return (
       <div className="absolute left-1/2 top-4  -translate-x-1/2 bg-alert  font-bold min-w-[400px] shadow-xl  text-white rounded-[6px]">

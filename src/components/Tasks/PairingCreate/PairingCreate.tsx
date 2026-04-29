@@ -32,6 +32,10 @@ export default function PairingCreate({ task }: { task: TaskJson }) {
     prevLengthRef.current = currentLength;
   }, [pairing.pairing_groups.length]);
 
+  useEffect(() => {
+    console.log(task);
+  }, [task]);
+
   if (task)
     return (
       <div className="flex  flex-col gap-ElementsSpace transition-all">

@@ -139,8 +139,9 @@ export const PairingCard = ({
           ) : (
             <>
               <p className="w-3/4 truncate font-medium italic">
-                {!(item.pair_question || item.pair_question_image) ||
-                  'Nincs kérdés vagy kép megadva'}
+                {item.pair_question || item.pair_question_image
+                  ? item.pair_question || 'Kép feltöltve' // Ha van kérdés, azt írja, ha csak kép van, ezt
+                  : 'Nincs kérdés vagy kép megadva'}
               </p>
               {item.pair_answer && item.pair_question && (
                 <div className="h-[1px] w-8 bg-gray-300 my-1" />
