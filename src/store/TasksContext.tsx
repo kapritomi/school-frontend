@@ -33,6 +33,7 @@ type TasksContextType = {
   reorderSlots: (from: number, to: number) => void;
   saveWorksheetToDB: () => void;
   setWorksheetMessage: (message: MessageType | null) => void;
+  setIsLoading: (isLoading: boolean) => void;
 };
 
 type worksheetErrors = {
@@ -226,6 +227,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     setWorksheetMessage,
     worksheetErrors,
     isLoading,
+    setIsLoading,
   };
 
   return (

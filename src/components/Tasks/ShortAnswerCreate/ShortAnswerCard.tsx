@@ -76,8 +76,15 @@ export const ShortAnswerCard = ({
         <div className="flex flex-col gap-[10px]">
           {/* Kérdés Textarea */}
           <div className="flex flex-col gap-[15px]">
-            <label className="font-medium">Kérdés vagy kép</label>
+            <label
+              htmlFor={`tasks.${Number(activeTaskId) - 1}.short_answer.questions.${index}.question`}
+              className="font-medium"
+            >
+              Kérdés vagy kép
+            </label>
             <textarea
+              id={`tasks.${Number(activeTaskId) - 1}.short_answer.questions.${index}`}
+              name={`tasks.${Number(activeTaskId) - 1}.short_answer.questions.${index}`}
               disabled={inputDisabled}
               maxLength={150}
               value={item.question}
@@ -101,8 +108,15 @@ export const ShortAnswerCard = ({
 
           {/* Válasz Input */}
           <div className="flex flex-col gap-[15px]">
-            <label className="font-medium">Válasz</label>
+            <label
+              htmlFor={`tasks.${Number(activeTaskId) - 1}.short_answer.questions.${index}.answer`}
+              className="font-medium"
+            >
+              Válasz
+            </label>
             <textarea
+              id={`tasks.${Number(activeTaskId) - 1}.short_answer.questions.${index}.answer`}
+              name={`tasks.${Number(activeTaskId) - 1}.short_answer.questions.${index}.answer`}
               maxLength={50}
               value={item.answer}
               onChange={(e) => updateQuestion(index, 'answer', e.target.value)}

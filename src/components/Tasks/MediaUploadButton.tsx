@@ -83,12 +83,12 @@ export const MediaUploadButton = ({
 
   return (
     <div className="flex flex-col gap-3">
-      <label className="block font-medium text-gray-700">Kép</label>
+      <label className="block font-medium text-gray">Kép</label>
 
       <div className="flex gap-4 items-center">
         <label
           htmlFor={`pairQuestionImage${id}`}
-          className={`
+          className={`text-gray
             cursor-pointer py-2 px-4 rounded-md border border-solid text-sm font-medium transition-all
             ${disabled ? 'opacity-50 cursor-not-allowed bg-gray-100' : 'bg-white hover:bg-gray-50 active:bg-gray-100'}
             ${errorMessage ? 'border-alert text-alert' : 'border-lightBorder text-gray-600'}

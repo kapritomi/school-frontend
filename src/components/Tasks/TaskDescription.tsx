@@ -17,7 +17,10 @@ export const TaskDescription = ({ taskId }: { taskId: string }) => {
     return (
       <section className="flex flex-col gap-LabelDescriptionInputSpace">
         <div className="flex flex-col gap-LabelDescriptionSpace">
-          <label className="block text-primary text-[30px] font-semibold">
+          <label
+            htmlFor={`tasks.${taskToUpdate.id}.description`}
+            className="block text-primary text-[30px] font-semibold"
+          >
             Feladatleírás:
           </label>
           <p className="text-[#818181]  text-[15px]">
@@ -27,6 +30,8 @@ export const TaskDescription = ({ taskId }: { taskId: string }) => {
           </p>
         </div>
         <textarea
+          name={`tasks.${taskToUpdate.id}.description`}
+          id={`tasks.${taskToUpdate.id}.description`}
           value={taskToUpdate.task_description}
           onChange={(e) =>
             updateTask({ ...taskToUpdate, task_description: e.target.value })

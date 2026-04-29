@@ -6,6 +6,8 @@ import { Navbar } from '../../components/Navbar';
 import { Modal } from '../../components/Modal';
 import { useTeacherHomePage } from './useTeacherHomePage';
 import { Worksheets } from '../Worksheets/Worksheets';
+import { BgLeftBottom } from '@/assets/Icons/BgLeftBottom';
+import { BgRightTop } from '@/assets/Icons/BgRightTop';
 
 export const TeacherHomePage = () => {
   const navigate = useNavigate();
@@ -27,6 +29,12 @@ export const TeacherHomePage = () => {
   return (
     <div className="relative w-screen h-screen max-h-screen overflow-y-hidden">
       <Navbar></Navbar>
+      <div className="absolute bottom-0 left-0 -z-10">
+        <BgLeftBottom></BgLeftBottom>
+      </div>
+      <div className="absolute top-0 right-0 -z-10">
+        <BgRightTop></BgRightTop>
+      </div>
       {isModalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center"

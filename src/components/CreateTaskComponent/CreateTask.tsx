@@ -10,8 +10,10 @@ import { BgLeftBottom } from '@/assets/Icons/BgLeftBottom';
 import { BgRightTop } from '@/assets/Icons/BgRightTop';
 import { ClipLoader } from 'react-spinners';
 import { Modal } from '../Modal';
+import { useState } from 'react';
 
 export default function CreateTask() {
+  const [sideBarIsOpen, setSidebarIsOpen] = useState<boolean>(true);
   const {
     activeTask,
     saveWorksheetToDB,
@@ -43,12 +45,14 @@ export default function CreateTask() {
             type={worksheetMessage.type}
           />
         )}
-        <div className="w-1/6">
-          <Sidebar />
+        <div
+          className={`transition-all ${sideBarIsOpen ? 'max-w-[500px]' : 'max-w-[0px]'} `}
+        >
+          <Sidebar isOpen={sideBarIsOpen} setIsOpen={setSidebarIsOpen} />
         </div>
         <div
           id="scroll-container"
-          className="w-full p-4 overflow-y-scroll h-full "
+          className={`w-full ${sideBarIsOpen ? 'p-4' : 'pl-12 pt-4 pr-4 pb-4'}   overflow-y-scroll h-full`}
         >
           {tasksJson.tasks.map((task) => {
             switch (task.task_type_id) {

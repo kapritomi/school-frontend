@@ -2,7 +2,7 @@ import { ArrowDownIcon } from '@/assets/Icons/ArrowDownIcon';
 import { ArrowUpIcon } from '@/assets/Icons/ArrowUpIcon';
 import { BinIcon } from '@/assets/Icons/BinIcon';
 import { useTasks } from '@/store/TasksContext';
-import type { PairGroup, TaskJson } from '@/types/tasks';
+import type { PairGroup } from '@/types/tasks';
 import { getFieldError } from '@/utils/GetFieldError';
 import { MediaUploadButton } from '../MediaUploadButton';
 import { useState } from 'react';
@@ -88,8 +88,15 @@ export const PairingCard = ({
         <div className="flex flex-col gap-[10px]">
           {/* Kérdés szekció */}
           <div className="flex flex-col gap-[15px]">
-            <label className="font-medium">Kérdés vagy leírás</label>
+            <label
+              htmlFor={`tasks.${taskIndex}.pairing.pairing_groups.${index}.question`}
+              className="font-medium"
+            >
+              Kérdés vagy leírás
+            </label>
             <textarea
+              name={`tasks.${taskIndex}.pairing.pairing_groups.${index}`}
+              id={`tasks.${taskIndex}.pairing.pairing_groups.${index}`}
               disabled={inputDisabled}
               maxLength={130}
               value={item.pair_question}
@@ -113,8 +120,15 @@ export const PairingCard = ({
 
           {/* Válasz szekció */}
           <div className="flex flex-col gap-[15px]">
-            <label className="font-medium">Válasz</label>
+            <label
+              htmlFor={`tasks.${taskIndex}.pairing.pairing_groups.${index}.answer`}
+              className="font-medium"
+            >
+              Válasz
+            </label>
             <textarea
+              name={`tasks.${taskIndex}.pairing.pairing_groups.${index}.answer`}
+              id={`tasks.${taskIndex}.pairing.pairing_groups.${index}.answer`}
               maxLength={130}
               value={item.pair_answer}
               onChange={(e) => updatePair(index, 'pair_answer', e.target.value)}

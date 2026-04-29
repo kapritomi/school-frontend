@@ -79,29 +79,28 @@ export const Worksheets = () => {
         </div>
       )}
       <p className="text-[40px] font-semibold text-primary">Feladatlapjaid:</p>
-      {
-        worksheets &&
-      <div className="w-full  flex flex-wrap gap-[60px]">
-        {worksheets &&
-          worksheets.map((item: WorksheetsResponseType) => (
-            <Worksheet
-              handleDeleteWorksheet={handleDeleteWorksheet}
-              handleSelectWorksheet={handleSelectWorksheet}
-              selectedWorksheetId={selectedWorksheetId}
-              id={item.id}
-              title={item.title}
-            ></Worksheet>
-          ))}
-        <div
-          onClick={() => navigate('/createTask')}
-          className={` w-[197px] h-[300px] flex p-[30px] rounded-[12px] cursor-pointer border-primary border-2 border-dashed text-white    tranition-all  `}
-        >
-          <p className="text-[20px] font-bold text-center text-primary">
-            + Új létrehozása
-          </p>
+      {worksheets && (
+        <div className="w-full  flex flex-wrap gap-[60px]">
+          {worksheets &&
+            worksheets.map((item: WorksheetsResponseType) => (
+              <Worksheet
+                handleDeleteWorksheet={handleDeleteWorksheet}
+                handleSelectWorksheet={handleSelectWorksheet}
+                selectedWorksheetId={selectedWorksheetId}
+                id={item.id}
+                title={item.title}
+              ></Worksheet>
+            ))}
+          <div
+            onClick={() => navigate('/createTask')}
+            className={` w-[197px] h-[300px] flex p-[30px] rounded-[12px] cursor-pointer border-primary border-2 border-dashed text-white    tranition-all  `}
+          >
+            <p className="text-[20px] font-bold text-center text-primary">
+              + Új létrehozása
+            </p>
+          </div>
         </div>
-      </div>
-      }
+      )}
     </div>
   );
 };

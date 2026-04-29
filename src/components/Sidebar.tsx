@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import type { TaskType } from '../types/tasks';
 import { useTasks } from '../store/TasksContext';
 import { Link } from 'react-router-dom';
-export default function Sidebar() {
+type SidebarProps = {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+};
+export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const { slots, createTask, removeTask, reorderSlots } = useTasks();
 
   const taskCards: { type: TaskType; title: string }[] = [
@@ -12,7 +16,6 @@ export default function Sidebar() {
     { type: 'short', title: 'Rövid válasz' },
   ];
 
-  const [isOpen, setIsOpen] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingIndex, setPendingIndex] = useState<number | null>(null);
   const [newLabel, setNewLabel] = useState('');
@@ -234,7 +237,7 @@ export default function Sidebar() {
                     type="button"
                     onClick={() => setSelectedType(c.type)}
                     className={[
-                      'rounded-[8px] border bg-white shadow-md w-1/4 shadow-[4px_8px_6px_rgba(0,0,0,0.25)] border-[1px] border-lightBorder',
+                      'rounded-[8px]  bg-white w-1/4 shadow-[4px_8px_6px_rgba(0,0,0,0.25)] border-[1px] border-lightBorder',
                       'flex flex-col justify-between',
                       'h-[200px] p-2',
                       selected

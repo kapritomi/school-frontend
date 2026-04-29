@@ -1,8 +1,18 @@
+import { logout } from '@/api/logout';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (e: any) {
+      console.log(e);
+    }
+  };
   return (
     <div className="w-screen bg-white h-[70px] px-[19px] shadow-md absolute flex items-center justify-between top-0">
       <button
@@ -25,7 +35,10 @@ export const Navbar = () => {
         >
           Kezdőlap
         </button>
-        <button className={`hover:text-secondary transition-all duration-150`}>
+        <button
+          onClick={() => handleLogout()}
+          className={`hover:text-secondary transition-all duration-150`}
+        >
           Kijelentkezés
         </button>
       </div>

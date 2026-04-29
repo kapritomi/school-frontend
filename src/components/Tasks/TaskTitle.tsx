@@ -17,10 +17,14 @@ export const TaskTitle = ({ taskId }: { taskId: string }) => {
   if (taskToUpdate)
     return (
       <section className="flex flex-col gap-LabelDescriptionInputSpace">
-        <label className="block text-primary text-[30px] font-semibold">
+        <label
+          htmlFor={`tasks.${taskToUpdate.id}.title`}
+          className="block text-primary text-[30px] font-semibold"
+        >
           A feladat címe:
         </label>
         <input
+          name={`tasks.${taskToUpdate.id}.title`}
           id={`tasks.${taskToUpdate.id}.title`}
           value={taskToUpdate.task_title}
           onChange={(e) =>
