@@ -5,7 +5,7 @@ import { ArrowUpIcon } from '@/assets/Icons/ArrowUpIcon';
 import { ArrowDownIcon } from '@/assets/Icons/ArrowDownIcon';
 import { BinIcon } from '@/assets/Icons/BinIcon';
 import type { TaskJson } from '@/types/tasks';
-function ShortAnswerCreate({ task }: { task: TaskJson }) {
+function ShortAnswerCreate({ task, index }: { task: TaskJson; index: number }) {
   const { updateTask } = useTasks();
   const itemsRef = useRef<Map<string, HTMLDivElement> | null>(null);
   
@@ -98,6 +98,7 @@ function ShortAnswerCreate({ task }: { task: TaskJson }) {
 
   return (
     <div id={`task-${task.id}`} className="flex min-h-[900px] flex-col gap-ElementsSpace">
+      <div className='pt-4'><span className=' px-3 py-1 rounded-full bg-primary text-white font-semibold'><span className='font-black'>•</span> {index+1}. Feladat</span></div>
       {/* ---- Feladat címe ---- */}
       <section className="flex flex-col gap-LabelDescriptionInputSpace">
         <label className="block text-primary text-[30px] font-semibold">

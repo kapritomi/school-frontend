@@ -15,21 +15,21 @@ type TasksContextType = {
   tasksJson: TasksJson;
   activeId: string | null;
   activeTask: TaskJson | null;
-  worksheetMessage:MessageType | null;
-
+  worksheetMessage: MessageType | null;
 
   selectTask: (item: SidebarItem) => void;
   createTask: (slotIndex: number, label: string, type: TaskType) => void;
   removeTask: (id: string) => void;
   updateTask: (task: TaskJson) => void;
   reorderSlots: (from: number, to: number) => void;
-  saveWorksheetToDB:()=>void;
-  setWorksheetMessage:(message:MessageType | null) =>void;
+  saveWorksheetToDB: () => void;
+  setWorksheetMessage: (message: MessageType | null) => void;
 };
+
 type worksheetErrors = {
-  key:string,
-  message:string[]
-}
+  key: string;
+  message: string[];
+};
 
 const TasksContext = createContext<TasksContextType | null>(null);
 
@@ -37,18 +37,33 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   const [slots, setSlots] = useState<Slot[]>(() => Array(MAX_ITEMS).fill(null));
   const [tasksJson, setTasksJson] = useState<TasksJson>({ tasks: [] });
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [nextId, setNextId] = useState(1);
-  
-  const [worksheetMessage,setWorksheetMessage]=useState<null|MessageType>(null)
-  const [worksheetErrors,setWorksheetErrors]=useState<null | worksheetErrors[]>(null)
+
+  const [worksheetMessage, setWorksheetMessage] =
+    useState<null | MessageType>(null);
+  const [worksheetErrors, setWorksheetErrors] =
+    useState<null | worksheetErrors[]>(null);
 
   const activeTask = useMemo(() => {
     if (!activeId) return null;
     return tasksJson.tasks.find((t) => t.id === activeId) ?? null;
   }, [activeId, tasksJson.tasks]);
 
-  // -----------------------
-  // ACTIONS
+  // ✅ NEW: legkisebb szabad ID
+  const getNextId = (tasks: TaskJson[]) => {
+    const ids = tasks
+      .map((t) => Number(t.id))
+      .sort((a, b) => a - b);
+
+    let next = 0;
+
+    for (const id of ids) {
+      if (id !== next) break;
+      next++;
+    }
+
+    return String(next);
+  };
+
   // -----------------------
 
   const selectTask = (item: SidebarItem) => {
@@ -56,19 +71,20 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   };
 
   const createTask = (slotIndex: number, label: string, type: TaskType) => {
-    const id = String(nextId);
+    if (slots[slotIndex] !== null) return;
+
+    const newId = getNextId(tasksJson.tasks);
 
     // SLOT
     setSlots((prev) => {
       const copy = prev.slice();
-      if (copy[slotIndex] !== null) return prev;
-      copy[slotIndex] = { id, label, type };
+      copy[slotIndex] = { id: newId, label, type };
       return copy;
     });
 
     // TASK JSON
     const base: TaskJson = {
-      id,
+      id: newId,
       task_title: label,
       task_description: '',
       task_type_id: TASK_TYPE_ID[type],
@@ -78,19 +94,18 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
       type === 'assignment'
         ? { ...base, assignment: { image: '', coordinatesAndAnswers: [] } }
         : type === 'short'
-          ? { ...base, short_answer: { questions: [] } }
-          : type === 'pair'
-            ? { ...base, pairing: { pairing_groups: [] } }
-            : type === 'grouping'
-              ? { ...base, grouping: { groups: [] } }
-              : base;
+        ? { ...base, short_answer: { questions: [] } }
+        : type === 'pair'
+        ? { ...base, pairing: { pairing_groups: [] } }
+        : type === 'grouping'
+        ? { ...base, grouping: { groups: [] } }
+        : base;
 
     setTasksJson((prev) => ({
       tasks: [...prev.tasks, task],
     }));
 
-    setActiveId(id);
-    setNextId((n) => n + 1);
+    setActiveId(newId);
   };
 
   const removeTask = (id: string) => {
@@ -108,11 +123,10 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
       tasks: prev.tasks.map((t) => (t.id === task.id ? task : t)),
     }));
 
-    // sidebar label sync
     setSlots((prev) =>
       prev.map((s) =>
-        s?.id === task.id ? { ...s, label: task.task_title } : s,
-      ),
+        s?.id === task.id ? { ...s, label: task.task_title } : s
+      )
     );
   };
 
@@ -124,7 +138,6 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
       const copy = prevSlots.slice();
       [copy[from], copy[to]] = [copy[to], copy[from]];
 
-      // JSON reorder
       setTasksJson((prevJson) => {
         const map = new Map(prevJson.tasks.map((t) => [t.id, t]));
 
@@ -140,32 +153,25 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const saveWorksheetToDB =async ()=>{
-    try{
+  const saveWorksheetToDB = async () => {
+    try {
       const worksheetData = {
-        title:'test',
-         assignments: [
-          {
-              classroom_id: 6,
-              password: "alma123"
-          }
-      ],
-      subject_id: 1,
-      lifetime_minutes: 60,
-      max_time_to_resolve_minutes: 45,
-      max_points: 1,
-      is_public: 0,
-      tasks:tasksJson.tasks
-      }
-      
-      const res = await uploadWorksheet(worksheetData)
-     setWorksheetMessage({type:'success',message:res.message})
-    }catch(e:any){
-      setWorksheetErrors(e.response.data.errors)
-    }
+        title: 'test',
+        assignments: [{ classroom_id: 6, password: 'alma123' }],
+        subject_id: 1,
+        lifetime_minutes: 60,
+        max_time_to_resolve_minutes: 45,
+        max_points: 1,
+        is_public: 0,
+        tasks: tasksJson.tasks,
+      };
 
-   
-  }
+      const res = await uploadWorksheet(worksheetData);
+      setWorksheetMessage({ type: 'success', message: res.message });
+    } catch (e: any) {
+      setWorksheetErrors(e.response.data.errors);
+    }
+  };
 
   const value = {
     slots,
@@ -179,11 +185,13 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     reorderSlots,
     saveWorksheetToDB,
     worksheetMessage,
-    setWorksheetMessage
+    setWorksheetMessage,
   };
 
   return (
-    <TasksContext.Provider value={value}>{children}</TasksContext.Provider>
+    <TasksContext.Provider value={value}>
+      {children}
+    </TasksContext.Provider>
   );
 }
 

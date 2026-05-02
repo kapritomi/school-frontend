@@ -7,7 +7,7 @@ import type { PairGroup } from '@/types/tasks';
 import { useEffect, useRef } from 'react';
 import  type { TaskJson } from '@/types/tasks';
 
-export default function PairingCreate({ task }: { task: TaskJson }) {
+export default function PairingCreate({ task, index }: { task: TaskJson; index: number }) {
   const { updateTask } = useTasks();
   const itemsRef = useRef<Map<string, HTMLDivElement> | null>(null);
 
@@ -101,6 +101,7 @@ export default function PairingCreate({ task }: { task: TaskJson }) {
 
   return (
     <div id={`task-${task.id}`} className="flex min-h-[900px] flex-col gap-ElementsSpace">
+      <div className='pt-4'><span className=' px-3 py-1 rounded-full bg-primary text-white font-semibold'><span className='font-black'>•</span> {index+1}. Feladat</span></div>
       {/* ---- Feladat címe ---- */}
       <section className="flex flex-col gap-LabelDescriptionInputSpace">
         <label className="block text-primary text-[30px] font-semibold">

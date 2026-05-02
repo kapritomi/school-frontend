@@ -4,7 +4,7 @@ import type { Group } from '@/types/tasks';
 import { EditIcon } from '@/assets/Icons/EditIcon';
 import { BinIcon } from '@/assets/Icons/BinIcon';
 import type { TaskJson } from '@/types/tasks';
-export default function GroupingCreate({ task }: { task: TaskJson }) {
+export default function GroupingCreate({ task, index }: { task: TaskJson; index: number }) {
   const { updateTask } = useTasks();
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<null | Group>(null);
@@ -111,6 +111,7 @@ export default function GroupingCreate({ task }: { task: TaskJson }) {
   };
   return (
     <div id={`task-${task.id}`} className="flex min-h-[900px] flex-col gap-ElementsSpace">
+      <div className='pt-4'><span className=' px-3 py-1 rounded-full bg-primary text-white font-semibold'><span className='font-black'>•</span> {index+1}. Feladat</span></div>
       <section className="flex flex-col gap-LabelDescriptionInputSpace">
         <label className="block text-primary text-[30px] font-semibold">
           A feladat címe:

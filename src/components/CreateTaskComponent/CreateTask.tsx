@@ -9,12 +9,15 @@ import { Navbar } from '../Navbar';
 import { BgLeftBottom } from '@/assets/Icons/BgLeftBottom';
 import { BgRightTop } from '@/assets/Icons/BgRightTop';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export default function CreateTask() {
   const { activeTask,saveWorksheetToDB,tasksJson} = useTasks();
-
+  useEffect(()=>{
+    console.log(tasksJson)
+  },[tasksJson])
   return (
-    <div className=" overflow-hidden w-screen h-dvh max-h-dvh relative   flex">
+    <div className="overflow-hidden w-screen h-dvh max-h-dvh relative flex">
       <Navbar></Navbar>
       <div className="absolute bottom-0 left-0 -z-10">
         <BgLeftBottom></BgLeftBottom>
@@ -26,22 +29,22 @@ export default function CreateTask() {
         <div className="w-1/6">
           <Sidebar />
         </div>
-        <div id='scroll-container' className="w-full p-4 overflow-y-scroll h-full ">
-           <Link to={'/StudentView'}>Tanulói nézet</Link>
-          {tasksJson.tasks.map((task) => {
+        <div id='scroll-container' className="w-full p-4 overflow-y-scroll h-full">
+           {/* <Link to={'/StudentView'}>Tanulói nézet</Link> */}
+          {tasksJson.tasks.map((task, id) => {
             
             switch (task.task_type_id) {
               case TASK_TYPE_ID.assignment:
-                return <AssignmentCreate key={task.id} task={task}/>;
+                return <AssignmentCreate key={task.id} task={task} index={id}/>;
 
               case TASK_TYPE_ID.short:
-                return <ShortAnswerCreate key={task.id} task={task}/>;
+                return <ShortAnswerCreate key={task.id} task={task} index={id}/>;
 
               case TASK_TYPE_ID.pair:
-                return <PairingCreate key={task.id} task={task}/>;
+                return <PairingCreate key={task.id} task={task} index={id}/>;
 
               case TASK_TYPE_ID.grouping:
-                return <GroupingCreate key={task.id} task={task}/>;
+                return <GroupingCreate key={task.id} task={task} index={id}/>;
 
               default:
                 return null;
