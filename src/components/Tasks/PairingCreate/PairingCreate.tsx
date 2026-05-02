@@ -8,7 +8,13 @@ import { TaskDescription } from '../TaskDescription';
 import { AddButton } from '../AddButton';
 import type { TaskJson } from '@/types/tasks';
 
-export default function PairingCreate({ task }: { task: TaskJson }) {
+export default function PairingCreate({
+  task,
+  index,
+}: {
+  task: TaskJson;
+  index: number;
+}) {
   const { getMap, removePair, scrollToId, updatePair, addPair } = usePairing();
   const { worksheetErrors } = useTasks();
   const pairing = task?.pairing ?? { pairing_groups: [] };
@@ -34,7 +40,16 @@ export default function PairingCreate({ task }: { task: TaskJson }) {
 
   if (task)
     return (
-      <div className="flex  flex-col gap-ElementsSpace transition-all">
+      <div
+        id={`task-${task.id}`}
+        className="flex min-h-[900px] flex-col gap-ElementsSpace"
+      >
+        <div className="pt-4">
+          <span className=" px-3 py-1 rounded-full bg-primary text-white font-semibold">
+            <span className="font-black">•</span> {index + 1}. Feladat
+          </span>
+        </div>
+
         {/* ---- Feladat címe ---- */}
         <TaskTitle taskId={task.id}></TaskTitle>
         {/* ---- Feladatleírás ---- */}
@@ -68,12 +83,12 @@ export default function PairingCreate({ task }: { task: TaskJson }) {
           </div>
           {worksheetErrors &&
             Object.keys(worksheetErrors).includes(
-              `tasks.${Number(task.id) - 1}.pairing.pairing_groups`,
+              `tasks.${Number(task.id)}.pairing.pairing_groups`,
             ) && (
               <p className="text-[18px] text-alert">
                 {getFieldError(
                   worksheetErrors,
-                  `tasks.${Number(task.id) - 1}.pairing.pairing_groups`,
+                  `tasks.${Number(task.id)}.pairing.pairing_groups`,
                 )}
               </p>
             )}
