@@ -12,34 +12,25 @@ import { Clock } from './assets/Icons/Clock';
 export default function StudentView() {
   const { tasksJson } = useTasks();
   const [time, setTime] = useState(45 * 60); // 45 perc másodpercben
+  const [dataType, setDataType] = useState<'frontend' | 'backend'>('frontend');
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTime((prev) => {
-        if (prev <= 0) {
-          clearInterval(interval);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
 
-    return () => clearInterval(interval);
-  }, []);
-  const minutes = Math.floor(time / 60);
-  const seconds = time % 60;
+
+  
+
+
 
   useEffect(() => {
     console.log(tasksJson);
   }, [tasksJson]);
   const TASK_COMPONENTS: Record<
     number,
-    React.ComponentType<{ task: TaskJson }>
+    React.ComponentType<{ task: TaskJson; dataType: 'frontend' | 'backend' }>
   > = {
     1: Grouping,
     2: Pairing,
-    3: Assignment,
-    4: ShortAnswer,
+    3: ShortAnswer,
+    4: Assignment,
   };
 
   return (
@@ -69,7 +60,7 @@ export default function StudentView() {
             <h2 className="task-padding font-semibold text-TaskTitle">
               {task.task_title}
             </h2>
-            <Component task={task} />
+             <Component dataType={dataType} task={task} />
           </div>
         );
       })}

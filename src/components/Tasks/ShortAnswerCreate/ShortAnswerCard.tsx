@@ -29,7 +29,7 @@ export const ShortAnswerCard = ({
   updateQuestion,
 }: QuestionCardProps) => {
   const { worksheetErrors } = useTasks();
-  const fieldPath = `tasks.${Number(activeTaskId) - 1}.short_answer.questions.${index}`;
+  const fieldPath = `tasks.${Number(activeTaskId)}.short_answer.questions.${index}`;
   const error = getFieldError(worksheetErrors, fieldPath);
   const [inputDisabled, setInputDisabled] = useState(false);
   const containerClasses = `
@@ -83,8 +83,8 @@ export const ShortAnswerCard = ({
               Kérdés vagy kép
             </label>
             <textarea
-              id={`tasks.${Number(activeTaskId) - 1}.short_answer.questions.${index}`}
-              name={`tasks.${Number(activeTaskId) - 1}.short_answer.questions.${index}`}
+              id={`tasks.${Number(activeTaskId)}.short_answer.questions.${index}`}
+              name={`tasks.${Number(activeTaskId)}.short_answer.questions.${index}`}
               disabled={inputDisabled}
               maxLength={150}
               value={item.question}
@@ -97,6 +97,7 @@ export const ShortAnswerCard = ({
 
           {/* Kép feltöltés */}
           <MediaUploadButton
+            htmlFor={`tasks.${activeTaskId}.short_answer.questions.${index}.question_image`}
             id={index}
             disabled={item.question ? true : false}
             itemUrl={item.question_image}

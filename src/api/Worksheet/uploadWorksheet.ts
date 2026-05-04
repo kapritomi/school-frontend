@@ -23,13 +23,13 @@ export interface Task {
 }
 
 export interface WorksheetInfo {
-  title: string;
-  subject_id: number;
-  lifetime_minutes: number;
-  max_time_to_resolve_minutes: number;
-  max_points: number;
-  is_public: number;
-  assignments: Assignment[];
+  title: string | null;
+  subject_id: number |null;
+  lifetime_minutes: number|null;
+  max_time_to_resolve_minutes: number |null;
+  max_points: number |null;
+  is_public: number |null;
+  assignments: Assignment[] |null;
   tasks: Task[];
 }
 export const uploadWorksheet = async (worksheet: WorksheetInfo) => {

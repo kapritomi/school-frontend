@@ -8,6 +8,9 @@ export type TaskPreviewProps = {
   dataType: 'frontend' | 'backend';
 };
 function Pairing({ task, dataType }: TaskPreviewProps) {
+  useEffect(()=>{
+    console.log(task)
+  },[task])
   const hasData =
     dataType === 'frontend' ? !!task.pairing : !!(task as any).pairQuestions;
 

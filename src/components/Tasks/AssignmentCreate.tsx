@@ -232,6 +232,7 @@ export default function AssignmentCreate({
         {!assignment.image ? (
           <div className="mb-4 w-3/5">
             <input
+              name={`tasks.${task.id}.assignment.image`}
               className="
                   block w-full text-sm text-gray-500
                   file:mr-4

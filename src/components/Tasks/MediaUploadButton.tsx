@@ -9,7 +9,7 @@ type MediaUploadButtonProps = {
   onUploadSuccess: (url: string) => void;
   setInputDisabled: (inputDisabled: boolean) => void;
   itemUrl: string | null;
-  htmlFor:string
+  htmlFor: string;
 };
 
 export const MediaUploadButton = ({

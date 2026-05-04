@@ -13,7 +13,7 @@ import type {
   SidebarItem,
 } from '../types/tasks';
 import { MAX_ITEMS, TASK_TYPE_ID } from '../types/tasks';
-import { uploadWorksheet } from '@/api/Worksheet/uploadWorksheet';
+import { uploadWorksheet, type WorksheetInfo } from '@/api/Worksheet/uploadWorksheet';
 import type { MessageType } from '@/types/messageType';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -25,13 +25,15 @@ type TasksContextType = {
   worksheetMessage: MessageType | null;
   isLoading: boolean;
   worksheetErrors: worksheetErrors[] | null;
+  setWorksheetInfo :(worksheet:WorksheetInfo)=>void,
+
 
   selectTask: (item: SidebarItem) => void;
   createTask: (slotIndex: number, label: string, type: TaskType) => void;
   removeTask: (id: string) => void;
   updateTask: (task: TaskJson) => void;
   reorderSlots: (from: number, to: number) => void;
-  saveWorksheetToDB: () => void;
+  saveWorksheetToDB: (worksheetData: WorksheetInfo) => Promise<void>;
   setWorksheetMessage: (message: MessageType | null) => void;
   setIsLoading: (isLoading: boolean) => void;
 };
@@ -54,13 +56,36 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   const [worksheetErrors, setWorksheetErrors] = useState<
     null | worksheetErrors[]
   >(null);
-
+  const [worksheetInfo,setWorksheetInfo]=useState<WorksheetInfo>({
+    title:null,
+    is_public:null,
+    assignments:null,
+    lifetime_minutes:null,
+    max_points:null,
+    max_time_to_resolve_minutes:null,
+    subject_id:1,
+    tasks:tasksJson.tasks
+  })
   const queryClient = useQueryClient();
 
   const activeTask = useMemo(() => {
     if (!activeId) return null;
     return tasksJson.tasks.find((t) => t.id === activeId) ?? null;
   }, [activeId, tasksJson.tasks]);
+
+  useEffect(()=>{
+    setWorksheetInfo((prev)=>({
+      ...prev,
+      tasks:tasksJson.tasks
+    }))
+  },[tasksJson.tasks])
+
+
+   useEffect(()=>{
+    console.log(worksheetInfo)
+  },[worksheetInfo])
+
+
 
   // ✅ NEW: legkisebb szabad ID
   const getNextId = (tasks: TaskJson[]) => {
@@ -165,26 +190,10 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const saveWorksheetToDB = async () => {
+  const saveWorksheetToDB = async (worksheetData:WorksheetInfo) => {
     setIsLoading(true);
     setWorksheetErrors(null);
     try {
-      const worksheetData = {
-        title: 'csoportositas',
-        assignments: [
-          {
-            classroom_id: 6,
-            password: 'alma123',
-          },
-        ],
-        subject_id: 1,
-        lifetime_minutes: 60,
-        max_time_to_resolve_minutes: 45,
-        max_points: 1,
-        is_public: 0,
-        tasks: tasksJson.tasks,
-      };
-
       await uploadWorksheet(worksheetData);
       queryClient.invalidateQueries({ queryKey: ['worksheets', 'all'] });
       setTasksJson({ tasks: [] });
@@ -228,6 +237,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     worksheetErrors,
     isLoading,
     setIsLoading,
+    setWorksheetInfo
   };
 
   return (

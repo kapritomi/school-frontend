@@ -2,8 +2,9 @@ import { logout } from '@/api/logout';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { useTasks } from '@/store/TasksContext';
 
-const classesList = ['1.a', '1.b', '2.a', '2.b', '3.a', '3.b'];
+
 
 export const Navbar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -11,7 +12,9 @@ export const Navbar = () => {
   const [password, setPassword] = useState('');
   const [title, setTitle] = useState('');
   const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
+  const {setWorksheetInfo}=useTasks()
 
+  
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -19,6 +22,15 @@ export const Navbar = () => {
     setSelectedClasses((prev) =>
       prev.includes(cls) ? prev.filter((c) => c !== cls) : [...prev, cls],
     );
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/');
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleSave = () => {
@@ -30,7 +42,7 @@ export const Navbar = () => {
     setIsModalOpen(false);
   };
   return (
-    <div className="w-screen bg-white h-[70px] px-[19px] shadow-md absolute flex justify-between top-0 z-50">
+    <div className="w-screen bg-white h-[70px] px-[19px] shadow-md absolute flex justify-between top-0 z-10">
       <div className="flex items-center">
         <button
           className="w-[117px] h-[36px] bg-primary text-white font-semibold text-[20px] rounded-[6px]"
@@ -39,7 +51,7 @@ export const Navbar = () => {
           Vissza
         </button>
         <div className="ml-[140px] flex items-center">
-          <Link to={'/StudentView'}>
+          <Link to={'/taskPreview'}>
             <div className="px-3 py-3">
               <div className="h-[36px] px-2 border-[2px] border-secondary rounded-[8px] flex items-center justify-center text-secondaryFont hover:text-gray font-bold drop-shadow-lg">
                 Előnézet
@@ -58,6 +70,16 @@ export const Navbar = () => {
       </div>
 
       <div className="flex gap-8 font-semibold text-[20px] text-primary">
+                <div
+          className={`h-full flex items-center ${location.pathname.includes('teacherHomePage') ? ' border-b-[3px] border-primary' : 'hover:border-b-[3px] border-primary'}`}
+        >
+          <button
+            onClick={() => navigate('/teacherHomePage')}
+            className={`hover:text-secondary transition-all duration-150`}
+          >
+            Kezdőlap
+          </button>
+        </div>
         <div
           className={`h-full flex items-center ${location.pathname.includes('worksheets') ? ' border-b-[3px] border-primary' : 'hover:border-b-[3px] border-primary'}`}
         >
@@ -69,7 +91,7 @@ export const Navbar = () => {
           </button>
         </div>
         <div
-          className={`h-full flex items-center ${location.pathname.includes('Class') || location.pathname.includes('teacherHomePage') ? ' border-b-[3px] border-primary' : 'hover:border-b-[3px] border-primary'}`}
+          className={`h-full flex items-center ${location.pathname.includes('Class')  ? ' border-b-[3px] border-primary' : 'hover:border-b-[3px] border-primary'}`}
         >
           <button
             onClick={() => navigate('/teacherHomePage')}
@@ -79,7 +101,10 @@ export const Navbar = () => {
           </button>
         </div>
 
-        <button className={`hover:text-secondary transition-all duration-150`}>
+        <button
+          onClick={() => handleLogout()}
+          className={`hover:text-secondary transition-all duration-150`}
+        >
           Kijelentkezés
         </button>
       </div>
@@ -140,7 +165,7 @@ export const Navbar = () => {
               <p className="font-semibold mb-2 text-secondaryFont">
                 Hozzárendelt osztályok:
               </p>
-              <div className="flex flex-wrap gap-2">
+              {/* <div className="flex flex-wrap gap-2">
                 {classesList.map((cls) => (
                   <button
                     key={cls}
@@ -154,7 +179,7 @@ export const Navbar = () => {
                     {cls}
                   </button>
                 ))}
-              </div>
+              </div> */}
             </div>
 
             {/* Gombok */}

@@ -106,28 +106,30 @@ export const TeacherHomePage = () => {
             </p>
           )}
           {isLoading ||
-            (mutation.isPending && (
+            (mutation.isPending ? (
               <ClipLoader size={90} color="#2E6544"></ClipLoader>
+            ) : (
+              classrooms && (
+                <div className="flex flex-wrap gap-[56px]">
+                  {classrooms.map((item: ClassType) => (
+                    <ClassComponent
+                      onClick={() => navigate(`/editClass/${item.id}`)}
+                      id={item.id}
+                      name={item.name}
+                      key={item.id}
+                    ></ClassComponent>
+                  ))}
+                  <div
+                    onClick={() => setIsModalOpen(true)}
+                    className="w-[164px] cursor-pointer text-white items-center justify-center shadow-md h-[157px] flex bg-primary rounded-[12px]"
+                  >
+                    <p className="text-[40px] font-bold">+</p>
+                  </div>
+                </div>
+              )
             ))}
 
-          {classrooms && (
-            <div className="flex flex-wrap gap-[56px]">
-              {classrooms.map((item: ClassType) => (
-                <ClassComponent
-                  onClick={() => navigate(`/editClass/${item.id}`)}
-                  id={item.id}
-                  name={item.name}
-                  key={item.id}
-                ></ClassComponent>
-              ))}
-              <div
-                onClick={() => setIsModalOpen(true)}
-                className="w-[164px] cursor-pointer text-white items-center justify-center shadow-md h-[157px] flex bg-primary rounded-[12px]"
-              >
-                <p className="text-[40px] font-bold">+</p>
-              </div>
-            </div>
-          )}
+          {}
         </div>
       </div>
     </div>

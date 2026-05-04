@@ -38,7 +38,7 @@ export const PairingCard = ({
   getMap,
 }: PairingCardProps) => {
   const { worksheetErrors } = useTasks();
-  const taskIndex = Number(activeTask.id) - 1;
+  const taskIndex = Number(activeTask.id);
   const fieldPath = `tasks.${taskIndex}.pairing.pairing_groups.${index}`;
   const hasError = !!(
     worksheetErrors && Object.keys(worksheetErrors).includes(fieldPath)
@@ -49,7 +49,7 @@ export const PairingCard = ({
   const cardClasses = `
     border w-full flex flex-col gap-[13px] rounded-[5px] text-gray duration-300 transition-all p-4 bg-white
     ${hasError ? 'border-alert border-[2px]' : 'border-secondary'}
-    ${item.isExpanded ? 'max-h-[620px]' : 'max-h-[140px] overflow-hidden'}
+    ${item.isExpanded ? 'max-h-[800px]' : 'max-h-[140px] overflow-hidden'}
   `;
 
   return (
@@ -109,7 +109,7 @@ export const PairingCard = ({
 
           {/* Kép szekció */}
           <MediaUploadButton
-          htmlFor={`tasks.${taskIndex}.pairing.pairing_groups.${index}.pair_question_image`}
+            htmlFor={`tasks.${taskIndex}.pairing.pairing_groups.${index}.pair_question_image`}
             id={index}
             itemUrl={item.pair_question_image}
             setInputDisabled={setInputDisabled}

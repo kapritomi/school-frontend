@@ -105,10 +105,12 @@ export const CreateGroupItemField = ({
                 value={itemName ? itemName : ''}
                 onChange={(e) => setItemName(e.target.value)}
                 disabled={itemNameInputDisabled}
+                maxLength={30}
               />
             </div>
 
             <MediaUploadButton
+              htmlFor={`tasks.${taskId}.grouping.groups.${selectedGroup.index}.items.image`}
               id={selectedGroup.index}
               itemUrl={null}
               setInputDisabled={setItemNameInputDisabled}
@@ -121,7 +123,6 @@ export const CreateGroupItemField = ({
               onClick={() => addItem(selectedGroup.index)}
             ></AddButton>
           </div>
-          {/* tasks.0.grouping.groups.0.name */}
           <div
             id={`tasks.${Number(taskId) - 1}.grouping.groups.${selectedGroup.index}.items`}
             className={`w-1/2 border-l-[1px] py- pl-[35px]  `}

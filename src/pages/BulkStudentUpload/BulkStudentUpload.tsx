@@ -125,6 +125,7 @@ export const BulkStudentUpload = () => {
              
               cursor-pointer"
                 type="file"
+                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                 onChange={(e) => {
                   if (e.target.files && e.target.files.length > 0) {
                     setFile(e.target.files[0]);

@@ -17,7 +17,6 @@ export default function CreateTask() {
   const [sideBarIsOpen, setSidebarIsOpen] = useState<boolean>(true);
   const {
     activeTask,
-    saveWorksheetToDB,
     tasksJson,
     isLoading,
     worksheetMessage,
@@ -82,21 +81,9 @@ export default function CreateTask() {
             }
           })}
 
-          {!activeTask ? (
+          {!activeTask && (
             <div className="text-gray-500">
               Válassz egy feladatot bal oldalt.
-            </div>
-          ) : (
-            <div className="mt-6">
-              <button
-                className="   px-3 py-2 rounded-lg cursor-pointer transition-all duration-200
-                bg-primary text-white  w-[211px]
-                disabled:bg-opacity-75 disabled:cursor-not-allowed
-                active:scale-95"
-                onClick={() => saveWorksheetToDB()}
-              >
-                Feladatlap mentése
-              </button>
             </div>
           )}
         </div>

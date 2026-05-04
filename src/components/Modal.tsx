@@ -20,7 +20,7 @@ export const Modal = ({
   }, []);
   if (type === 'error')
     return (
-      <div className="absolute left-1/2 top-4  -translate-x-1/2 bg-alert  font-bold min-w-[400px] shadow-xl  text-white rounded-[6px]">
+      <div className="absolute left-1/2 top-20  -translate-x-1/2 bg-alert  font-bold min-w-[400px] shadow-xl  text-white rounded-[6px]">
         <div className="relative w-full h-full  flex items-center justify-center px-8 py-5  ">
           <button
             onClick={() => setModalErrorMessage(null)}
@@ -33,7 +33,7 @@ export const Modal = ({
       </div>
     );
   return (
-    <div className="absolute left-1/2 top-4 -translate-x-1/2 bg-secondary text-white font-bold min-w-[400px] shadow-xl  rounded-[6px]">
+    <div className="absolute left-1/2 top-20 -translate-x-1/2 bg-secondary text-white font-bold min-w-[400px] shadow-xl  rounded-[6px]">
       <div className="relative w-full h-full  flex items-center justify-center px-8 py-5 ">
         <button
           onClick={() => setModalErrorMessage(null)}

@@ -33,7 +33,7 @@ export const TaskTitle = ({ taskId }: { taskId: string }) => {
           className={` ${
             worksheetErrors &&
             Object.keys(worksheetErrors).includes(
-              `tasks.${Number(taskToUpdate.id) - 1}.task_title`,
+              `tasks.${Number(taskToUpdate.id)}.task_title`,
             )
               ? 'border-alert border-[2px]'
               : 'border-lightBorder'
@@ -42,12 +42,12 @@ export const TaskTitle = ({ taskId }: { taskId: string }) => {
 
         {worksheetErrors &&
           Object.keys(worksheetErrors).includes(
-            `tasks.${Number(taskToUpdate.id) - 1}.task_title`,
+            `tasks.${Number(taskToUpdate.id)}.task_title`,
           ) && (
             <p className="text-[18px] text-alert">
               {getFieldError(
                 worksheetErrors,
-                `tasks.${Number(taskToUpdate.id) - 1}.task_title`,
+                `tasks.${Number(taskToUpdate.id)}.task_title`,
               )}
             </p>
           )}
