@@ -7,7 +7,13 @@ import type { TaskJson } from '../../types/tasks';
 type XY = { x: number; y: number };
 type CoordItem = { id: number; coordinate: string; answer: string };
 
-export default function AssignmentCreate({ task }: { task: TaskJson }) {
+export default function AssignmentCreate({
+  task,
+  index,
+}: {
+  task: TaskJson;
+  index: number;
+}) {
   const { updateTask } = useTasks();
 
   const onChange = updateTask;
@@ -175,6 +181,11 @@ export default function AssignmentCreate({ task }: { task: TaskJson }) {
 
   return (
     <div id={`task-${task.id}`}>
+      <div className="pt-4">
+        <span className=" px-3 py-1 rounded-full bg-primary text-white font-semibold">
+          <span className="font-black">•</span> {index + 1}. Feladat
+        </span>
+      </div>
       <form className="mb-4">
         <section className="space-y-4 mt-4">
           <label

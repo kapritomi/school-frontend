@@ -66,7 +66,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   const getNextId = (tasks: TaskJson[]) => {
     const ids = tasks.map((t) => Number(t.id)).sort((a, b) => a - b);
 
-    let next = 1;
+    let next = 0;
 
     for (const id of ids) {
       if (id !== next) break;

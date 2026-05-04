@@ -7,7 +7,13 @@ import type { TaskJson } from '@/types/tasks';
 import { useTasks } from '@/store/TasksContext';
 import { getFieldError } from '@/utils/GetFieldError';
 
-export default function GroupingCreate({ task }: { task: TaskJson }) {
+export default function GroupingCreate({
+  task,
+  index,
+}: {
+  task: TaskJson;
+  index: number;
+}) {
   const {
     selectedGroup,
     setSelectedId,
@@ -79,7 +85,16 @@ export default function GroupingCreate({ task }: { task: TaskJson }) {
 
   if (task)
     return (
-      <div className="flex  flex-col gap-ElementsSpace">
+      <div
+        id={`task-${task.id}`}
+        className="flex min-h-[900px] flex-col gap-ElementsSpace"
+      >
+        <div className="pt-4">
+          <span className=" px-3 py-1 rounded-full bg-primary text-white font-semibold">
+            <span className="font-black">•</span> {index + 1}. Feladat
+          </span>
+        </div>
+
         <TaskTitle taskId={task.id}></TaskTitle>
         <TaskDescription taskId={task.id}></TaskDescription>
         <section className="flex flex-col gap-LabelDescriptionInputSpace">

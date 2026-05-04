@@ -11,6 +11,7 @@ import { BgRightTop } from '@/assets/Icons/BgRightTop';
 import { ClipLoader } from 'react-spinners';
 import { Modal } from '../Modal';
 import { useState } from 'react';
+import { useEffect } from 'react';
 
 export default function CreateTask() {
   const [sideBarIsOpen, setSidebarIsOpen] = useState<boolean>(true);
@@ -23,8 +24,11 @@ export default function CreateTask() {
     setWorksheetMessage,
   } = useTasks();
 
+  useEffect(() => {
+    console.log(tasksJson);
+  }, [tasksJson]);
   return (
-    <div className=" overflow-hidden w-screen h-dvh max-h-dvh relative   flex">
+    <div className="overflow-hidden w-screen h-dvh max-h-dvh relative flex">
       <Navbar></Navbar>
       {isLoading && (
         <div className="w-full h-full z-20 top-0 flex right-0 items-center justify-center absolute bg-zinc-400 bg-opacity-40">
@@ -52,41 +56,26 @@ export default function CreateTask() {
         </div>
         <div
           id="scroll-container"
-          className={`w-full ${sideBarIsOpen ? 'p-4' : 'pl-12 pt-4 pr-4 pb-4'}   overflow-y-scroll h-full`}
+          className="w-full p-4 overflow-y-scroll h-full"
         >
-          {tasksJson.tasks.map((task) => {
+          {/* <Link to={'/StudentView'}>Tanulói nézet</Link> */}
+          {tasksJson.tasks.map((task, id) => {
             switch (task.task_type_id) {
               case TASK_TYPE_ID.assignment:
                 return (
-                  <div key={task.id} className="min-h-dvh">
-                    {task.id}
-                    <AssignmentCreate task={task} key={task.id} />
-                  </div>
+                  <AssignmentCreate key={task.id} task={task} index={id} />
                 );
 
               case TASK_TYPE_ID.short:
                 return (
-                  <div key={task.id} className="min-h-dvh">
-                    {task.id}
-                    <ShortAnswerCreate task={task} key={task.id} />
-                  </div>
+                  <ShortAnswerCreate key={task.id} task={task} index={id} />
                 );
 
               case TASK_TYPE_ID.pair:
-                return (
-                  <div key={task.id} className="min-h-dvh">
-                    {task.id}
-                    <PairingCreate task={task} key={task.id} />
-                  </div>
-                );
+                return <PairingCreate key={task.id} task={task} index={id} />;
 
               case TASK_TYPE_ID.grouping:
-                return (
-                  <div key={task.id} className="min-h-dvh">
-                    {task.id}
-                    <GroupingCreate task={task} key={task.id} />{' '}
-                  </div>
-                );
+                return <GroupingCreate key={task.id} task={task} index={id} />;
 
               default:
                 return null;
