@@ -9,6 +9,7 @@ type MediaUploadButtonProps = {
   onUploadSuccess: (url: string) => void;
   setInputDisabled: (inputDisabled: boolean) => void;
   itemUrl: string | null;
+  htmlFor:string
 };
 
 export const MediaUploadButton = ({
@@ -17,6 +18,7 @@ export const MediaUploadButton = ({
   setInputDisabled,
   itemUrl,
   id,
+  htmlFor,
 }: MediaUploadButtonProps) => {
   const { setIsLoading } = useTasks();
   const [filePath, setFilePath] = useState<string | null>(null);
@@ -87,7 +89,7 @@ export const MediaUploadButton = ({
 
       <div className="flex gap-4 items-center">
         <label
-          htmlFor={`pairQuestionImage${id}`}
+          htmlFor={htmlFor}
           className={`text-gray
             cursor-pointer py-2 px-4 rounded-md border border-solid text-sm font-medium transition-all
             ${disabled ? 'opacity-50 cursor-not-allowed bg-gray-100' : 'bg-white hover:bg-gray-50 active:bg-gray-100'}
@@ -99,7 +101,7 @@ export const MediaUploadButton = ({
 
         <input
           ref={fileInputRef}
-          id={`pairQuestionImage${id}`}
+          id={htmlFor}
           type="file"
           accept="image/*"
           disabled={disabled}

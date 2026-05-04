@@ -109,6 +109,7 @@ export const PairingCard = ({
 
           {/* Kép szekció */}
           <MediaUploadButton
+          htmlFor={`tasks.${taskIndex}.pairing.pairing_groups.${index}.pair_question_image`}
             id={index}
             itemUrl={item.pair_question_image}
             setInputDisabled={setInputDisabled}
